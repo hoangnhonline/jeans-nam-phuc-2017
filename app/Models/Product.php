@@ -31,25 +31,19 @@ class Product extends Model  {
                     'thumbnail_id', 
                     'is_hot', 
                     'is_sale', 
-                    'is_new',
-                    'is_old',
-                    'price',
-                    'price_new',
+                    'is_new',                    
+                    'price',                    
                     'price_sale',
                     'loai_id', 
                     'cate_id', 
                     'mo_ta',                    
-                    'xuat_xu', 
-                    'khuyen_mai', 
-                    'chi_tiet', 
-                    'bao_hanh', 
-                    'so_luong_ton', 
+                    'xuat_xu',                     
+                    'chi_tiet',                                          
                     'sale_percent', 
                     'so_luong_ban', 
                     'views', 
                     'so_lan_mua',                     
-                    'display_order',                     
-                    'color_id',
+                    'display_order',                                         
                     'status', 
                     'created_user', 
                     'updated_user', 
@@ -57,14 +51,18 @@ class Product extends Model  {
                     'price_sell'                    
                     ];
     
-    public function prices()
+    public function sizes()
     {
-        return $this->hasMany('App\Models\ProductPrice', 'product_id');
+        return $this->hasMany('App\Models\ProductSize', 'product_id');
+    }
+    public function colors()
+    {
+        return $this->hasMany('App\Models\ProductColor', 'product_id');
+    }
+    public function cate(){
+        return $this->belongsTo('App\Models\Cate', 'cate_id');
     }
     public function loaiSp(){
         return $this->belongsTo('App\Models\LoaiSp', 'loai_id');
-    }
-    public function thuocTinh(){
-        return $this->hasOne('App\Models\SpThuocTinh', 'product_id');
     }
 }

@@ -125,31 +125,41 @@
                             <label>Giá SALE</label>
                             <input type="text" class="form-control number {{ old('is_sale', $detail->is_sale) == 1  ? "req" : "" }}" name="price_sale" id="price_sale" value="{{ old('price_sale', $detail->price_sale) }}">
                         </div>
-                        
-                         <div class="col-md-6 none-padding">
-                          <label>Số lượng tồn<span class="red-star">*</span></label>                  
-                          <input type="text" class="form-control req number" name="so_luong_ton" id="so_luong_ton" value="{{ old('so_luong_ton', $detail->so_luong_ton) }}">                        
-                        </div>
-                      <div class="col-md-6">
+                        <div class="form-group">
                           <label>Màu sắc</label>
-                          <select name="color_id" id="color_id" class="form-control">
-                              <option value="">--chọn--</option>
-                              @if( $colorArr->count() > 0)
-                                @foreach( $colorArr as $color )
-                                    <option value="{{ $color->id }}" {{ old('color_id', $detail->color_id) == $color->id ? "selected" : "" }}>{{ $color->name }}</option>
-                                @endforeach
-                              @endif
-                          </select>
-                      </div>
+                          <ul>
+                            @foreach($colorList as $color)
+                            <li class="col-md-2" style="list-style:none">
+                                <label>
+                                  <input type="checkbox" name="color_id[]" {{ in_array($color->id, old('color_id', $colorSelected)) ? "checked" : "" }} value="{{ $color->id }}">
+                                  <img src="{{ Helper::showImage($color->image_url) }}" width="26" title="{{ $color->name }}" alt="{{ $color->name }}" style="border:1px solid #CCC">
+                                </label>
+                              </li>
+                            @endforeach
+                          </ul>
+                        </div>     
+                        <div class="clearfix"></div>
+                        <div class="form-group">
+                          <label>Size</label>
+                          <ul>
+                            @foreach($sizeList as $size)
+                            <li class="col-md-2" style="list-style:none">
+                                <label>
+                                  <input type="checkbox" name="size_id[]" {{ in_array($size->id, old('size_id', $sizeSelected)) ? "checked" : "" }} value="{{ $size->id }}">
+                                  {{ $size->name }}
+                                </label>
+                              </li>
+                            @endforeach
+                          </ul>
+                        </div>                        
+                        <div style="margin-bottom:10px;clear:both"></div>
+                        
                       <div style="margin-bottom:10px;clear:both"></div>
-                      <div class="form-group col-md-6 none-padding">
+                      <div class="form-group col-md-12 none-padding">
                           <label>Mô tả</label>
                           <textarea class="form-control" rows="4" name="mo_ta" id="mo_ta">{{ old('mo_ta', $detail->mo_ta) }}</textarea>
                         </div>
-                      <div class="form-group col-md-6 none-padding pleft-5">
-                        <label>Khuyến mãi</label>
-                        <textarea class="form-control" rows="4" name="khuyen_mai" id="khuyen_mai">{{ old('khuyen_mai', $detail->khuyen_mai) }}</textarea>
-                      </div>
+                      
                        
                       <div class="form-group">
                         <label>Chi tiết</label>
@@ -188,24 +198,42 @@
 
                      </div><!--end hinh anh-->
                      <div role="tabpanel" class="tab-pane" id="thuoctinh">
-                     
-                     @if( !empty( $thuocTinhArr ))
-                     <table class="table table-responsive table-bordered">
-                      @foreach($thuocTinhArr as $loaithuoctinh)
-                        <tr style="background-color:#CCC">
-                          <td colspan="2">{{ $loaithuoctinh['name']}}</td>
-                        </tr>
-                        @if( !empty($loaithuoctinh['child']))
-                          @foreach( $loaithuoctinh['child'] as $thuoctinh)
-                          <tr>
-                            <td width="150">{{ $thuoctinh['name']}}</td>
-                            <td><input type="text" class="form-control" name="thuoc_tinh[{{ $thuoctinh['id'] }}]" value="{{ isset($spThuocTinhArr[$thuoctinh['id']]) ?  $spThuocTinhArr[$thuoctinh['id']] : "" }}" ></td>
-                          </tr>
+                      <table class="table table-bordered">
+                        <tr>
+                          <th></th>
+                          <th>Hình ảnh</th>
+                          <th class="text-center" style="white-space:nowrap">Đại diện</th>
+                          @foreach($detail->sizes as $size)                         
+                          <th class="text-center">Size {{ $sizeArr[$size->size_id]->name }}</th>
                           @endforeach
-                        @endif
-                      @endforeach
+                        </tr>
+                        @foreach($detail->colors as $color)
+                        <tr>
+                          <td><img src="{{ Helper::showImage($colorArr[$color->color_id]->image_url)}}" width="30" style="border:1px solid #CCC"></br>{{ $colorArr[$color->color_id]->name }}</td>
+                          <td width="200px">
+                            <div class="div-upload">
+                                <img class="show_thumbnail" src="{{ URL::asset('public/admin/dist/img/img.png') }}" class="img-favicon" width="100">
+                                
+                                <input type="file" data-value="favicon" class="click-choose-file-product" style="display:none" />
+                             
+                                <button class="btn btn-default btn-sm btnUploadProduct" type="button"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> </button>
+                                <input type="hidden" name="color_id_url[]" class="color_id_url" value="">
+                                <input type="hidden" name="color_id_name[]" class="color_id_name" value="">
+                                <input type="hidden" name="color_id_ivt[]" class="color_id_ivt" value="{{ $color->color_id }}">
+                            </div>
+                          </td>
+                          <td class="text-center">
+                            <input type="checkbox" name="thumbnail_id" value="{{ $color->color_id }}">
+                          </td>
+                          @foreach($detail->sizes as $size)                         
+                          <td>
+                            <input type="text" class="form-control number" name="amount[{{ $color->color_id}}][{{ $size->size_id}}]" >
+                          </td>
+                          @endforeach
+                        </tr>
+                        @endforeach
                       </table>
-                     @endif
+                 
                      
                      </div>
                   </div>
@@ -321,13 +349,7 @@ $(document).on('keypress', '#name_search', function(e){
           }
         }
       });
-      $('#is_old').change(function(){
-        if($(this).prop('checked') == true){
-          $('#price_new').addClass('req');
-        }else{
-          $('#price_new').val('').removeClass('req');
-        }
-      });
+      
       $('#is_sale').change(function(){
         if($(this).prop('checked') == true){
           $('#price_sale').addClass('req');
@@ -356,19 +378,7 @@ $(document).on('keypress', '#name_search', function(e){
           filebrowserUploadUrl: "{{ URL::asset('/admin/dist/js/kcfinder/upload.php?type=files') }}",
           filebrowserImageUploadUrl: "{{ URL::asset('/admin/dist/js/kcfinder/upload.php?type=images') }}",
           filebrowserFlashUploadUrl: "{{ URL::asset('/admin/dist/js/kcfinder/upload.php?type=flash') }}"
-      });
-      var editor2 = CKEDITOR.replace( 'khuyen_mai',{
-          language : 'vi',
-          height : 100,
-          toolbarGroups : [
-            
-            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-            { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
-            { name: 'links', groups: [ 'links' ] },           
-            '/',
-            
-          ]
-      });
+      });     
       var editor3 = CKEDITOR.replace( 'mo_ta',{
           language : 'vi',
           height : 100,

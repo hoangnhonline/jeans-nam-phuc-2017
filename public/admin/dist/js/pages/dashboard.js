@@ -55,5 +55,42 @@ $(function () {
         });
       }
     });
+
+    $('.btnUploadProduct').click(function(){    
+      $(this).parents('.div-upload').find('.click-choose-file-product').click();
+    });
+    
+    var files = "";
+    $('.click-choose-file-product').change(function(e){
+       var obj = $(this);
+       var valueObj = obj.data('value');
+       files = e.target.files;
+       
+       if(files != ''){
+         var dataForm = new FormData();        
+        $.each(files, function(key, value) {
+           dataForm.append('file', value);
+        });   
+        
+        dataForm.append('date_dir', 0);
+        dataForm.append('folder', 'tmp');
+
+        $.ajax({
+          url: $('#route_upload_tmp_image').val(),
+          type: "POST",
+          async: false,      
+          data: dataForm,
+          processData: false,
+          contentType: false,
+          success: function (response) {
+            if(response.image_path){
+              obj.parents('.div-upload').find('img.show_thumbnail').attr('src', $('#upload_url').val() + response.image_path);
+              obj.parents('.div-upload').find('.color_id_url').val( response.image_path );
+              obj.parents('.div-upload').find('.color_id_name').val( response.image_name );
+            }             
+          }
+        });
+      }
+    });
 });
 

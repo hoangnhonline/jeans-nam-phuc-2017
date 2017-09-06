@@ -43,9 +43,8 @@
 
                   <!-- Nav tabs -->
                   <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Thông tin chi tiết</a></li>                    
-                    <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Hình ảnh</a></li>
-                    <li role="presentation"><a href="#thuoctinh" aria-controls="thuoctinh" role="tab" data-toggle="tab">Thuộc tính</a></li>
+                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Thông tin chi tiết</a></li>
+                    <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Hình ảnh</a></li>                    
                   </ul>
 
                   <!-- Tab panes -->
@@ -66,12 +65,12 @@
                           <?php 
                           $loai_id = old('loai_id');
                           if($loai_id > 0){
-                            $cateArr = DB::table('cate')->where('loai_id', $loai_id)->orderBy('display_order')->get();
+                            $cateList = DB::table('cate')->where('loai_id', $loai_id)->orderBy('display_order')->get();
                           }
                           ?>
                           <select class="form-control req" name="cate_id" id="cate_id">
                             <option value="">--Chọn--</option>
-                            @foreach( $cateArr as $value )
+                            @foreach( $cateList as $value )
                             <option value="{{ $value->id }}" {{ $value->id == old('cate_id') || $value->id == $cate_id ? "selected" : "" }}>{{ $value->name }}</option>
                             @endforeach
                           </select>
@@ -106,31 +105,39 @@
                         <div class="form-group col-md-6" >                  
                             <label>Giá SALE</label>
                             <input type="text" class="form-control number" name="price_sale" id="price_sale" value="{{ old('price_sale') }}">
+                        </div>     
+                        <div class="form-group">
+                          <label>Màu sắc</label>
+                          <ul>
+                            @foreach($colorList as $color)
+                            <li class="col-md-2" style="list-style:none">
+                                <label>
+                                  <input type="checkbox" name="color_id[]" value="{{ $color->id }}">
+                                  <img src="{{ Helper::showImage($color->image_url) }}" width="26" title="{{ $color->name }}" alt="{{ $color->name }}" style="border:1px solid #CCC">
+                                </label>
+                              </li>
+                            @endforeach
+                          </ul>
+                        </div>     
+                        <div class="clearfix"></div>
+                        <div class="form-group">
+                          <label>Size</label>
+                          <ul>
+                            @foreach($sizeList as $size)
+                            <li class="col-md-2" style="list-style:none">
+                                <label>
+                                  <input type="checkbox" name="size_id[]" value="{{ $size->id }}">
+                                  {{ $size->name }}
+                                </label>
+                              </li>
+                            @endforeach
+                          </ul>
                         </div>                        
-                         <div class="col-md-6 none-padding">
-                          <label>Số lượng tồn<span class="red-star">*</span></label>                  
-                          <input type="text" class="form-control req number" name="so_luong_ton" id="so_luong_ton" value="{{ old('so_luong_ton') }}">                        
-                        </div>
-                        <div class="col-md-6">
-                            <label>Màu sắc</label>
-                            <select name="color_id" id="color_id" class="form-control">
-                                <option value="">--chọn--</option>
-                                @if( $colorArr->count() > 0)
-                                  @foreach( $colorArr as $color )
-                                      <option value="{{ $color->id }}">{{ $color->name }}</option>
-                                  @endforeach
-                                @endif
-                            </select>
-                        </div>
                         <div style="margin-bottom:10px;clear:both"></div>
-                        <div class="form-group col-md-6 none-padding">
+                        <div class="form-group col-md-12 none-padding">
                             <label>Mô tả</label>
                             <textarea class="form-control" rows="4" name="mo_ta" id="mo_ta">{{ old('mo_ta') }}</textarea>
-                          </div>
-                        <div class="form-group col-md-6 none-padding pleft-5">
-                          <label>Khuyến mãi</label>
-                          <textarea class="form-control" rows="4" name="khuyen_mai" id="khuyen_mai">{{ old('khuyen_mai') }}</textarea>
-                        </div>
+                          </div>                        
                          
                         <div class="form-group">
                           <label>Chi tiết</label>
@@ -333,18 +340,7 @@ $(document).on('click', '.remove-image', function(){
           filebrowserImageUploadUrl: "{{ URL::asset('/admin/dist/js/kcfinder/upload.php?type=images') }}",
           filebrowserFlashUploadUrl: "{{ URL::asset('/admin/dist/js/kcfinder/upload.php?type=flash') }}"
       });
-      var editor2 = CKEDITOR.replace( 'khuyen_mai',{
-          language : 'vi',
-          height : 100,
-          toolbarGroups : [
-            
-            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-            { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
-            { name: 'links', groups: [ 'links' ] },           
-            '/',
-            
-          ]
-      });
+     
       var editor3 = CKEDITOR.replace( 'mo_ta',{
           language : 'vi',
           height : 100,
