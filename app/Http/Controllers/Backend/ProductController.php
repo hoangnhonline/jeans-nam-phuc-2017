@@ -14,8 +14,11 @@ use App\Models\LoaiThuocTinh;
 use App\Models\ThuocTinh;
 use App\Models\SpThuocTinh;
 use App\Models\ProductImg;
+use App\Models\ProductSize;
+use App\Models\ProductColor;
+use App\Models\ProductInventory;
 use App\Models\MetaData;
-
+use App\Models\Size;
 use Helper, File, Session, Auth, URL, Image;
 
 class ProductController extends Controller
@@ -79,38 +82,7 @@ class ProductController extends Controller
         }
 
         return view('backend.product.index', compact( 'items', 'arrSearch', 'loaiSpArr', 'cateArr'));
-    }
-    public function short(Request $request)
-    {
-        
-        $arrSearch['status'] = $status = isset($request->status) ? $request->status : 1;
-        $arrSearch['loai_id'] = $loai_id = isset($request->loai_id) ? $request->loai_id : null;
-        $arrSearch['cate_id'] = $cate_id = isset($request->cate_id) ? $request->cate_id : null;
-        $arrSearch['name'] = $name = isset($request->name) && trim($request->name) != '' ? trim($request->name) : '';
-        
-        $query = Product::where('product.status', $status);
-        if( $loai_id ){
-            $query->where('product.loai_id', $loai_id);
-        }
-        if( $cate_id ){
-            $query->where('product.cate_id', $cate_id);
-        }
-        if( $name != ''){
-            $query->where('product.name', 'LIKE', '%'.$name.'%');         
-        }        
-        $query->orderBy('product.id', 'desc');
-        $items = $query->select(['product.*','product.id as product_id' , 'product.created_at as time_created'])
-        ->paginate(50);
-
-        $loaiSpArr = LoaiSp::all();  
-        if( $loai_id ){
-            $cateArr = Cate::where('loai_id', $loai_id)->orderBy('display_order', 'desc')->get();
-        }else{
-            $cateArr = (object) [];
-        }
-
-        return view('backend.product.short', compact( 'items', 'arrSearch', 'loaiSpArr', 'cateArr'));
-    }    
+    }     
     public function ajaxSearch(Request $request){    
         $search_type = $request->search_type;
         $arrSearch['loai_id'] = $loai_id = isset($request->loai_id) ? $request->loai_id : -1;
@@ -156,29 +128,14 @@ class ProductController extends Controller
     {
         $loai_id = $request->loai_id ? $request->loai_id : null;
         $cate_id = $request->cate_id ? $request->cate_id : null;
-        $cateArr = $loaiThuocTinhArr = (object) [];
-        $thuocTinhArr = [];
-        $loaiSpArr = LoaiSp::all();
-        
-        if( $loai_id ){
-            
-            $cateArr = Cate::where('loai_id', $loai_id)->select('id', 'name')->orderBy('display_order', 'desc')->get();
-            
-            $loaiThuocTinhArr = LoaiThuocTinh::where('loai_id', $loai_id)->orderBy('display_order')->get();
-
-            if( $loaiThuocTinhArr->count() > 0){
-                foreach ($loaiThuocTinhArr as $value) {
-
-                    $thuocTinhArr[$value->id]['id'] = $value->id;
-                    $thuocTinhArr[$value->id]['name'] = $value->name;
-
-                    $thuocTinhArr[$value->id]['child'] = ThuocTinh::where('loai_thuoc_tinh_id', $value->id)->select('id', 'name')->orderBy('display_order')->get()->toArray();
-                }
-                
-            }
+        $cateList = (object) [];     
+        $loaiSpArr = LoaiSp::all();      
+        if($loai_id > 0){
+            $cateList = Cate::where('loai_id', $loai_id)->get();
         }
-        $colorArr = Color::orderBy('display_order')->get();        
-        return view('backend.product.create', compact('loaiSpArr', 'cateArr', 'colorArr', 'loai_id', 'thuocTinhArr', 'cate_id'));
+        $colorList = Color::orderBy('display_order')->get();      
+        $sizeList = Size::orderBy('display_order')->get();        
+        return view('backend.product.create', compact('loaiSpArr', 'cateList', 'loai_id', 'colorList', 'cate_id', 'sizeList'));
     }
 
     /**
@@ -194,19 +151,17 @@ class ProductController extends Controller
         $this->validate($request,[
             'name' => 'required',
             'slug' => 'required' ,
-            'price' => 'required',
-            'so_luong_ton' => 'required'           
+            'price' => 'required'            
         ],
         [
             'name.required' => 'Bạn chưa nhập tên sản phẩm',
             'slug.required' => 'Bạn chưa nhập slug',            
-            'price.required' => 'Bạn chưa nhập giá',
-            'so_luong_ton.required' => 'Bạn chưa nhập số lượng tồn'                      
+            'price.required' => 'Bạn chưa nhập giá'            
         ]);
        
         $dataArr['is_hot'] = isset($dataArr['is_hot']) ? 1 : 0;
         $dataArr['is_sale'] = isset($dataArr['is_sale']) ? 1 : 0; 
-        $dataArr['is_old'] = 0;
+        
         $dataArr['is_new'] = isset($dataArr['is_new']) ? 1 : 0;
         
         $dataArr['alias'] = Helper::stripUnicode($dataArr['name']);
@@ -215,8 +170,7 @@ class ProductController extends Controller
         $dataArr['slug'] = str_replace(")", "", $dataArr['slug']);
         
         $dataArr['price'] = str_replace(',', '', $request->price);
-        $dataArr['price_sale'] = str_replace(',', '', $request->price_sale);
-        $dataArr['price_new'] =null;
+        $dataArr['price_sale'] = str_replace(',', '', $request->price_sale);        
         $dataArr['so_luong_ton'] = str_replace(',', '', $request->so_luong_ton);
 
         $dataArr['status'] = 1;
@@ -227,8 +181,7 @@ class ProductController extends Controller
         //luu display order
         if($dataArr['is_hot'] == 1){
             $dataArr['display_order'] = Helper::getNextOrder('product', 
-                                            [
-                                            'is_old' => $dataArr['is_old'],
+                                            [                                            
                                             'loai_id' => $dataArr['loai_id'],
                                             'cate_id' => $dataArr['cate_id']
                                         ]);
@@ -236,18 +189,15 @@ class ProductController extends Controller
         $rs = Product::create($dataArr);
 
         $product_id = $rs->id;
+        
+        $this->storeColor( $product_id, $dataArr);
+        $this->storeSize( $product_id, $dataArr);
 
-        $this->storeThuocTinh( $product_id, $dataArr);
-
-        $this->storeImage( $product_id, $dataArr);
+       // $this->storeImage( $product_id, $dataArr);
         $this->storeMeta($product_id, 0, $dataArr);
-        Session::flash('message', 'Tạo mới sản phẩm thành công');
+        Session::flash('message', 'Tạo mới thành công');
 
-        return redirect()->route('product.index', [
-                        'loai_id' => $dataArr['loai_id'], 
-                        'cate_id' => $dataArr['cate_id']            
-                        ]
-                        );
+        return redirect()->route('product.edit', $product_id);
     }
 
     public function storeMeta( $id, $meta_id, $dataArr ){
@@ -266,18 +216,24 @@ class ProductController extends Controller
             $model->update( $arrData );
         }              
     }
-    public function storeThuocTinh($id, $dataArr){
+    public function storeColor($id, $dataArr){
         
-        SpThuocTinh::where('product_id', $id)->delete();
+        ProductColor::where('product_id', $id)->delete();
 
-        if( !empty($dataArr['thuoc_tinh'])){
-            foreach( $dataArr['thuoc_tinh'] as $k => $value){
-                if( $value == ""){
-                    unset( $dataArr['thuoc_tinh'][$k]);
-                }
+        if( !empty($dataArr['color_id'])){
+            foreach( $dataArr['color_id'] as $color_id){
+                ProductColor::create(['product_id' => $id, 'color_id' => $color_id]);
             }
-            
-            SpThuocTinh::create(['product_id' => $id, 'thuoc_tinh' => json_encode($dataArr['thuoc_tinh'])]);
+        }
+    }
+    public function storeSize($id, $dataArr){
+        
+        ProductSize::where('product_id', $id)->delete();
+
+        if( !empty($dataArr['size_id'])){
+            foreach( $dataArr['size_id'] as $size_id){
+                ProductSize::create(['product_id' => $id, 'size_id' => $size_id]);
+            }
         }
     }
 
@@ -381,42 +337,41 @@ class ProductController extends Controller
     */
     public function edit($id)
     {
-        $thuocTinhArr = [];
+        $colorSelected = $sizeSelected = $colorArr = $sizeArr = [];
         $hinhArr = (object) [];
         $detail = Product::find($id);
 
         $hinhArr = ProductImg::where('product_id', $id)->lists('image_url', 'id');
         
-        $tmp = SpThuocTinh::where('product_id', $id)->select('thuoc_tinh')->first();
-
-        if( $tmp ){
-            $spThuocTinhArr = json_decode( $tmp->thuoc_tinh, true);
-        }        
-
+        
         $loaiSpArr = LoaiSp::all();
         
         $loai_id = $detail->loai_id; 
             
         $cateArr = Cate::where('loai_id', $loai_id)->select('id', 'name')->orderBy('display_order', 'desc')->get();
         
-        $loaiThuocTinhArr = LoaiThuocTinh::where('loai_id', $loai_id)->orderBy('display_order')->get();
+        
         $meta = (object) [];
         if ( $detail->meta_id > 0){
             $meta = MetaData::find( $detail->meta_id );
         }       
-        if( $loaiThuocTinhArr->count() > 0){
-            foreach ($loaiThuocTinhArr as $value) {
-
-                $thuocTinhArr[$value->id]['id'] = $value->id;
-                $thuocTinhArr[$value->id]['name'] = $value->name;
-
-                $thuocTinhArr[$value->id]['child'] = ThuocTinh::where('loai_thuoc_tinh_id', $value->id)->select('id', 'name')->orderBy('display_order')->get()->toArray();
-            }
+       
+        $colorList = Color::orderBy('display_order')->get();      
+        $sizeList = Size::orderBy('display_order')->get();    
+        foreach($colorList as $color){
+            $colorArr[$color->id] = $color;
+        }
+        foreach($sizeList as $size){
+            $sizeArr[$size->id] = $size;
+        }
+        foreach($detail->colors as $color){
+            $colorSelected[] = $color->color_id;
+        } 
+        foreach($detail->sizes as $size){
+            $sizeSelected[] = $size->size_id;
+        } 
             
-        }        
-        $colorArr = Color::all();          
-            
-        return view('backend.product.edit', compact( 'detail', 'hinhArr', 'thuocTinhArr', 'spThuocTinhArr', 'colorArr', 'loaiSpArr', 'cateArr', 'meta'));
+        return view('backend.product.edit', compact( 'detail', 'hinhArr', 'colorList', 'sizeList' , 'loaiSpArr', 'cateArr', 'meta', 'colorSelected', 'sizeSelected', 'colorArr', 'sizeArr'));
     }
     public function copy($id)
     {
@@ -473,24 +428,21 @@ class ProductController extends Controller
     public function update(Request $request)
     {
         $dataArr = $request->all();
-        
+        dd($dataArr);
         $this->validate($request,[
             'name' => 'required',
             'slug' => 'required',
-            'price' => 'required',
-            'so_luong_ton' => 'required'            
+            'price' => 'required'         
         ],
         [
             'name.required' => 'Bạn chưa nhập tên sản phẩm',
             'slug.required' => 'Bạn chưa nhập slug',            
-            'price.required' => 'Bạn chưa nhập giá',
-            'so_luong_ton.required' => 'Bạn chưa nhập số lượng tồn'                    
+            'price.required' => 'Bạn chưa nhập giá'            
         ]);
 
         
         $dataArr['is_hot'] = isset($dataArr['is_hot']) ? 1 : 0;
-        $dataArr['is_sale'] = isset($dataArr['is_sale']) ? 1 : 0;  
-        $dataArr['is_old'] = 0;
+        $dataArr['is_sale'] = isset($dataArr['is_sale']) ? 1 : 0;          
         $dataArr['is_new'] = isset($dataArr['is_new']) ? 1 : 0;
 
         $dataArr['slug'] = str_replace(".", "-", $dataArr['slug']);
@@ -499,8 +451,7 @@ class ProductController extends Controller
         $dataArr['alias'] = Helper::stripUnicode($dataArr['name']);
 
         $dataArr['price'] = str_replace(',', '', $request->price);
-        $dataArr['price_sale'] = str_replace(',', '', $request->price_sale);
-        $dataArr['price_new'] = null;
+        $dataArr['price_sale'] = str_replace(',', '', $request->price_sale);        
         $dataArr['so_luong_ton'] = str_replace(',', '', $request->so_luong_ton);
 
         $dataArr['updated_user'] = Auth::user()->id;    
@@ -517,7 +468,55 @@ class ProductController extends Controller
 
         $this->storeMeta( $product_id, $dataArr['meta_id'], $dataArr);
         $this->storeImage( $product_id, $dataArr);
-        Session::flash('message', 'Chỉnh sửa sản phẩm thành công');
+
+        /*
+          "color_id_url" => array:4 [▼
+            0 => "tmp/1339337386492583760-574-574-1504688912.jpg"
+            1 => "tmp/girl-xinh-facebook-tu-suong-1504688915.jpg"
+            2 => "tmp/anh-teen-girl-9x-nung-niu-ben-chiec-dien-thoai-iphone-c77694-1504688918.jpg"
+            3 => "tmp/bi-quyet-lam-dep-da-cua-co-nang-teen-d80a9f-1504688920.jpg"
+          ]
+          "color_id_name" => array:4 [▼
+            0 => "1339337386492583760-574-574-1504688912.jpg"
+            1 => "girl-xinh-facebook-tu-suong-1504688915.jpg"
+            2 => "anh-teen-girl-9x-nung-niu-ben-chiec-dien-thoai-iphone-c77694-1504688918.jpg"
+            3 => "bi-quyet-lam-dep-da-cua-co-nang-teen-d80a9f-1504688920.jpg"
+          ]
+          "color_id_ivt" => array:4 [▼
+            0 => "1"
+            1 => "2"
+            2 => "3"
+            3 => "4"
+          ]
+          "amount" => array:4 [▼
+            1 => array:4 [▼
+              1 => ""
+              2 => ""
+              7 => ""
+              8 => ""
+            ]
+            2 => array:4 [▼
+              1 => ""
+              2 => ""
+              7 => ""
+              8 => ""
+            ]
+            3 => array:4 [▼
+              1 => ""
+              2 => ""
+              7 => ""
+              8 => ""
+            ]
+            4 => array:4 [▼
+              1 => ""
+              2 => ""
+              7 => ""
+              8 => ""
+            ]
+          ]
+          "thumbnail_id" => "2"
+        */
+        Session::flash('message', 'Chỉnh sửa thành công');
 
         return redirect()->route('product.edit', $product_id);
         
@@ -536,7 +535,7 @@ class ProductController extends Controller
         
         $product_id = $dataArr['id'];        
 
-        Session::flash('message', 'Chỉnh sửa sản phẩm thành công');
+        Session::flash('message', 'Chỉnh sửa thành công');
 
     }
    
@@ -552,9 +551,11 @@ class ProductController extends Controller
         $model = Product::find($id);        
         $model->delete();
         ProductImg::where('product_id', $id)->delete(); 
-        SpThuocTinh::where('product_id', $id)->delete(); 
+        ProductColor::where('product_id', $id)->delete(); 
+        ProductSize::where('product_id', $id)->delete(); 
+        ProductInventory::where('product_id', $id)->delete(); 
         // redirect
-        Session::flash('message', 'Xóa sản phẩm thành công');
+        Session::flash('message', 'Xóa thành công');
         
         return redirect(URL::previous());//->route('product.short');
         
