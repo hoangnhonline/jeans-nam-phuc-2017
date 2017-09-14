@@ -4,7 +4,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <h1>
-    Quản lý banner
+    Quản lý banner quảng cáo
   </h1>
   <ol class="breadcrumb">
     <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
@@ -39,32 +39,39 @@
            
               <tr>
                 <td><span class="order">1</span></td>                                                                           
-                <td><a href="{{ route( 'banner.index', [ 'object_id' => 1, 'object_type' => 3 ]) }}" class="link_edit">Banner slide trang chủ <span style="color:red">( 870 x 448 px) </span></a></td>
+                <td><a href="{{ route( 'banner.index', [ 'object_id' => 1, 'object_type' => 3 ]) }}" class="link_edit">Banner slide trang chủ ( 1349 x 505 px)</a></td>
                 <td style="white-space:nowrap; text-align:right">                 
                   <a href="{{ route( 'banner.index', [ 'object_id' => 1, 'object_type' => 3 ]) }}" class="btn-sm btn btn-primary">Banner</a>
                 </td>
-              </tr> 
+              </tr>               
               <tr>
+                <td><span class="order">5</span></td>                                                                           
+                <td><a href="{{ route( 'banner.index', [ 'object_id' => 5, 'object_type' => 3 ]) }}" class="link_edit">Banner giữa trang ( 1349 x 200 px )</a></td>
+                <td style="white-space:nowrap; text-align:right">                 
+                  <a href="{{ route( 'banner.index', [ 'object_id' => 5, 'object_type' => 3 ]) }}" class="btn-sm btn btn-primary">Banner</a>
+                </td>
+              </tr>
+             <!-- <tr>
                 <td><span class="order">2</span></td>                                                                           
-                <td><a href="{{ route( 'banner.index', [ 'object_id' => 2, 'object_type' => 3 ]) }}" class="link_edit">Banner trang chủ - bên trái <span style="color:red">( 570 x 102 px)</span></a></td>
+                <td><a href="{{ route( 'banner.index', [ 'object_id' => 2, 'object_type' => 3 ]) }}" class="link_edit">Banner sidebar các trang con (tin tức, danh mục con ...)</a></td>
                 <td style="white-space:nowrap; text-align:right">                 
                   <a href="{{ route( 'banner.index', [ 'object_id' => 2, 'object_type' => 3 ]) }}" class="btn-sm btn btn-primary">Banner</a>
                 </td>
               </tr> 
               <tr>
                 <td><span class="order">3</span></td>                                                                           
-                <td><a href="{{ route( 'banner.index', [ 'object_id' => 3, 'object_type' => 3 ]) }}" class="link_edit">Banner trang chủ - bên phải <span style="color:red">( 570 x 102 px)</span></a></td>
+                <td><a href="{{ route( 'banner.index', [ 'object_id' => 3, 'object_type' => 3 ]) }}" class="link_edit">Banner trái phía trên phần 'Tin tức công nghệ'</a></td>
                 <td style="white-space:nowrap; text-align:right">                 
                   <a href="{{ route( 'banner.index', [ 'object_id' => 3, 'object_type' => 3 ]) }}" class="btn-sm btn btn-primary">Banner</a>
                 </td>
               </tr> 
               <tr>
                 <td><span class="order">4</span></td>                                                                           
-                <td><a href="{{ route( 'banner.index', [ 'object_id' => 4, 'object_type' => 3 ]) }}" class="link_edit">Banner sidebar trang tin tức <span style="color:red">( 270 x 0 px)</span></a></td>
+                <td><a href="{{ route( 'banner.index', [ 'object_id' => 4, 'object_type' => 3 ]) }}" class="link_edit">Banner phải phía trên phần 'Tin tức công nghệ'</a></td>
                 <td style="white-space:nowrap; text-align:right">                 
                   <a href="{{ route( 'banner.index', [ 'object_id' => 4, 'object_type' => 3 ]) }}" class="btn-sm btn btn-primary">Banner</a>
                 </td>
-              </tr> 
+              </tr> -->
              
 
           </tbody>

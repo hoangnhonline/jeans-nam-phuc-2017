@@ -27,7 +27,7 @@
         </div>
         <div class="panel-body">
           <form class="form-inline" role="form" method="GET" action="{{ route('pages.index') }}">                       
-            
+           
             <div class="form-group">
               <label for="email">Từ khóa :</label>
               <input type="text" class="form-control" name="title" value="{{ $title }}">
@@ -49,7 +49,7 @@
             <tr>
               <th style="width: 1%">#</th>                            
               <th>Tiêu đề</th>
-              <th width="10%">Người tạo</th>
+              
               <th width="1%;white-space:nowrap">Thao tác</th>
             </tr>
             <tbody>
@@ -69,10 +69,10 @@
 
                   <p>{{ $item->description }}</p>
                 </td>
-                <td>{{ $item->account->full_name }}</td>
+                
                 <td style="white-space:nowrap">   
                 
-                  <a class="btn btn-default btn-sm" href="{{ route('parent-cate', $item->slug ) }}" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i> Xem</a>               
+                  <a class="btn btn-default btn-sm" href="{{ route('pages', $item->slug ) }}" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i> Xem</a>               
                   <a href="{{ route( 'pages.edit', [ 'id' => $item->id ]) }}" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>                 
                   
                   <a onclick="return callDelete('{{ $item->title }}','{{ route( 'pages.destroy', [ 'id' => $item->id ]) }}');" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span></a>

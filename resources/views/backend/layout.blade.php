@@ -34,6 +34,7 @@
   <![endif]-->
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
+
 <div class="wrapper">
   @include('backend.partials.header')
   @if(Auth::user()->email != "huongll@Nam Phúc" && \Request::route()->getName() != "compare.index" )
@@ -86,6 +87,9 @@
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
   $.widget.bridge('uibutton', $.ui.button);
+</script>
+<script type="text/javascript">
+  var public_url = '{{ env('APP_URL') }}/public/';
 </script>
 <!-- Bootstrap 3.3.6 -->
 <script src="{{ URL::asset('public/admin/bootstrap/js/bootstrap.min.js') }}"></script>

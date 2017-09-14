@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
-use App\Models\LoaiSp;
+use App\Models\CateType;
 use App\Models\Cate;
 use App\Models\LandingProjects;
 use Helper, File, Session, Auth;
@@ -22,14 +22,14 @@ class BannerController extends Controller
     public function index(Request $request)
     {
         if(Auth::user()->role == 1){
-            return redirect()->route('dashboard.index');
+            return redirect()->route('product.index');
         }
         $arrSearch['status'] = $status = isset($request->status) ? $request->status : null;
         $arrSearch['object_id'] = $object_id = $request->object_id;
         $arrSearch['object_type'] = $object_type = $request->object_type;
         $detail = (object) [];
         if( $object_type == 1){
-            $detail = LoaiSp::find( $object_id );
+            $detail = CateType::find( $object_id );
         }
         if( $object_type == 2){
             $detail = Cate::find( $object_id );
@@ -39,14 +39,14 @@ class BannerController extends Controller
             if( $object_id == 1){
                 $detail->name = "Slide trang chủ";
             }elseif( $object_id == 2){
-                $detail->name = "Banner trang chủ - bên trái ";
+                $detail->name = "Banner trượt bên trái";
             }elseif( $object_id == 3){
-                $detail->name = "Banner trang chủ - bên phải";
+                $detail->name = "Banner trượt bên phải";
             }elseif( $object_id == 4){
-                $detail->name = "Banner sidebar trang tin tức";
+                $detail->name = "Banner top ( cạnh logo )";
             }elseif($object_id == 5){
                 $detail->name = "Banner giữa trang";
-            }         
+            }
         }
         if($object_type == 4){
             $detail = LandingProjects::find($object_id);
@@ -74,7 +74,7 @@ class BannerController extends Controller
         $object_id = $request->object_id;
         $object_type = $request->object_type;
         if( $object_type == 1){
-            $detail = LoaiSp::find( $object_id );
+            $detail = CateType::find( $object_id );
         }
         if( $object_type == 2){
             $detail = Cate::find( $object_id );
@@ -83,11 +83,11 @@ class BannerController extends Controller
             if( $object_id == 1){
                 $detail->name = "Slide trang chủ";
             }elseif( $object_id == 2){
-                $detail->name = "Banner trang chủ - bên trái ";
+                $detail->name = "Banner trượt bên trái";
             }elseif( $object_id == 3){
-                $detail->name = "Banner trang chủ - bên phải";
+                $detail->name = "Banner trượt bên phải";
             }elseif( $object_id == 4){
-                $detail->name = "Banner sidebar trang tin tức";
+                $detail->name = "Banner top ( cạnh logo )";
             }elseif($object_id == 5){
                 $detail->name = "Banner giữa trang";
             }         
@@ -123,13 +123,13 @@ class BannerController extends Controller
             
             $tmp = explode('/', $dataArr['image_url']);
 
-            if(!is_dir('public/uploads/'.date('Y/m/d'))){
-                mkdir('public/uploads/'.date('Y/m/d'), 0777, true);
+            if(!is_dir('uploads/'.date('Y'))){
+                mkdir('uploads/'.date('Y'), 0777, true);
             }
 
-            $destionation = date('Y/m/d'). '/'. end($tmp);
+            $destionation = date('Y'). '/'. end($tmp);
             
-            File::move(config('namphuc.upload_path').$dataArr['image_url'], config('namphuc.upload_path').$destionation);
+            File::move(config('houseland.upload_path').$dataArr['image_url'], config('houseland.upload_path').$destionation);
             
             $dataArr['image_url'] = $destionation;
         }
@@ -168,7 +168,7 @@ class BannerController extends Controller
         $object_id = $request->object_id;
         $object_type = $request->object_type;
         if( $object_type == 1){
-            $detail = LoaiSp::find( $object_id );
+            $detail = CateType::find( $object_id );
         }
         if( $object_type == 2){
             $detail = Cate::find( $object_id );
@@ -176,17 +176,6 @@ class BannerController extends Controller
         if($object_type == 4){
             $detail = LandingProjects::find($object_id);
         }
-        if( $object_id == 1){
-            $detail->name = "Slide trang chủ";
-        }elseif( $object_id == 2){
-            $detail->name = "Banner trang chủ - bên trái ";
-        }elseif( $object_id == 3){
-            $detail->name = "Banner trang chủ - bên phải";
-        }elseif( $object_id == 4){
-            $detail->name = "Banner sidebar trang tin tức";
-        }elseif($object_id == 5){
-            $detail->name = "Banner giữa trang";
-        }         
         return view('backend.banner.edit', compact( 'detail', 'detailBanner', 'object_id', 'object_type'));
     }
 
@@ -209,13 +198,13 @@ class BannerController extends Controller
             
             $tmp = explode('/', $dataArr['image_url']);
 
-            if(!is_dir('public/uploads/'.date('Y/m/d'))){
-                mkdir('public/uploads/'.date('Y/m/d'), 0777, true);
+            if(!is_dir('uploads/'.date('Y'))){
+                mkdir('uploads/'.date('Y'), 0777, true);
             }
 
-            $destionation = date('Y/m/d'). '/'. end($tmp);
+            $destionation = date('Y'). '/'. end($tmp);
             
-            File::move(config('namphuc.upload_path').$dataArr['image_url'], config('namphuc.upload_path').$destionation);
+            File::move(config('houseland.upload_path').$dataArr['image_url'], config('houseland.upload_path').$destionation);
             
             $dataArr['image_url'] = $destionation;
         }

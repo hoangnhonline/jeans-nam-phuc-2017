@@ -47,7 +47,7 @@
                 <span class=""></span>
                 <div class="form-group">                  
                   <label>Slug <span class="red-star">*</span></label>                  
-                  <input type="text" class="form-control" name="slug" id="slug" value="{{ old('slug') }}">
+                  <input type="text" class="form-control" readonly="readonly" name="slug" id="slug" value="{{ old('slug') }}">
                 </div>
                 
                 <div class="form-group" style="margin-top:10px;margin-bottom:10px">  
@@ -82,8 +82,7 @@
                 </div>
                   
             </div>          
-            <input type="hidden" name="image_url" id="image_url" value="{{ old('image_url') }}"/>          
-            <input type="hidden" name="image_name" id="image_name" value="{{ old('image_name') }}"/>
+            <input type="hidden" name="image_url" id="image_url" value="{{ old('image_url') }}"/>                      
             <div class="box-footer">
               <button type="submit" class="btn btn-primary btn-sm">Lưu</button>
               <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="{{ route('pages.index')}}">Hủy</a>
@@ -137,19 +136,25 @@
 @stop
 @section('javascript_page')
 <script type="text/javascript">
+var h = screen.height;
+var w = screen.width;
+var left = (screen.width/2)-((w-300)/2);
+var top = (screen.height/2)-((h-100)/2);
+function openKCFinder_singleFile() {
+      window.KCFinder = {};
+      window.KCFinder.callBack = function(url) {
+         $('#image_url').val(url);
+         $('#thumbnail_image').attr('src', $('#app_url').val() + url);
+          window.KCFinder = null;
+      };
+      window.open('{{ URL::asset("public/admin/dist/js/kcfinder/browse.php?type=images") }}', 'kcfinder_single','scrollbars=1,menubar=no,width='+ (w-300) +',height=' + (h-300) +',top=' + top+',left=' + left);
+  }
     $(document).ready(function(){
       $(".select2").select2();
-      var editor = CKEDITOR.replace( 'content',{
-          language : 'vi',
-          filebrowserBrowseUrl: "{{ URL::asset('/admin/dist/js/kcfinder/browse.php?type=files') }}",
-          filebrowserImageBrowseUrl: "{{ URL::asset('/admin/dist/js/kcfinder/browse.php?type=images') }}",
-          filebrowserFlashBrowseUrl: "{{ URL::asset('/admin/dist/js/kcfinder/browse.php?type=flash') }}",
-          filebrowserUploadUrl: "{{ URL::asset('/admin/dist/js/kcfinder/upload.php?type=files') }}",
-          filebrowserImageUploadUrl: "{{ URL::asset('/admin/dist/js/kcfinder/upload.php?type=images') }}",
-          filebrowserFlashUploadUrl: "{{ URL::asset('/admin/dist/js/kcfinder/upload.php?type=flash') }}"
-      });
+      var editor = CKEDITOR.replace( 'content');
       $('#btnUploadImage').click(function(){        
-        $('#file-image').click();
+        //$('#file-image').click();
+        openKCFinder_singleFile();
       });      
       var files = "";
       $('#file-image').change(function(e){

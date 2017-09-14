@@ -42,9 +42,8 @@
                 <div class="form-group">
                   <label for="email">Loại </label>
                   <select class="form-control" name="type" id="type">                                
-                    <option value="1" {{ 1 ==  old('type', $type) ? "selected" : "" }}>BĐS</option>
-                    <option value="2" {{ 2 ==  old('type', $type) ? "selected" : "" }}>Bài viết</option>
-                    <option value="3" {{ 3 ==  old('type', $type) ? "selected" : "" }}>Tiện ích</option>
+                    <option value="1" {{ 1 ==  old('type', $type) ? "selected" : "" }}>Sản phẩm</option>
+                    <option value="2" {{ 2 ==  old('type', $type) ? "selected" : "" }}>Tin tức</option>                    
                   </select>
                 </div>              
                  <!-- text input -->

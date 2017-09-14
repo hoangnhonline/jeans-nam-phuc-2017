@@ -43,7 +43,17 @@
                       </ul>
                   </div>
               @endif                
-                 <input type="hidden" name="cate_id" value="1">                          
+                <div class="form-group">
+                  <label for="email">Danh mục <span class="red-star">*</span></label>
+                  <select class="form-control" name="cate_id" id="cate_id">
+                    <option value="">-- chọn --</option>
+                    @if( $cateArr->count() > 0)
+                      @foreach( $cateArr as $value )
+                      <option value="{{ $value->id }}" {{ $value->id == $detail->cate_id ? "selected" : "" }}>{{ $value->name }}</option>
+                      @endforeach
+                    @endif
+                  </select>
+                </div>                           
                 
                 <div class="form-group" >
                   
@@ -57,7 +67,7 @@
                 </div>
                 
                 <div class="form-group" style="margin-top:10px;margin-bottom:10px">  
-                  <label class="col-md-3 row">Thumbnail ( 600x336 px)</label>    
+                  <label class="col-md-3 row">Thumbnail ( 624x468 px)</label>    
                   <div class="col-md-9">
                     <img id="thumbnail_image" src="{{ $detail->image_url ? Helper::showImage($detail->image_url ) : URL::asset('public/admin/dist/img/img.png') }}" class="img-thumbnail" width="145" height="85">
                     
@@ -196,6 +206,19 @@
 @stop
 @section('javascript_page')
 <script type="text/javascript">
+var h = screen.height;
+var w = screen.width;
+var left = (screen.width/2)-((w-300)/2);
+var top = (screen.height/2)-((h-100)/2);
+function openKCFinder_singleFile() {
+      window.KCFinder = {};
+      window.KCFinder.callBack = function(url) {
+         $('#image_url').val(url);
+         $('#thumbnail_image').attr('src', $('#app_url').val() + url);
+          window.KCFinder = null;
+      };
+      window.open('{{ URL::asset("public/admin/dist/js/kcfinder/browse.php?type=images") }}', 'kcfinder_single','scrollbars=1,menubar=no,width='+ (w-300) +',height=' + (h-300) +',top=' + top+',left=' + left);
+  }
 $(document).on('click', '#btnSaveTagAjax', function(){
   $.ajax({
     url : $('#formAjaxTag').attr('action'),
@@ -222,18 +245,10 @@ $(document).on('click', '#btnSaveTagAjax', function(){
 });
   $(document).ready(function(){
       $(".select2").select2();
-      var editor = CKEDITOR.replace( 'content',{
-          language : 'vi',
-          filebrowserBrowseUrl: "{{ URL::asset('/admin/dist/js/kcfinder/browse.php?type=files') }}",
-          filebrowserImageBrowseUrl: "{{ URL::asset('/admin/dist/js/kcfinder/browse.php?type=images') }}",
-          filebrowserFlashBrowseUrl: "{{ URL::asset('/admin/dist/js/kcfinder/browse.php?type=flash') }}",
-          filebrowserUploadUrl: "{{ URL::asset('/admin/dist/js/kcfinder/upload.php?type=files') }}",
-          filebrowserImageUploadUrl: "{{ URL::asset('/admin/dist/js/kcfinder/upload.php?type=images') }}",
-          filebrowserFlashUploadUrl: "{{ URL::asset('/admin/dist/js/kcfinder/upload.php?type=flash') }}",
-          height : 500
-      });
+      var editor = CKEDITOR.replace( 'content');
       $('#btnUploadImage').click(function(){        
-        $('#file-image').click();
+        //$('#file-image').click();
+        openKCFinder_singleFile();
       });  
       $('#btnAddTag').click(function(){
           $('#tagModal').modal('show');
