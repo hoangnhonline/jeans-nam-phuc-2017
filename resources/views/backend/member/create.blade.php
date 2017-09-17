@@ -4,27 +4,27 @@
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
-      Banner của <span style="color:red">{{ $detail->name }}</span>
+      Ban lãnh đạo    
     </h1>
     <ol class="breadcrumb">
       <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-      <li><a href="{{ route('banner.index', ['object_id' => $object_id, 'object_type' => $object_type]) }}">banner</a></li>
-      <li class="active"><span class="glyphicon glyphicon-pencil"></span></li>
+      <li><a href="{{ route('member.index') }}">Ban lãnh đạo</a></li>
+      <li class="active">Tạo mới</li>
     </ol>
   </section>
 
   <!-- Main content -->
   <section class="content">
-    <a class="btn btn-default btn-sm " href="{{ route('banner.index', ['object_id' => $object_id, 'object_type' => $object_type]) }}" style="margin-bottom:5px">Quay lại</a>
-    <form role="form" method="POST" action="{{ route('banner.update') }}">
+    <a class="btn btn-default btn-sm" href="{{ route('member.index') }}" style="margin-bottom:5px">Quay lại</a>
+    <form role="form" method="POST" action="{{ route('member.store') }}">
     <div class="row">
       <!-- left column -->
 
-      <div class="col-md-12">
+      <div class="col-md-8">
         <!-- general form elements -->
         <div class="box box-primary">
           <div class="box-header with-border">
-            Chỉnh sửa
+            <h3 class="box-title">Tạo mới</h3>
           </div>
           <!-- /.box-header -->               
             {!! csrf_field() !!}
@@ -38,59 +38,43 @@
                           @endforeach
                       </ul>
                   </div>
-              @endif              
-                 <div class="form-group" style="margin-top:10px;margin-bottom:10px">  
-                  <label class="col-md-3 row">Banner <?php 
-                  if($object_id == 1){
-                    echo "( 1349 x 505 px)";
-                  }elseif($object_id == 5){
-                    echo "( 1349 x 200 px)";
-                  }
-                  ?></label>  
-                  <input type="hidden" name="id" value="{{ $detailBanner->id }}">  
+              @endif                
+               
+                <div class="form-group" >                  
+                  <label> Tên <span class="red-star">*</span></label>
+                  <input type="text" class="form-control" name="name" id="name" value="{{ old('name') }}">
+                </div>
+                <div class="form-group" >                  
+                  <label> Chức danh <span class="red-star">*</span></label>
+                  <input type="text" class="form-control" name="chuc_vu" id="chuc_vu" value="{{ old('chuc_vu') }}">
+                </div>             
+                
+                <div class="form-group" style="margin-top:10px;margin-bottom:10px">  
+                  <label class="col-md-3 row">Hình ảnh ( 164 x 164 px )</label>    
                   <div class="col-md-9">
-                    <img id="thumbnail_image" src="{{ $detailBanner->image_url ? Helper::showImage($detailBanner->image_url) : URL::asset('public/admin/dist/img/img.png') }}" class="img-thumbnail" width="145" height="85">
+                    <img id="thumbnail_image" src="{{ old('image_url') ? Helper::showImage(old('image_url')) : URL::asset('public/admin/dist/img/img.png') }}" class="img-thumbnail" width="164" height="164">
                     
                     <input type="file" id="file-image" style="display:none" />
                  
                     <button class="btn btn-default btn-sm" id="btnUploadImage" type="button"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload</button>
                   </div>
                   <div style="clear:both"></div>
-                </div>  
-                <div class="form-group">
-                  <label>Ẩn / Hiện</label>
-                  <select name="status" class="form-control" id="status">
-                  	<option value="1" {{ $detailBanner->status == 1  ? "selected" : "" }}>Hiện</option>
-                  	<option value="2" {{ $detailBanner->status == 2  ? "selected" : "" }}>Ẩn</option>
-                  </select>
-                </div>           
-                <!-- textarea -->
-                <div class="form-group">
-                  <label>Loại banner</label>
-                  <select name="type" class="form-control" id="type">
-                  	<option value="1" {{ $detailBanner->type == 1  ? "selected" : "" }}>Không liên kết</option>
-                  	<option value="2" {{ $detailBanner->type == 2 ? "selected" : "" }}>Có liên kết</option>
-                  </select>
-                </div>  
-                <div class="form-group" id="div_lk" style="display:none">
-                  <label>Liên kết</label>
-                  <input type="text" name="ads_url" id="ads_url" value="{{ $detailBanner->ads_url }}" class="form-control">
-                </div>  
-                <input type="hidden" name="image_url" id="image_url" value="{{ $detailBanner->image_url }}"/>          
-            	<input type="hidden" name="image_name" id="image_name" value="{{ old('image_name') }}"/>
-                <input type="hidden" name="object_id" value="{{ $object_id }}">
-                <input type="hidden" name="object_type" value="{{ $object_type }}">
-            </div>                        
+                </div>
+                <div style="clear:both"></div>                
+            </div>          
+            <input type="hidden" name="image_url" id="image_url" value="{{ old('image_url') }}"/>
             <div class="box-footer">
               <button type="submit" class="btn btn-primary btn-sm">Lưu</button>
-              <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="{{ route('banner.index', ['object_id' => $object_id, 'object_type' => $object_type])}}">Hủy</a>
+              <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="{{ route('member.index')}}">Hủy</a>
             </div>
             
         </div>
         <!-- /.box -->     
 
       </div>
-     
+      <div class="col-md-4">
+        <!-- general form elements -->
+       
       <!--/.col (left) -->      
     </div>
     </form>
@@ -99,6 +83,8 @@
   <!-- /.content -->
 </div>
 <input type="hidden" id="route_upload_tmp_image" value="{{ route('image.tmp-upload') }}">
+<!-- Modal -->
+
 @stop
 @section('javascript_page')
 <script type="text/javascript">
@@ -115,12 +101,13 @@ function openKCFinder_singleFile() {
       };
       window.open('{{ URL::asset("public/admin/dist/js/kcfinder/browse.php?type=images") }}', 'kcfinder_single','scrollbars=1,menubar=no,width='+ (w-300) +',height=' + (h-300) +',top=' + top+',left=' + left);
   }
-    $(document).ready(function(){
-      
+$(document).ready(function(){
+
       $('#btnUploadImage').click(function(){        
         //$('#file-image').click();
         openKCFinder_singleFile();
       });      
+     
       var files = "";
       $('#file-image').change(function(e){
          files = e.target.files;
@@ -162,21 +149,8 @@ function openKCFinder_singleFile() {
         }
       });
       
-      var type = $('#type').val();
-      checkType( type );
-
-      $('#type').change(function(){
-      	checkType( $(this).val() );
-      });
-      
-     
+    
     });
-    function checkType( type ){
-    	if( type == 1){
-    		$('#div_lk').hide();
-    	}else{
-    		$('#div_lk').show();
-    	}
-    }
+    
 </script>
 @stop

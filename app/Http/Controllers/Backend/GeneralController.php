@@ -7,8 +7,12 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Helpers\Helper;
-use App\Models\Product;
-use DB, Session, URL;
+use App\Models\LandingProjects;
+use App\Models\ArticlesCate;
+use App\Models\Pages;
+use App\Models\Menu;
+
+use DB, Session;
 class GeneralController extends Controller
 {
     public function updateOrder(Request $request){
@@ -31,47 +35,6 @@ class GeneralController extends Controller
             }
         }        
     }
-    public function changeValue(Request $request){
-        $value = $request->value;
-        $column = $request->column;
-        $table = $request->table;     
-        $id = $request->id;
-        if($table == 'product'){
-            $detail = Product::find($id);
-            if($value == 1){
-                $display_order = Helper::getNextOrder($table,
-                [
-                    'is_old' => $detail->is_old,
-                    'loai_id' =>  $detail->loai_id,
-                    'cate_id' => $detail->cate_id
-                ]
-            );    
-            }else{
-                $display_order = 0;
-            }
-            DB::table($table)->where('id', $id)->update([$column => $value, 'display_order' => $display_order]);
-        }else{
-            DB::table($table)->where('id', $id)->update([$column => $value]);       
-        }
-        
-        
-    }
-    public function updateOrderList(Request $request){
-    
-        $dataArr = $request->all();               
-        $table = $dataArr['table'];        
-        if( !empty($dataArr['display_order'] )){            
-            foreach ($dataArr['display_order'] as $key => $display_order) {
-                if( $display_order > 0 ){                    
-                    DB::table($table)
-                    ->where('id', $dataArr['id'][$key])                      
-                    ->update(array('display_order' => $display_order));         
-                }
-            }
-        }
-        Session::flash('message', 'Cập nhật thứ tự thành công');
-        return redirect(URL::previous());
-    }
     
     public function getSlug(Request $request){
     	$strReturn = '';
@@ -82,5 +45,38 @@ class GeneralController extends Controller
     		}
     	}
     	return response()->json( ['str' => $strReturn] );
+    }
+    public function setupMenu(Request $request){        
+        $articlesCateList = ArticlesCate::where('status', 1)->orderBy('display_order', 'asc')->get();
+        $pageList = Pages::where('status', 1)->get();
+        return view('backend.menu.index', compact( 'landingList', 'articlesCateList', 'pageList'));
+    }
+    public function renderMenu(Request $request){        
+        $dataArr = $request->all();       
+        return view('backend.menu.render-menu', compact( 'dataArr' ));   
+    }
+    public function storeMenu(Request $request){
+        $data = $request->all();
+        Menu::where('menu_id', 1)->delete();
+        if(!empty($data)){
+            $i = 0;
+            foreach($data['title'] as $k => $title){
+                $i++;
+                Menu::create([
+                    'menu_id' => 1,
+                    'title' => $title,
+                    'url' => $data['url'][$k],
+                    'slug' => $data['slug'][$k],
+                    'type' => $data['type'][$k],
+                    'object_id' => $data['object_id'][$k],
+                    'status' => 1,
+                    'title_attr' => $title,
+                    'display_order' => $i
+                ]);
+            }
+        }
+        Session::flash('message', 'Cập nhật menu thành công.');
+
+        return redirect()->route('menu.index');
     }
 }

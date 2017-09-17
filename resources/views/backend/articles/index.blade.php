@@ -75,7 +75,7 @@
                   <img class="img-thumbnail lazy" data-original="{{ Helper::showImage($item->image_url)}}" width="145">
                 </td>        
                 <td>                  
-                  <a style="font-size:18px;color:" href="{{ route( 'articles.edit', [ 'id' => $item->id ]) }}">{{ $item->title }}</a><br>
+                  <a href="{{ route( 'articles.edit', [ 'id' => $item->id ]) }}">{{ $item->title }}</a>
                   
                   @if( $item->is_hot == 1 )
                   <img class="img-thumbnail" src="{{ URL::asset('public/admin/dist/img/star.png')}}" alt="Nổi bật" title="Nổi bật" />
@@ -131,6 +131,9 @@ function callDelete(name, url){
   return flag;
 }
 $(document).ready(function(){
+    $('#cate_id').change(function(){
+      $(this).parents('form').submit();
+    });
   $('#parent_id').change(function(){
     $.ajax({
         url: $('#route_get_cate_by_parent').val(),

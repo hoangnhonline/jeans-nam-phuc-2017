@@ -237,86 +237,7 @@ class ProductController extends Controller
         }
     }
 
-    public function storeImage($id, $dataArr){        
-        //process old image
-        $imageIdArr = isset($dataArr['image_id']) ? $dataArr['image_id'] : [];
-        $hinhXoaArr = ProductImg::where('product_id', $id)->whereNotIn('id', $imageIdArr)->lists('id');
-        if( $hinhXoaArr )
-        {
-            foreach ($hinhXoaArr as $image_id_xoa) {
-                $model = ProductImg::find($image_id_xoa);
-                $urlXoa = config('namphuc.upload_path')."/".$model->image_url;
-                if(is_file($urlXoa)){
-                    unlink($urlXoa);
-                }
-                $model->delete();
-            }
-        }       
-
-        //process new image
-        if( isset( $dataArr['thumbnail_id'])){
-            $thumbnail_id = $dataArr['thumbnail_id'];
-
-            $imageArr = []; 
-
-            if( !empty( $dataArr['image_tmp_url'] )){
-
-                foreach ($dataArr['image_tmp_url'] as $k => $image_url) {
-
-                    if( $image_url && $dataArr['image_tmp_name'][$k] ){
-
-                        $tmp = explode('/', $image_url);
-
-                        if(!is_dir('public/uploads/'.date('Y/m/d'))){
-                            mkdir('public/uploads/'.date('Y/m/d'), 0777, true);
-                        }
-                        if(!is_dir('uploads/thumbs/'.date('Y/m/d'))){
-                            mkdir('uploads/thumbs/'.date('Y/m/d'), 0777, true);
-                        }
-
-                        $destionation = date('Y/m/d'). '/'. end($tmp);
-                        
-                        File::move(config('namphuc.upload_path').$image_url, config('namphuc.upload_path').$destionation);
-
-                        $imageArr['is_thumbnail'][] = $is_thumbnail = $dataArr['thumbnail_id'] == $image_url  ? 1 : 0;
-
-                        //if($is_thumbnail == 1){
-                            $img = Image::make(config('namphuc.upload_path').$destionation);
-                            $w_img = $img->width();
-                            $h_img = $img->height();                            
-                           // var_dump($w_img, $h_img);
-                            if($h_img >= $w_img){
-                                //die('height > hon');
-                                Image::make(config('namphuc.upload_path').$destionation)->resize(210, null, function ($constraint) {
-                                        $constraint->aspectRatio();
-                                })->crop(210, 210)->save(config('namphuc.upload_thumbs_path').$destionation);
-                            }else{                             
-                                Image::make(config('namphuc.upload_path').$destionation)->resize(null, 210, function ($constraint) {
-                                        $constraint->aspectRatio();
-                                })->crop(210, 210)->save(config('namphuc.upload_thumbs_path').$destionation);
-                            }
-
-                        //}
-
-                        $imageArr['name'][] = $destionation;
-                        
-                    }
-                }
-            }
-            if( !empty($imageArr['name']) ){
-                foreach ($imageArr['name'] as $key => $name) {
-                    $rs = ProductImg::create(['product_id' => $id, 'image_url' => $name, 'display_order' => 1]);                
-                    $image_id = $rs->id;
-                    if( $imageArr['is_thumbnail'][$key] == 1){
-                        $thumbnail_id = $image_id;
-                    }
-                }
-            }
-            $model = Product::find( $id );
-            $model->thumbnail_id = $thumbnail_id;
-            $model->save();
-        }
-    }
+    
 
     /**
     * Display the specified resource.
@@ -520,6 +441,86 @@ class ProductController extends Controller
 
         return redirect()->route('product.edit', $product_id);
         
+    }
+    public function storeImage($id, $dataArr){        
+        //process old image
+        $imageIdArr = isset($dataArr['image_id']) ? $dataArr['image_id'] : [];
+        $hinhXoaArr = ProductImg::where('product_id', $id)->whereNotIn('id', $imageIdArr)->lists('id');
+        if( $hinhXoaArr )
+        {
+            foreach ($hinhXoaArr as $image_id_xoa) {
+                $model = ProductImg::find($image_id_xoa);
+                $urlXoa = config('namphuc.upload_path')."/".$model->image_url;
+                if(is_file($urlXoa)){
+                    unlink($urlXoa);
+                }
+                $model->delete();
+            }
+        }       
+
+        //process new image
+        if( isset( $dataArr['thumbnail_id'])){
+            $thumbnail_id = $dataArr['thumbnail_id'];
+
+            $imageArr = []; 
+
+            if( !empty( $dataArr['image_tmp_url'] )){
+
+                foreach ($dataArr['image_tmp_url'] as $k => $image_url) {
+
+                    if( $image_url && $dataArr['image_tmp_name'][$k] ){
+
+                        $tmp = explode('/', $image_url);
+
+                        if(!is_dir('public/uploads/'.date('Y/m/d'))){
+                            mkdir('public/uploads/'.date('Y/m/d'), 0777, true);
+                        }
+                        if(!is_dir('uploads/thumbs/'.date('Y/m/d'))){
+                            mkdir('uploads/thumbs/'.date('Y/m/d'), 0777, true);
+                        }
+
+                        $destionation = date('Y/m/d'). '/'. end($tmp);
+                        
+                        File::move(config('namphuc.upload_path').$image_url, config('namphuc.upload_path').$destionation);
+
+                        $imageArr['is_thumbnail'][] = $is_thumbnail = $dataArr['thumbnail_id'] == $image_url  ? 1 : 0;
+
+                        //if($is_thumbnail == 1){
+                            $img = Image::make(config('namphuc.upload_path').$destionation);
+                            $w_img = $img->width();
+                            $h_img = $img->height();                            
+                           // var_dump($w_img, $h_img);
+                            if($h_img >= $w_img){
+                                //die('height > hon');
+                                Image::make(config('namphuc.upload_path').$destionation)->resize(210, null, function ($constraint) {
+                                        $constraint->aspectRatio();
+                                })->crop(210, 210)->save(config('namphuc.upload_thumbs_path').$destionation);
+                            }else{                             
+                                Image::make(config('namphuc.upload_path').$destionation)->resize(null, 210, function ($constraint) {
+                                        $constraint->aspectRatio();
+                                })->crop(210, 210)->save(config('namphuc.upload_thumbs_path').$destionation);
+                            }
+
+                        //}
+
+                        $imageArr['name'][] = $destionation;
+                        
+                    }
+                }
+            }
+            if( !empty($imageArr['name']) ){
+                foreach ($imageArr['name'] as $key => $name) {
+                    $rs = ProductImg::create(['product_id' => $id, 'image_url' => $name, 'display_order' => 1]);                
+                    $image_id = $rs->id;
+                    if( $imageArr['is_thumbnail'][$key] == 1){
+                        $thumbnail_id = $image_id;
+                    }
+                }
+            }
+            $model = Product::find( $id );
+            $model->thumbnail_id = $thumbnail_id;
+            $model->save();
+        }
     }
     public function ajaxSaveInfo(Request $request){
         

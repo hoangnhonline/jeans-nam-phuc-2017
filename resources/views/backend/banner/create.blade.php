@@ -40,19 +40,13 @@
                   </div>
               @endif              
                  <div class="form-group" style="margin-top:10px;margin-bottom:10px">  
-                  <label class="col-md-3 row">Banner 
-                  <?php 
+                  <label class="col-md-3 row">Banner <?php 
                   if($object_id == 1){
-                    echo "( 870 x 448 px)";
-                  }elseif($object_id == 2){
-                    echo "( 570 x 102 px)";
-                  }elseif($object_id == 3){
-                    echo "( 570 x 102 px)";
-                  }elseif($object_id == 4){
-                    echo "( 270 x 0 px)";
+                    echo "( 1349 x 505 px)";
+                  }elseif($object_id == 5){
+                    echo "( 1349 x 200 px)";
                   }
-                  ?>
-                  </label>    
+                  ?></label>    
                   <div class="col-md-9">
                     <img id="thumbnail_image" src="{{ old('image_url') ? Helper::showImage(old('image_url')) : URL::asset('public/admin/dist/img/img.png') }}" class="img-thumbnail" width="145" height="85">
                     
@@ -81,14 +75,14 @@
                   <label>Liên kết</label>
                   <input type="text" name="ads_url" id="ads_url" value="{{ old('ads_url') }}" class="form-control">
                 </div>  
-                <input type="hidden" name="image_url" id="image_url" value="{{ old('image_url') }}"/>          
-            	<input type="hidden" name="image_name" id="image_name" value="{{ old('image_name') }}"/>
+                <input type="hidden" name="image_url" id="image_url" value="{{ old('image_url') }}"/>         
+            	
                 <input type="hidden" name="object_id" value="{{ $object_id }}">
                 <input type="hidden" name="object_type" value="{{ $object_type }}">
             </div>                        
             <div class="box-footer">
               <button type="submit" class="btn btn-primary btn-sm">Lưu</button>
-              <a class="btn btn-default btn-sm" href="{{ route('banner.index', ['object_id' => $object_id, 'object_type' => $object_type])}}">Hủy</a>
+              <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="{{ route('banner.index', ['object_id' => $object_id, 'object_type' => $object_type])}}">Hủy</a>
             </div>
             
         </div>
@@ -107,10 +101,24 @@
 @stop
 @section('javascript_page')
 <script type="text/javascript">
+var h = screen.height;
+var w = screen.width;
+var left = (screen.width/2)-((w-300)/2);
+var top = (screen.height/2)-((h-100)/2);
+function openKCFinder_singleFile() {
+      window.KCFinder = {};
+      window.KCFinder.callBack = function(url) {
+         $('#image_url').val(url);
+         $('#thumbnail_image').attr('src', $('#app_url').val() + url);
+          window.KCFinder = null;
+      };
+      window.open('{{ URL::asset("public/admin/dist/js/kcfinder/browse.php?type=images") }}', 'kcfinder_single','scrollbars=1,menubar=no,width='+ (w-300) +',height=' + (h-300) +',top=' + top+',left=' + left);
+  }
     $(document).ready(function(){
       
       $('#btnUploadImage').click(function(){        
-        $('#file-image').click();
+        //$('#file-image').click();
+        openKCFinder_singleFile();
       });      
       var files = "";
       $('#file-image').change(function(e){

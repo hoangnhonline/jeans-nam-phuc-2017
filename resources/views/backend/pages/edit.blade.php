@@ -4,19 +4,19 @@
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
-      Cập nhật trang    
+      Chỉnh sửa trang    
     </h1>
     <ol class="breadcrumb">
       <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
       <li><a href="{{ route('pages.index') }}">Thông tin trang</a></li>
-      <li class="active">Cập nhật</li>
+      <li class="active">Chỉnh sửa</li>
     </ol>
   </section>
 
   <!-- Main content -->
   <section class="content">
     <a class="btn btn-default btn-sm" href="{{ route('pages.index') }}" style="margin-bottom:5px">Quay lại</a>
-    <a class="btn btn-primary btn-sm" href="{{ route('parent-cate', $detail->slug ) }}" target="_blank" style="margin-top:-6px"><i class="fa fa-eye" aria-hidden="true"></i> Xem</a>
+    <a class="btn btn-primary btn-sm" href="{{ route('pages', $detail->slug ) }}" target="_blank" style="margin-top:-6px"><i class="fa fa-eye" aria-hidden="true"></i> Xem</a>
     <form role="form" method="POST" action="{{ route('pages.update') }}">
     <div class="row">
       <!-- left column -->
@@ -53,7 +53,7 @@
                 <span class=""></span>
                 <div class="form-group">                  
                   <label>Slug <span class="red-star">*</span></label>                  
-                  <input type="text" class="form-control" name="slug" id="slug" value="{{ $detail->slug }}">
+                  <input type="text" class="form-control" name="slug" readonly="readonly"  id="slug" value="{{ $detail->slug }}">
                 </div>
                 
                 <div class="form-group" style="margin-top:10px;margin-bottom:10px">  
@@ -71,7 +71,7 @@
                 <!-- textarea -->
                 <div class="form-group">
                   <label>Mô tả</label>
-                  <textarea class="form-control" rows="3" name="description" id="description">{{ $detail->description }}</textarea>
+                  <textarea class="form-control" rows="6" name="description" id="description">{{ $detail->description }}</textarea>
                 </div> 
                 
                 <div class="form-group">
@@ -88,8 +88,7 @@
                 </div>
                   
             </div>          
-            <input type="hidden" name="image_url" id="image_url" value="{{ $detail->image_url }}"/>          
-            <input type="hidden" name="image_name" id="image_name" value="{{ $detail->image_name }}"/>
+            <input type="hidden" name="image_url" id="image_url" value="{{ $detail->image_url }}"/>                      
             <div class="box-footer">
               <button type="submit" class="btn btn-primary btn-sm">Lưu</button>
               <a class="btn btn-default btn-sm" href="{{ route('pages.index')}}">Hủy</a>
@@ -142,20 +141,25 @@
 @stop
 @section('javascript_page')
 <script type="text/javascript">
+var h = screen.height;
+var w = screen.width;
+var left = (screen.width/2)-((w-300)/2);
+var top = (screen.height/2)-((h-100)/2);
+function openKCFinder_singleFile() {
+      window.KCFinder = {};
+      window.KCFinder.callBack = function(url) {
+         $('#image_url').val(url);
+         $('#thumbnail_image').attr('src', $('#app_url').val() + url);
+          window.KCFinder = null;
+      };
+      window.open('{{ URL::asset("public/admin/dist/js/kcfinder/browse.php?type=images") }}', 'kcfinder_single','scrollbars=1,menubar=no,width='+ (w-300) +',height=' + (h-300) +',top=' + top+',left=' + left);
+  }
     $(document).ready(function(){
       $(".select2").select2();
-      var editor = CKEDITOR.replace( 'content',{
-          language : 'vi',
-          filebrowserBrowseUrl: "{{ URL::asset('/admin/dist/js/kcfinder/browse.php?type=files') }}",
-          filebrowserImageBrowseUrl: "{{ URL::asset('/admin/dist/js/kcfinder/browse.php?type=images') }}",
-          filebrowserFlashBrowseUrl: "{{ URL::asset('/admin/dist/js/kcfinder/browse.php?type=flash') }}",
-          filebrowserUploadUrl: "{{ URL::asset('/admin/dist/js/kcfinder/upload.php?type=files') }}",
-          filebrowserImageUploadUrl: "{{ URL::asset('/admin/dist/js/kcfinder/upload.php?type=images') }}",
-          filebrowserFlashUploadUrl: "{{ URL::asset('/admin/dist/js/kcfinder/upload.php?type=flash') }}",
-          height: 500
-      });
+      var editor = CKEDITOR.replace( 'content');
       $('#btnUploadImage').click(function(){        
-        $('#file-image').click();
+        //$('#file-image').click();
+        openKCFinder_singleFile();
       });      
       var files = "";
       $('#file-image').change(function(e){

@@ -369,27 +369,11 @@ $(document).on('keypress', '#name_search', function(e){
       })
       $(".select2").select2();
      
-      var editor = CKEDITOR.replace( 'chi_tiet',{
-          language : 'vi',
-          height: 300,
-          filebrowserBrowseUrl: "{{ URL::asset('/admin/dist/js/kcfinder/browse.php?type=files') }}",
-          filebrowserImageBrowseUrl: "{{ URL::asset('/admin/dist/js/kcfinder/browse.php?type=images') }}",
-          filebrowserFlashBrowseUrl: "{{ URL::asset('/admin/dist/js/kcfinder/browse.php?type=flash') }}",
-          filebrowserUploadUrl: "{{ URL::asset('/admin/dist/js/kcfinder/upload.php?type=files') }}",
-          filebrowserImageUploadUrl: "{{ URL::asset('/admin/dist/js/kcfinder/upload.php?type=images') }}",
-          filebrowserFlashUploadUrl: "{{ URL::asset('/admin/dist/js/kcfinder/upload.php?type=flash') }}"
+      var editor = CKEDITOR.replace( 'chi_tiet',{     
+          height: 300
       });     
-      var editor3 = CKEDITOR.replace( 'mo_ta',{
-          language : 'vi',
+      var editor3 = CKEDITOR.replace( 'mo_ta',{  
           height : 100,
-          toolbarGroups : [
-            
-            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-            { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
-            { name: 'links', groups: [ 'links' ] },           
-            '/',
-            
-          ]
       });
       $('#btnUploadImage').click(function(){        
         $('#file-image').click();

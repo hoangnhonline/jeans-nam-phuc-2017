@@ -22,6 +22,7 @@ class ContactController extends Controller
         $type = isset($request->type) ? $request->type : 0;
         $email = isset($request->email) && $request->email != '' ? $request->email : '';
         $phone = isset($request->phone) && $request->phone != '' ? $request->phone : '';
+        $project_id = isset($request->project_id) && $request->project_id != '' ? $request->project_id : null;
         
         $query = Contact::whereRaw('1')->orderBy('id', 'DESC');
 
@@ -39,9 +40,12 @@ class ContactController extends Controller
         if( $phone != ''){
             $query->where('phone', 'LIKE', '%'.$phone.'%');
         }
+        if( $project_id != ''){
+            $query->where('project_id', $project_id);
+        }
         $items = $query->orderBy('id', 'desc')->paginate(20);
         
-        return view('backend.contact.index', compact( 'items', 'email', 'status', 'phone', 'type'));
+        return view('backend.contact.index', compact( 'items', 'email', 'status', 'phone', 'type', 'project_id', 'proList'));
     }    
     public function download()
     {
@@ -53,6 +57,7 @@ class ContactController extends Controller
             $contents[] = [
                 'STT' => $i,
                 'Email' => $data->email,
+                'Nội dung' => $data->content,
                 'Ngày ĐK' => date('d-m-Y H:i', strtotime($data->created_at))
             ];
         }        
