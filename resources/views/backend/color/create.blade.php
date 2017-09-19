@@ -47,15 +47,14 @@
                 <div class="form-group" style="margin-top:10px;margin-bottom:10px">  
                   <label class="col-md-3 row ">Hình ảnh ( 26x26 px)</label>    
                   <div class="col-md-9 div-upload">
-                    <img src="{{ old('image_url') ? Helper::showImage(old('image_url')) : URL::asset('public/admin/dist/img/img.png') }}" class="img-thumbnail show_thumbnail" width="40" height="40">
+                    <img src="{{ old('image_url') ? Helper::showImage(old('image_url')) : URL::asset('public/admin/dist/img/img.png') }}" id="thumbnail_image" class="img-thumbnail show_thumbnail" width="40" height="40">
                     
                     <input type="file" data-value="image_url" class="click-choose-file" style="display:none" />
                  
-                    <button class="btn btn-default btn-sm btnUpload" type="button"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload</button>
+                    <button class="btn btn-default btn-sm " id="btnUploadImage" type="button"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload</button>
                   </div>
                   <div style="clear:both"></div>
-                  <input type="hidden" name="image_url" id="image_url" value="{{ old('image_url') }}"/>
-                  <input type="hidden" name="image_url_name" id="image_url_name" value="{{ old('image_url_name') }}"/>
+                  <input type="hidden" name="image_url" id="image_url" value="{{ old('image_url') }}"/>                 
                 </div>  
             </div>              
             <div class="box-footer">
@@ -75,4 +74,26 @@
   </section>
   <!-- /.content -->
 </div>
+@stop
+@section('javascript_page')
+<script type="text/javascript">
+var h = screen.height;
+var w = screen.width;
+var left = (screen.width/2)-((w-300)/2);
+var top = (screen.height/2)-((h-100)/2);
+function openKCFinder_singleFile() {
+      window.KCFinder = {};
+      window.KCFinder.callBack = function(url) {
+         $('#image_url').val(url);
+         $('#thumbnail_image').attr('src', $('#app_url').val() + url);
+          window.KCFinder = null;
+      };
+      window.open('{{ URL::asset("public/admin/dist/js/kcfinder/browse.php?type=images") }}', 'kcfinder_single','scrollbars=1,menubar=no,width='+ (w-300) +',height=' + (h-300) +',top=' + top+',left=' + left);
+  }
+  $(document).ready(function(){
+    $('#btnUploadImage').click(function(){
+      openKCFinder_singleFile();
+    });
+  });
+</script>
 @stop

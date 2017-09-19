@@ -81,6 +81,7 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
         Route::get('/create', ['as' => 'cart-product.create', 'uses' => 'CartProductController@create']);
         Route::post('/store', ['as' => 'cart-product.store', 'uses' => 'CartProductController@store']);
         Route::get('{id}/edit',   ['as' => 'cart-product.edit', 'uses' => 'CartProductController@edit']);
+
         Route::post('/update', ['as' => 'cart-product.update', 'uses' => 'CartProductController@update']);
         Route::get('{id}/destroy', ['as' => 'cart-product.destroy', 'uses' => 'CartProductController@destroy']);
     });
@@ -206,12 +207,15 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
         Route::get('/ajax-get-detail-product', ['as' => 'ajax-get-detail-product', 'uses' => 'ProductController@ajaxDetail']);        
         Route::get('/create/', ['as' => 'product.create', 'uses' => 'ProductController@create']);        
         Route::post('/store', ['as' => 'product.store', 'uses' => 'ProductController@store']);        
+        Route::post('/store-image', ['as' => 'product.store-image', 'uses' => 'ProductController@storeImage']);        
         Route::get('{id}/edit',   ['as' => 'product.edit', 'uses' => 'ProductController@edit']);
         Route::post('/update', ['as' => 'product.update', 'uses' => 'ProductController@update']);       
         Route::post('/save-order-hot', ['as' => 'product.save-order-hot', 'uses' => 'ProductController@saveOrderHot']);       
         Route::get('{id}/destroy', ['as' => 'product.destroy', 'uses' => 'ProductController@destroy']);
         Route::get('/ajax-get-tien-ich', ['as' => 'product.ajax-get-tien-ich', 'uses' => 'ProductController@ajaxGetTienIch']);
-
+        Route::get('image/{product_id}/{color_id}',   ['as' => 'product.image', 'uses' => 'ProductController@imageOfColor']);
+        Route::get('/remove-img', ['as' => 'product.remove-img', 'uses' => 'ProductController@deleteImg']);  
+        
     });
      Route::group(['prefix' => 'loai-sp'], function () {
         Route::get('/', ['as' => 'loai-sp.index', 'uses' => 'LoaiSpController@index']);

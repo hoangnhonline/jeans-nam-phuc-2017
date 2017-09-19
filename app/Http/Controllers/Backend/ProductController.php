@@ -80,9 +80,22 @@ class ProductController extends Controller
         }else{
             $cateArr = (object) [];
         }
+        $colorList = Color::orderBy('display_order')->get();              
+        foreach($colorList as $color){
+            $colorArr[$color->id] = $color;
+        }
+        return view('backend.product.index', compact( 'items', 'arrSearch', 'loaiSpArr', 'cateArr', 'colorArr'));
+    }   
+    public function imageOfColor(Request $request){
+        $color_id = $request->color_id;
+        $product_id = $request->product_id;
+        $detail = Product::find($product_id);
+        $detailColor = Color::find($color_id);
 
-        return view('backend.product.index', compact( 'items', 'arrSearch', 'loaiSpArr', 'cateArr'));
-    }     
+        $hinhArr = ProductImg::where('product_id', $product_id)->where('color_id', $color_id)->get(); 
+
+         return view('backend.product.image', compact( 'detail', 'detailColor', 'hinhArr'));
+    }  
     public function ajaxSearch(Request $request){    
         $search_type = $request->search_type;
         $arrSearch['loai_id'] = $loai_id = isset($request->loai_id) ? $request->loai_id : -1;
@@ -237,8 +250,74 @@ class ProductController extends Controller
         }
     }
 
-    
+    public function storeImage(Request $request){
+        $dataArr = $request->all();
+       
+        //process new image
+        if( isset( $dataArr['thumbnail_id'])){
+            if( (int) $dataArr['thumbnail_id'] > 0){
+                ProductImg::where(['color_id' => $dataArr['color_id'], 'product_id' => $dataArr['product_id']])->update(['is_thumbnail' => 0]);
+                ProductImg::find($dataArr['thumbnail_id'])->update(['is_thumbnail' => 1]);                
+            }
+            $thumbnail_id = $dataArr['thumbnail_id'];
 
+            $imageArr = []; 
+            $dataInsert['product_id'] = $dataArr['product_id'];
+            $dataInsert['color_id'] = $dataArr['color_id']; 
+           // ProductImg::where('product_id', $dataArr['product_id'])->where('color_id', $dataArr['color_id'])->delete();
+            
+            if( !empty( $dataArr['image_tmp_url'] )){
+                $countImg = 0;
+                foreach ($dataArr['image_tmp_url'] as $k => $image_url) {
+                    $countImg++;
+                    $origin_img = base_path().$image_url;
+                    
+                    if( $image_url ){
+
+                        $is_thumbnail = $dataArr['thumbnail_id'] == $image_url  ? 1 : 0;
+
+                        $img = Image::make($origin_img);
+                        $w_img = $img->width();
+                        $h_img = $img->height();
+                        $tile1 = 1;        
+                                         
+                        $new_img = str_replace('/uploads/images/', '/uploads/images/thumbs/', $origin_img);
+                       
+                        if($w_img/$h_img <= $tile1){
+
+                            Image::make($origin_img)->resize(210, null, function ($constraint) {
+                                    $constraint->aspectRatio();
+                            })->crop(210, 210)->save($new_img, 100);
+                        }else{
+                            Image::make($origin_img)->resize(null, 210, function ($constraint) {
+                                    $constraint->aspectRatio();
+                            })->crop(210, 210)->save($new_img, 100);
+                        }                                        
+
+                     
+                        $dataInsert['display_order'] = $countImg;
+                        $dataInsert['is_thumbnail'] = $is_thumbnail;
+                        $dataInsert['image_url'] = $image_url;
+                        ProductImg::create($dataInsert);
+                    }
+
+                }
+            }
+            
+            $detailProduct = Product::find($dataArr['product_id']);
+            if($detailProduct->color_id_main == $dataArr['color_id']){
+                $model = Product::find( $dataArr['product_id'] );
+                $model->thumbnail_id = $thumbnail_id;
+                $model->save();
+            }
+        }
+        Session::flash('message', 'Cập nhật thành công');
+        return redirect()->route('product.image', [$dataArr['product_id'], $dataArr['color_id']]);
+    }
+    public function deleteImg(Request $request){
+        $id = $request->id;
+        ProductImg::find($id)->delete();
+    }
     /**
     * Display the specified resource.
     *
@@ -291,8 +370,13 @@ class ProductController extends Controller
         foreach($detail->sizes as $size){
             $sizeSelected[] = $size->size_id;
         } 
-            
-        return view('backend.product.edit', compact( 'detail', 'hinhArr', 'colorList', 'sizeList' , 'loaiSpArr', 'cateArr', 'meta', 'colorSelected', 'sizeSelected', 'colorArr', 'sizeArr'));
+        $arrInv = [];
+        //get inventory
+        $rsInv = ProductInventory::where('product_id', $id)->orderBy('color_id')->orderBy('size_id')->get();
+        foreach($rsInv as $inv){
+            $arrInv[$inv->color_id][$inv->size_id] = $inv->amount;
+        }      
+        return view('backend.product.edit', compact( 'detail', 'hinhArr', 'colorList', 'sizeList' , 'loaiSpArr', 'cateArr', 'meta', 'colorSelected', 'sizeSelected', 'colorArr', 'sizeArr', 'arrInv'));
     }
     public function copy($id)
     {
@@ -349,7 +433,7 @@ class ProductController extends Controller
     public function update(Request $request)
     {
         $dataArr = $request->all();
-        dd($dataArr);
+        
         $this->validate($request,[
             'name' => 'required',
             'slug' => 'required',
@@ -372,9 +456,7 @@ class ProductController extends Controller
         $dataArr['alias'] = Helper::stripUnicode($dataArr['name']);
 
         $dataArr['price'] = str_replace(',', '', $request->price);
-        $dataArr['price_sale'] = str_replace(',', '', $request->price_sale);        
-        $dataArr['so_luong_ton'] = str_replace(',', '', $request->so_luong_ton);
-
+        $dataArr['price_sale'] = str_replace(',', '', $request->price_sale);             
         $dataArr['updated_user'] = Auth::user()->id;    
 
         $dataArr['price_sell'] = $dataArr['is_sale'] == 1 ? $dataArr['price_sale'] : $dataArr['price'];
@@ -385,143 +467,23 @@ class ProductController extends Controller
         
         $product_id = $dataArr['id'];
        
-        $this->storeThuocTinh( $product_id, $dataArr);
+        $this->storeInventory( $product_id, $dataArr);
 
-        $this->storeMeta( $product_id, $dataArr['meta_id'], $dataArr);
-        $this->storeImage( $product_id, $dataArr);
-
-        /*
-          "color_id_url" => array:4 [▼
-            0 => "tmp/1339337386492583760-574-574-1504688912.jpg"
-            1 => "tmp/girl-xinh-facebook-tu-suong-1504688915.jpg"
-            2 => "tmp/anh-teen-girl-9x-nung-niu-ben-chiec-dien-thoai-iphone-c77694-1504688918.jpg"
-            3 => "tmp/bi-quyet-lam-dep-da-cua-co-nang-teen-d80a9f-1504688920.jpg"
-          ]
-          "color_id_name" => array:4 [▼
-            0 => "1339337386492583760-574-574-1504688912.jpg"
-            1 => "girl-xinh-facebook-tu-suong-1504688915.jpg"
-            2 => "anh-teen-girl-9x-nung-niu-ben-chiec-dien-thoai-iphone-c77694-1504688918.jpg"
-            3 => "bi-quyet-lam-dep-da-cua-co-nang-teen-d80a9f-1504688920.jpg"
-          ]
-          "color_id_ivt" => array:4 [▼
-            0 => "1"
-            1 => "2"
-            2 => "3"
-            3 => "4"
-          ]
-          "amount" => array:4 [▼
-            1 => array:4 [▼
-              1 => ""
-              2 => ""
-              7 => ""
-              8 => ""
-            ]
-            2 => array:4 [▼
-              1 => ""
-              2 => ""
-              7 => ""
-              8 => ""
-            ]
-            3 => array:4 [▼
-              1 => ""
-              2 => ""
-              7 => ""
-              8 => ""
-            ]
-            4 => array:4 [▼
-              1 => ""
-              2 => ""
-              7 => ""
-              8 => ""
-            ]
-          ]
-          "thumbnail_id" => "2"
-        */
+      
         Session::flash('message', 'Chỉnh sửa thành công');
 
         return redirect()->route('product.edit', $product_id);
         
     }
-    public function storeImage($id, $dataArr){        
-        //process old image
-        $imageIdArr = isset($dataArr['image_id']) ? $dataArr['image_id'] : [];
-        $hinhXoaArr = ProductImg::where('product_id', $id)->whereNotIn('id', $imageIdArr)->lists('id');
-        if( $hinhXoaArr )
-        {
-            foreach ($hinhXoaArr as $image_id_xoa) {
-                $model = ProductImg::find($image_id_xoa);
-                $urlXoa = config('namphuc.upload_path')."/".$model->image_url;
-                if(is_file($urlXoa)){
-                    unlink($urlXoa);
-                }
-                $model->delete();
+    public function storeInventory($product_id, $dataArr){
+        ProductInventory::where('product_id', $product_id)->delete();
+        foreach($dataArr['amount'] as $color_id => $arrSizeInventory){
+            foreach($arrSizeInventory as $size_id => $amount){
+                $amount = (int) str_replace(",", "", $amount);
+                ProductInventory::create(['product_id' => $product_id, 'size_id' => $size_id, 'color_id' => $color_id, 'amount' => $amount]);
             }
-        }       
-
-        //process new image
-        if( isset( $dataArr['thumbnail_id'])){
-            $thumbnail_id = $dataArr['thumbnail_id'];
-
-            $imageArr = []; 
-
-            if( !empty( $dataArr['image_tmp_url'] )){
-
-                foreach ($dataArr['image_tmp_url'] as $k => $image_url) {
-
-                    if( $image_url && $dataArr['image_tmp_name'][$k] ){
-
-                        $tmp = explode('/', $image_url);
-
-                        if(!is_dir('public/uploads/'.date('Y/m/d'))){
-                            mkdir('public/uploads/'.date('Y/m/d'), 0777, true);
-                        }
-                        if(!is_dir('uploads/thumbs/'.date('Y/m/d'))){
-                            mkdir('uploads/thumbs/'.date('Y/m/d'), 0777, true);
-                        }
-
-                        $destionation = date('Y/m/d'). '/'. end($tmp);
-                        
-                        File::move(config('namphuc.upload_path').$image_url, config('namphuc.upload_path').$destionation);
-
-                        $imageArr['is_thumbnail'][] = $is_thumbnail = $dataArr['thumbnail_id'] == $image_url  ? 1 : 0;
-
-                        //if($is_thumbnail == 1){
-                            $img = Image::make(config('namphuc.upload_path').$destionation);
-                            $w_img = $img->width();
-                            $h_img = $img->height();                            
-                           // var_dump($w_img, $h_img);
-                            if($h_img >= $w_img){
-                                //die('height > hon');
-                                Image::make(config('namphuc.upload_path').$destionation)->resize(210, null, function ($constraint) {
-                                        $constraint->aspectRatio();
-                                })->crop(210, 210)->save(config('namphuc.upload_thumbs_path').$destionation);
-                            }else{                             
-                                Image::make(config('namphuc.upload_path').$destionation)->resize(null, 210, function ($constraint) {
-                                        $constraint->aspectRatio();
-                                })->crop(210, 210)->save(config('namphuc.upload_thumbs_path').$destionation);
-                            }
-
-                        //}
-
-                        $imageArr['name'][] = $destionation;
-                        
-                    }
-                }
-            }
-            if( !empty($imageArr['name']) ){
-                foreach ($imageArr['name'] as $key => $name) {
-                    $rs = ProductImg::create(['product_id' => $id, 'image_url' => $name, 'display_order' => 1]);                
-                    $image_id = $rs->id;
-                    if( $imageArr['is_thumbnail'][$key] == 1){
-                        $thumbnail_id = $image_id;
-                    }
-                }
-            }
-            $model = Product::find( $id );
-            $model->thumbnail_id = $thumbnail_id;
-            $model->save();
         }
-    }
+    }    
     public function ajaxSaveInfo(Request $request){
         
         $dataArr = $request->all();

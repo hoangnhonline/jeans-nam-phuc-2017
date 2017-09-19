@@ -277,6 +277,7 @@ $(document).on('click', '.remove-image', function(){
           }, 500);
           return false;
         }
+        /*
         if( $('#div-image img.img-thumbnail').length == 0){
           if(confirm('Bạn chưa upload hình sản phẩm. Vẫn tiếp tục lưu ?')){
             return true;
@@ -287,7 +288,7 @@ $(document).on('click', '.remove-image', function(){
             $('a[href="#settings"]').click();            
              return false;
           }
-        }
+        }*/
 
       });
       $('#is_old').change(function(){

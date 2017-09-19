@@ -27,7 +27,8 @@ class ProductImg extends Model  {
                     'product_id', 
                     'image_url', 
                     'display_order',
-                    'color_id'
+                    'color_id',
+                    'is_thumbnail'
                 ];
     
 }

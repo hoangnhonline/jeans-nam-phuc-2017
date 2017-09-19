@@ -55,7 +55,7 @@ class Helper
     public static function showImage($image_url, $type = 'original'){
 
         //return strpos($image_url, 'http') === false ? config('namphuc.upload_url') . $type . '/' . $image_url : $image_url;        
-        return strpos($image_url, 'http') === false ? config('namphuc.upload_url') . $image_url : $image_url;        
+        return strpos($image_url, 'http') === false ? env('APP_URL') . $image_url : $image_url;          
 
     }
     public static function showImageThumb($image_url, $object_type = 1, $folder = ''){             

@@ -82,21 +82,6 @@ class ArticlesController extends Controller
         
         $dataArr['alias'] = Helper::stripUnicode($dataArr['title']);
         
-        if($dataArr['image_url'] && $dataArr['image_name']){
-            
-            $tmp = explode('/', $dataArr['image_url']);
-
-            if(!is_dir('public/uploads/'.date('Y/m/d'))){
-                mkdir('public/uploads/'.date('Y/m/d'), 0777, true);
-            }
-
-            $destionation = date('Y/m/d'). '/'. end($tmp);
-            
-            File::move(config('namphuc.upload_path').$dataArr['image_url'], config('namphuc.upload_path').$destionation);
-            
-            $dataArr['image_url'] = $destionation;
-        }        
-        
         $dataArr['created_user'] = Auth::user()->id;
 
         $dataArr['updated_user'] = Auth::user()->id;
@@ -186,23 +171,8 @@ class ArticlesController extends Controller
             'slug.unique' => 'Slug đã được sử dụng.'
         ]);       
         
-        $dataArr['alias'] = Helper::stripUnicode($dataArr['title']);
-        
-        if($dataArr['image_url'] && $dataArr['image_name']){
-            
-            $tmp = explode('/', $dataArr['image_url']);
-
-            if(!is_dir('public/uploads/'.date('Y/m/d'))){
-                mkdir('public/uploads/'.date('Y/m/d'), 0777, true);
-            }
-
-            $destionation = date('Y/m/d'). '/'. end($tmp);
-            
-            File::move(config('namphuc.upload_path').$dataArr['image_url'], config('namphuc.upload_path').$destionation);
-            
-            $dataArr['image_url'] = $destionation;
-        }
-
+        $dataArr['alias'] = Helper::stripUnicode($dataArr['title']);       
+      
         $dataArr['updated_user'] = Auth::user()->id;
         $dataArr['is_hot'] = isset($dataArr['is_hot']) ? 1 : 0;  
         //$dataArr['status'] = isset($dataArr['status']) ? 1 : 0;  

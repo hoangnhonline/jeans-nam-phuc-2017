@@ -110,9 +110,15 @@
                 <td>                  
                   <a style="color:#333;font-weight:bold" href="{{ route( 'product.edit', [ 'id' => $item->id ]) }}">{{ $item->name }} </a>  &nbsp;
                   @if( $item->is_hot == 1 )
-                  <img class="img-thumbnail" src="{{ URL::asset('public/admin/dist/img/star.png')}}" alt="Nổi bật" title="Nổi bật" />
+                 <label class="label label-danger">Nổi bật</label>
                   @endif<br />
-                  <strong style="color:#337ab7;font-style:italic"> {{ $item->ten_loai }} / {{ $item->ten_cate }}</strong>                            
+                  <strong style="color:#337ab7;font-style:italic"> {{ $item->ten_loai }} / {{ $item->ten_cate }}</strong>                  
+                  @foreach($item->colors as $color)
+                    <div class="cleafix" style="margin-bottom:10px"></div>
+                <div class="col-md-2 text-center">
+                <a href="{{ route('product.image', [$item->id, $color->color_id])}}"><img src="{{ Helper::showImage($colorArr[$color->color_id]->image_url)}}" width="30" style="border:1px solid #CCC"></br>{{ $colorArr[$color->color_id]->name }}
+                </div>
+              @endforeach                           
                 </td>
                 <td style="text-align:center">
                   <input type="checkbox" data-id="{{ $item->id }}" data-col="is_hot" data-table="product" class="change-value" value="1" {{ $item->is_hot == 1  ? "checked" : "" }}>

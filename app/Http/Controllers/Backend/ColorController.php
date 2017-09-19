@@ -53,18 +53,14 @@ class ColorController extends Controller
         ],
         [                                    
             'title.required' => 'Bạn chưa nhập tên màu'
-        ]);       
-       
-        if($dataArr['image_url'] && $dataArr['image_url_name']){
-            $dataArr['image_url'] = $this->processImg($dataArr);
-        }
+        ]);             
+        
         $dataArr['display_order'] = Helper::getNextOrder('color');
-        unset($dataArr['_token']);
-        unset($dataArr['image_url_name']);        
+        unset($dataArr['_token']);           
         
         DB::table('color')->insert($dataArr);        
         
-        Session::flash('message', 'Tạo mới màu thành công');
+        Session::flash('message', 'Tạo mới thành công');
 
         return redirect()->route('color.index');
     }
@@ -126,16 +122,12 @@ class ColorController extends Controller
         [                                    
             'title.required' => 'Bạn chưa nhập tên màu'
         ]);
-
-        if($dataArr['image_url'] && $dataArr['image_url_name']){
-            $dataArr['image_url'] = $this->processImg($dataArr);
-        }
-        unset($dataArr['_token']);
-        unset($dataArr['image_url_name']);
+       
+        unset($dataArr['_token']);       
         
         DB::table('color')->where('id', $dataArr['id'])->update($dataArr);
        
-        Session::flash('message', 'Cập nhật màu thành công');        
+        Session::flash('message', 'Cập nhật thành công');        
 
         return redirect()->route('color.edit', $dataArr['id']);
     }
@@ -153,7 +145,7 @@ class ColorController extends Controller
         $model->delete();
 
         // redirect
-        Session::flash('message', 'Xóa màu thành công');
+        Session::flash('message', 'Xóa thành công');
         return redirect()->route('color.index');
     }
 }

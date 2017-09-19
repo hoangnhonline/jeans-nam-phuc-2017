@@ -21,7 +21,7 @@
     <div class="row">
       <!-- left column -->
       <input type="hidden" name="id" value="{{ $detail->id }}">
-      <div class="col-md-8">
+      <div class="col-md-12">
         <!-- general form elements -->
         <div class="box box-primary">
           <div class="box-header with-border">
@@ -46,9 +46,9 @@
 
                   <!-- Nav tabs -->
                   <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Thông tin chi tiết</a></li>                    
-                    <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Hình ảnh</a></li>
-                    <li role="presentation"><a href="#thuoctinh" aria-controls="thuoctinh" role="tab" data-toggle="tab">Thuộc tính</a></li>                                  
+                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Thông tin chi tiết</a></li>                                   
+                    <li role="presentation"><a href="#thuoctinh" aria-controls="thuoctinh" role="tab" data-toggle="tab">Số lượng</a></li> 
+                    <li role="presentation"><a href="#thongtinseo" aria-controls="thongtinseo" role="tab" data-toggle="tab">Thông tin SEO</a></li>                                  
                   </ul>
 
                   <!-- Tab panes -->
@@ -125,6 +125,7 @@
                             <label>Giá SALE</label>
                             <input type="text" class="form-control number {{ old('is_sale', $detail->is_sale) == 1  ? "req" : "" }}" name="price_sale" id="price_sale" value="{{ old('price_sale', $detail->price_sale) }}">
                         </div>
+                        <div class="clearfix"></div>
                         <div class="form-group">
                           <label>Màu sắc</label>
                           <ul>
@@ -167,73 +168,69 @@
                       </div>
                         <div class="clearfix"></div>
                     </div><!--end thong tin co ban-->                    
-                   
-                     <div role="tabpanel" class="tab-pane" id="settings">
-                        <div class="form-group" style="margin-top:10px;margin-bottom:10px">  
-                         
-                          <div class="col-md-12" style="text-align:center">                            
-                            
-                            <input type="file" id="file-image"  style="display:none" multiple/>
-                         
-                            <button class="btn btn-primary btn-sm" id="btnUploadImage" type="button"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload</button>
-                            <div class="clearfix"></div>
-                            <div id="div-image" style="margin-top:10px">                              
-                              @if( $hinhArr )
-                                @foreach( $hinhArr as $k => $hinh)
-                                  <div class="col-md-3">
-                                    <img class="img-thumbnail" src="{{ Helper::showImage($hinh) }}" style="width:100%">
-                                    <div class="checkbox">                                   
-                                      <label><input type="radio" name="thumbnail_id" class="thumb" value="{{ $k }}" {{ $detail->thumbnail_id == $k ? "checked" : "" }}> Ảnh đại diện </label>
-                                      <button class="btn btn-danger btn-sm remove-image" type="button" data-value="{{  $hinh }}" data-id="{{ $k }}" >Xóa</button>
-                                    </div>
-                                    <input type="hidden" name="image_id[]" value="{{ $k }}">
-                                  </div>
-                                @endforeach
-                              @endif
-
-                            </div>
-                          </div>
-                          <div style="clear:both"></div>
-                        </div>
-
-                     </div><!--end hinh anh-->
-                     <div role="tabpanel" class="tab-pane" id="thuoctinh">
+                     <div role="tabpanel" class="tab-pane" id="thuoctinh">                    
                       <table class="table table-bordered">
                         <tr>
-                          <th></th>
-                          <th>Hình ảnh</th>
+                          <th></th>                          
                           <th class="text-center" style="white-space:nowrap">Đại diện</th>
+                          
                           @foreach($detail->sizes as $size)                         
+                   
                           <th class="text-center">Size {{ $sizeArr[$size->size_id]->name }}</th>
                           @endforeach
                         </tr>
+                        <?php $iDaiDien = 0; ?>
                         @foreach($detail->colors as $color)
+                               <?php                            
+                               $iDaiDien ++; 
+
+                               if($detail->color_id_main){
+                                  $color_id_main = $detail->color_id_main;
+                               }else{
+                                  if($iDaiDien == 1){
+                                    $color_id_main = $color->color_id;
+                                  }
+                               }
+                               ?>
                         <tr>
-                          <td><img src="{{ Helper::showImage($colorArr[$color->color_id]->image_url)}}" width="30" style="border:1px solid #CCC"></br>{{ $colorArr[$color->color_id]->name }}</td>
-                          <td width="200px">
-                            <div class="div-upload">
-                                <img class="show_thumbnail" src="{{ URL::asset('public/admin/dist/img/img.png') }}" class="img-favicon" width="100">
-                                
-                                <input type="file" data-value="favicon" class="click-choose-file-product" style="display:none" />
-                             
-                                <button class="btn btn-default btn-sm btnUploadProduct" type="button"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> </button>
-                                <input type="hidden" name="color_id_url[]" class="color_id_url" value="">
-                                <input type="hidden" name="color_id_name[]" class="color_id_name" value="">
-                                <input type="hidden" name="color_id_ivt[]" class="color_id_ivt" value="{{ $color->color_id }}">
-                            </div>
+                          <td style="white-space:nowrap;text-align:center"><img src="{{ Helper::showImage($colorArr[$color->color_id]->image_url)}}" width="30" style="border:1px solid #CCC"></br>{{ $colorArr[$color->color_id]->name }}</td>
+                          <td class="text-center" style="vertical-align:middle">
+                            <input type="radio" {{ $color_id_main == $color->color_id ? "checked" : "" }}  name="color_id_main" value="{{ $color->color_id }}">
                           </td>
-                          <td class="text-center">
-                            <input type="checkbox" name="thumbnail_id" value="{{ $color->color_id }}">
-                          </td>
-                          @foreach($detail->sizes as $size)                         
-                          <td>
-                            <input type="text" class="form-control number" name="amount[{{ $color->color_id}}][{{ $size->size_id}}]" >
+                          @foreach($detail->sizes as $size)          
+                          <?php 
+                          $valueAmount = !empty($arrInv) ? $arrInv[$color->color_id][$size->size_id] : "";
+                          ?>               
+                          <td style="padding-left:1px;padding-right:1px; vertical-align:middle">
+                            <input type="text" class="form-control number"  name="amount[{{ $color->color_id}}][{{ $size->size_id}}]" value="{{ $valueAmount }}" >
                           </td>
                           @endforeach
                         </tr>
                         @endforeach
                       </table>
                  
+                     
+                     </div>
+                     <div role="tabpanel" class="tab-pane" id="thongtinseo">                    
+                     <input type="hidden" name="meta_id" value="{{ $detail->meta_id }}">
+                        <div class="form-group">
+                          <label>Meta title </label>
+                          <input type="text" class="form-control" name="meta_title" id="meta_title" value="{{ !empty((array)$meta) ? $meta->title : "" }}">
+                        </div>
+                        <!-- textarea -->
+                        <div class="form-group">
+                          <label>Meta desciption</label>
+                          <textarea class="form-control" rows="6" name="meta_description" id="meta_description">{{ !empty((array)$meta) ? $meta->description : "" }}</textarea>
+                        </div>  
+
+                        <div class="form-group">
+                          <label>Meta keywords</label>
+                          <textarea class="form-control" rows="4" name="meta_keywords" id="meta_keywords">{{ !empty((array)$meta) ? $meta->keywords : "" }}</textarea>
+                        </div>  
+                        <div class="form-group">
+                          <label>Custom text</label>
+                          <textarea class="form-control" rows="6" name="custom_text" id="custom_text">{{ !empty((array)$meta) ? $meta->custom_text : ""  }}</textarea>
+                        </div>
                      
                      </div>
                   </div>
@@ -251,41 +248,7 @@
         <!-- /.box -->     
 
       </div>
-      <div class="col-md-4">      
-        <div class="box box-primary">
-          <div class="box-header with-border">
-            <h3 class="box-title">Thông tin SEO</h3>
-          </div>
-
-          <!-- /.box-header -->
-            <div class="box-body">
-              <input type="hidden" name="meta_id" value="{{ $detail->meta_id }}">
-              <div class="form-group">
-                <label>Meta title </label>
-                <input type="text" class="form-control" name="meta_title" id="meta_title" value="{{ !empty((array)$meta) ? $meta->title : "" }}">
-              </div>
-              <!-- textarea -->
-              <div class="form-group">
-                <label>Meta desciption</label>
-                <textarea class="form-control" rows="6" name="meta_description" id="meta_description">{{ !empty((array)$meta) ? $meta->description : "" }}</textarea>
-              </div>  
-
-              <div class="form-group">
-                <label>Meta keywords</label>
-                <textarea class="form-control" rows="4" name="meta_keywords" id="meta_keywords">{{ !empty((array)$meta) ? $meta->keywords : "" }}</textarea>
-              </div>  
-              <div class="form-group">
-                <label>Custom text</label>
-                <textarea class="form-control" rows="6" name="custom_text" id="custom_text">{{ !empty((array)$meta) ? $meta->custom_text : ""  }}</textarea>
-              </div>
-            
-          </div>
-        <!-- /.box -->     
-
-      </div>
-      <!--/.col (left) -->      
-    </div>
-
+     
     </form>
     <!-- /.row -->
   </section>
@@ -337,6 +300,7 @@ $(document).on('keypress', '#name_search', function(e){
           }, 500);
           return false;
         }
+        /*
         if( $('#div-image img.img-thumbnail').length == 0){
           if(confirm('Bạn chưa upload hình sản phẩm. Vẫn tiếp tục lưu ?')){
             return true;
@@ -347,7 +311,7 @@ $(document).on('keypress', '#name_search', function(e){
             $('a[href="#settings"]').click();            
              return false;
           }
-        }
+        }*/
       });
       
       $('#is_sale').change(function(){
@@ -420,7 +384,7 @@ $(document).on('keypress', '#name_search', function(e){
 
       $('#name').change(function(){
          var name = $.trim( $(this).val() );
-         if( name != '' && $('#slug').val() == ''){
+         
             $.ajax({
               url: $('#route_get_slug').val(),
               type: "POST",
@@ -437,12 +401,10 @@ $(document).on('keypress', '#name_search', function(e){
                   var errors = response.responseJSON;
                   for (var key in errors) {
                     
-                  }
-                  //$('#btnLoading').hide();
-                  //$('#btnSave').show();
+                  }                  
               }
             });
-         }
+         
       }); 
     });
     

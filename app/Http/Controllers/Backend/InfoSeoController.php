@@ -56,22 +56,8 @@ class InfoSeoController extends Controller
             'title.required' => 'Bạn chưa nhập meta title',
             'url.required' => 'Bạn chưa nhập URL',
             'url.unique' => 'URL đã được tồn tại.'
-        ]);       
-        
-        if($dataArr['image_url'] && $dataArr['image_name']){
-            
-            $tmp = explode('/', $dataArr['image_url']);
-
-            if(!is_dir('public/uploads/'.date('Y/m/d'))){
-                mkdir('public/uploads/'.date('Y/m/d'), 0777, true);
-            }
-
-            $destionation = date('Y/m/d'). '/'. end($tmp);
-            
-            File::move(config('namphuc.upload_path').$dataArr['image_url'], config('namphuc.upload_path').$destionation);
-            
-            $dataArr['image_url'] = $destionation;
-        }                
+        ]);              
+                    
       
         $rs = InfoSeo::create($dataArr);        
 
@@ -124,22 +110,7 @@ class InfoSeoController extends Controller
             'title.required' => 'Bạn chưa nhập meta title',           
             'url.required' => 'Bạn chưa nhập URL',
             'url.unique' => 'URL đã được tồn tại.'
-        ]); 
-
-        if($dataArr['image_url'] && $dataArr['image_name']){
-            
-            $tmp = explode('/', $dataArr['image_url']);
-
-            if(!is_dir('public/uploads/'.date('Y/m/d'))){
-                mkdir('public/uploads/'.date('Y/m/d'), 0777, true);
-            }
-
-            $destionation = date('Y/m/d'). '/'. end($tmp);
-            
-            File::move(config('namphuc.upload_path').$dataArr['image_url'], config('namphuc.upload_path').$destionation);
-            
-            $dataArr['image_url'] = $destionation;
-        }       
+        ]);        
 
         $model = InfoSeo::find($dataArr['id']);
 
