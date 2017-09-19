@@ -9,7 +9,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Detail</title>
 	<meta name="description" content="">
 	<meta name="keywords" content="">
@@ -31,6 +31,15 @@
 	<![endif]-->
 </head>
 <body>
+
+	<div id="fb-root"></div>
+	<script>(function(d, s, id) {
+	  var js, fjs = d.getElementsByTagName(s)[0];
+	  if (d.getElementById(id)) return;
+	  js = d.createElement(s); js.id = id;
+	  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.10";
+	  fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));</script>
 
 	<header class="header">
 		<div class="block-header">
@@ -74,35 +83,57 @@
 					</div><!-- /bblock-info -->
 				</div>
 			</div>
+			<div class="block-search">
+				<form action="#" method="get">
+					<button type="submit" class="btn icon"><i class="fa fa-search"></i></button>
+					<div class="search-inner">
+						<input type="text" name="" class="" value="" placeholder="Search ...">
+					</div>
+				</form>
+			</div>
+			<div class="block-fb">
+				<div class="icon">
+					<i class="fa fa-facebook"></i>
+				</div>
+				<div class="fb-inner">
+					<div class="fb-page" data-href="https://www.facebook.com/facebook" data-tabs="timeline" data-width="300px" data-height="500px" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/facebook" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/facebook">Facebook</a></blockquote></div>
+				</div>
+			</div>
 		</div><!-- /block-header-bottom -->
 		<div class="menu">
 			<div class="nav-toogle">
 				<i class="fa"></i>
+			</div>
+			<div class="block-cart-mb">
+				<a href="#" onclick="return false;" title="Cart" data-toggle="modal" data-target="#Cart">
+					<i class="fa fa-shopping-cart"></i>
+					<span>10</span>
+				</a>
 			</div>
 			<nav class="menu-top">
 				<div class="container">
 					<ul class="nav-menu">
 						<li class="level0 active"><a href="index.html" title="Trang Chủ">Trang Chủ</a></li>
 						<li class="level0"><a href="about.html" title="Giới Thiệu">Giới Thiệu</a></li>
-						<li class="level0 parent">
-							<a href="pro-cate.html" title="SẢN PHẨM">SẢN PHẨM</a>
+						<li class="level0 parent active">
+							<a href="product.html" title="Sản Phẩm">SẢN PHẨM</a>
 							<ul class="level0 submenu">
-								<li class="level1"><a href="pro-child-cate.html" title="Tên menu sản phẩm quần jeans số 01">Tên menu sản phẩm quần jeans số 01</a></li>
-								<li class="level1"><a href="pro-child-cate.html" title="Tên menu sản phẩm quần jeans số 02">Tên menu sản phẩm quần jeans số 02</a></li>
+								<li class="level1"><a href="product.html" title="Tên menu sản phẩm quần jeans số 01">Tên menu sản phẩm quần jeans số 01</a></li>
+								<li class="level1"><a href="product.html" title="Tên menu sản phẩm quần jeans số 02">Tên menu sản phẩm quần jeans số 02</a></li>
 								<li class="level1 parent">
-									<a href="pro-child-cate.html" title="Tên menu sản phẩm quần jeans số 03">Tên menu sản phẩm quần jeans số 03</a>
+									<a href="product.html" title="Tên menu sản phẩm quần jeans số 03">Tên menu sản phẩm quần jeans số 03</a>
 									<ul class="level1 submenu">
-										<li class="level2"><a href="pro-child-cate.html" title="Tên menu sản phẩm quần jeans số 01">Tên menu sản phẩm quần jeans số 01</a></li>
-										<li class="level2"><a href="pro-child-cate.html" title="Tên menu sản phẩm quần jeans số 02">Tên menu sản phẩm quần jeans số 02</a></li>
-										<li class="level2"><a href="pro-child-cate.html" title="Tên menu sản phẩm quần jeans số 03">Tên menu sản phẩm quần jeans số 03</a></li>
-										<li class="level2"><a href="pro-child-cate.html" title="Tên menu sản phẩm quần jeans số 04">Tên menu sản phẩm quần jeans số 04</a></li>
+										<li class="level2"><a href="product.html" title="Tên menu sản phẩm quần jeans số 01">Tên menu sản phẩm quần jeans số 01</a></li>
+										<li class="level2"><a href="product.html" title="Tên menu sản phẩm quần jeans số 02">Tên menu sản phẩm quần jeans số 02</a></li>
+										<li class="level2"><a href="product.html" title="Tên menu sản phẩm quần jeans số 03">Tên menu sản phẩm quần jeans số 03</a></li>
+										<li class="level2"><a href="product.html" title="Tên menu sản phẩm quần jeans số 04">Tên menu sản phẩm quần jeans số 04</a></li>
 									</ul>
 								</li>
-								<li class="level1"><a href="pro-child-cate.html" title="">Tên menu sản phẩm quần jeans số 04</a></li>
+								<li class="level1"><a href="product.html" title="">Tên menu sản phẩm quần jeans số 04</a></li>
 							</ul>
 						</li>
-						<li class="level0"><a href="pro-cate.html" title="Thi Công">KHUYẾN MÃI</a></li>
-						<li class="level0"><a href="pro-cate.html" title="Nội Thất">TUYỂN DỤNG</a></li>
+						<li class="level0"><a href="sales.html" title="Thi Công">KHUYẾN MÃI</a></li>
+						<li class="level0"><a href="recruitment.html" title="Nội Thất">TUYỂN DỤNG</a></li>
 						<li class="level0"><a href="contact.html" title="Liên Hệ">Liên Hệ</a></li>
 						<li class="cart">
 							<a href="#" onclick="return false;" title="Cart" data-toggle="modal" data-target="#Cart">
@@ -182,10 +213,15 @@
 													<p class="title">Màu sắc sản phẩm:</p>
 													<div class="des">
 														<ul>
-															<li style="background: #000000;" class="active"></li>
-															<li style="background: #ffffff;"></li>
-															<li style="background: #00022c;"></li>
-															<li style="background: #3e8ebb;"></li>
+															<li class="out-of-stock">
+																<img src="images/color/000.jpg" alt="">
+															</li>
+															<li>
+																<img src="images/color/3e8ebb.jpg" alt="">
+															</li>
+															<li class="active">
+																<img src="images/color/fff.jpg" alt="">
+															</li>
 														</ul>
 													</div>
 												</div>
@@ -196,7 +232,7 @@
 															<li class="active">27</li>
 															<li>28</li>
 															<li>29</li>
-															<li>30</li>
+															<li class="out-of-stock">30</li>
 														</ul>
 													</div>
 												</div>
@@ -470,7 +506,7 @@
   		<i class="fa fa-angle-up" aria-hidden="true"></i>
 	</a><!-- return to top -->
 
-	<!-- Modal -->
+	<!-- Modal Cart -->
 	<div class="modal fade" id="Cart" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -540,6 +576,10 @@
 										<div class="table-cell total-col t-r">355.000đ</div><!-- /table-cell total-col t-r -->
 									</div>
 								</div><!-- tr-wrap -->
+							</div><!-- table cart-tbl -->
+							<div class="block-btn">
+								<a href="#" title="Xóa tất cả" class="btn btn-default">Xóa tất cả <i class="fa fa-trash-o"></i></a>
+								<a href="#" title="Xóa tất cả" class="btn btn-danger">Thanh toán <i class="fa fa-angle-right"></i></a>
 							</div>
 						</form>
 					</div>
