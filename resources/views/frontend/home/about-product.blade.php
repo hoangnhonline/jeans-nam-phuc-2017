@@ -1,4 +1,4 @@
-<div class="block block-title-cm block-categories-hm" style="margin-top:15px">
+<div class="block block-title-cm block-categories-hm">
 	<div class="container">
 		<div class="block-title">
 			<h2 data-text="11" @if($isEdit) class="edit" @endif>{!! $textList[11] !!}</h2>
@@ -26,6 +26,8 @@
 					</div>
 				</div><!-- /item -->
 				@endforeach
+				<div class="clearfix"></div>
 		</div>
 	</div>
 	</div><!-- /block_big-title -->
+	</div>
