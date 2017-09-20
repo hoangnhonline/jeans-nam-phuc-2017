@@ -71,7 +71,8 @@
                       <input type="checkbox" name="is_hot" value="1" {{ $detail->is_hot == 1 ? "checked" : "" }}>
                       HOT
                     </label>
-                  </div>                  
+                  </div>  
+                       
                 </div>
                 <div class="clearfix"></div>
               <!-- textarea -->
@@ -89,7 +90,7 @@
                 </select>
               </div>                
               <div class="form-group" style="margin-top:10px">  
-                <label class="col-md-3 row">Ảnh đại diện (265 x 150px)</label>    
+                <label class="col-md-3 row">Ảnh đại diện</label>    
                 <div class="col-md-9">
                     <img id="thumbnail_image" src="{{ $detail->image_url ? Helper::showImage($detail->image_url ) : URL::asset('public/admin/dist/img/img.png') }}" class="img-thumbnail" width="145" height="85">
                     
@@ -152,6 +153,11 @@
   </section>
   <!-- /.content -->
 </div>
+<style type="text/css">
+  .checkbox+.checkbox, .radio+.radio{
+    margin-top: 10px !important;
+  }
+</style>
 <input type="hidden" id="route_upload_tmp_image" value="{{ route('image.tmp-upload') }}">
 @stop
 @section('javascript_page')

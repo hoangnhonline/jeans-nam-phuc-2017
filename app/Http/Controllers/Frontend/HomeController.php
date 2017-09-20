@@ -56,15 +56,15 @@ class HomeController extends Controller
         $seo['keywords'] = $settingArr['site_keywords'];
 
         $socialImage = $settingArr['banner'];      
-                
+        
+        $hotParent = CateParent::where('is_hot',1)->orderBy('display_order')->get();
+
         return view('frontend.home.index', compact(
                                 'productList', 
                                 'socialImage', 
                                 'seo', 
-                                'thuocTinhArr', 
-                                'loaiThuocTinhArr', 
-                                'spThuocTinhArr',
-                                'hoverInfo'));
+                                'hotParent'
+                               ));
     }
     public function indexs(Request $request)
     {   

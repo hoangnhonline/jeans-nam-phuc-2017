@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Cate;
-use App\Models\CateParent;
 use App\Models\MetaData;
-use Helper, File, Session, Auth;
+use App\Models\CateParent;
+use Helper, File, Session, Auth, Image, DB;
 
 class CateController extends Controller
 {
@@ -19,18 +19,32 @@ class CateController extends Controller
     * @return Response
     */
     public function index(Request $request)
-    {        
-        if( $request->parent_id ){
+    {     
+        $is_hot = isset($request->is_hot) ? $request->is_hot : null;                   
+        $parent_id = isset($request->parent_id) ? $request->parent_id : null;        
+        if( $parent_id ){
             $parent_id = $request->parent_id;
-            $loaiSp = CateParent::find($parent_id);
-        }else{
-            $loaiSp = CateParent::orderBy('id')->first();
-            $parent_id = $loaiSp->id;    
+            $cateParentDetail = CateParent::find($parent_id);
         }
 
-        $items = Cate::where('parent_id', '=', $parent_id)->where('status', 1)->orderBy('display_order')->get();
-        $loaiSpArr = CateParent::where('status', 1)->orderBy('display_order')->get();
-        return view('backend.cate.index', compact( 'items', 'loaiSp' , 'parent_id', 'loaiSpArr'));
+        $name = isset($request->name) && trim($request->name) != '' ? trim($request->name) : '';  
+        
+        $query = Cate::where('status', 1);
+
+        if( $is_hot ){
+            $query->where('is_hot', $is_hot);
+        }        
+       
+        if( $name != ''){
+            $query->where('name', 'LIKE', '%'.$name.'%');            
+        }       
+
+        if( $parent_id ){
+            $query->where('parent_id', $parent_id);           
+        }        
+        $items = $query->orderBy('display_order')->get();   
+        $cateParentList = CateParent::orderBy('display_order')->get();     
+        return view('backend.cate.index', compact( 'items', 'parent_id', 'type_id', 'name', 'is_hot', 'cateParentList'));
     }
 
     /**
@@ -40,11 +54,15 @@ class CateController extends Controller
     */
     public function create(Request $request)
     {
-        $parent_id = isset($request->parent_id) ? $request->parent_id : 0;
+        $parent_id = isset($request->parent_id) ? $request->parent_id : 0;               
         
-        $loaiSpArr = CateParent::where('status', 1)->orderBy('display_order')->get();
-
-        return view('backend.cate.create', compact( 'parent_id', 'loaiSpArr'));
+        $cateList = Cate::whereRaw('1=2')->get();
+        
+        $cateParentList = CateParent::select('id', 'name')
+                        ->orderBy('display_order', 'asc')
+                        ->get();                        
+                    
+        return view('backend.cate.create', compact( 'parent_id', 'cateParentList', 'parent_id'));
     }
 
     /**
@@ -65,25 +83,26 @@ class CateController extends Controller
             'name.required' => 'Bạn chưa nhập tên danh mục',
             'slug.required' => 'Bạn chưa nhập slug',
         ]);
-        $dataArr['alias'] = Helper::stripUnicode($dataArr['name']);
         
         $dataArr['created_user'] = Auth::user()->id;
 
         $dataArr['updated_user'] = Auth::user()->id;
-
         
-        $dataArr['is_hot'] = isset($dataArr['is_hot']) ? 1 : 0;            
-
-        $dataArr['display_order'] = 1;
-
+        $dataArr['is_hot'] = isset($dataArr['is_hot']) ? 1 : 0;
+        $dataArr['is_widget'] = isset($dataArr['is_widget']) ? 1 : 0;
+        $dataArr['display_order'] = Helper::getNextOrder('cate', ['parent_id' => $dataArr['parent_id']]);
+         if($dataArr['is_widget'] == 1){
+            DB::table('cate_parent')->update(['is_widget' => 0]);
+            DB::table('cate')->update(['is_widget' => 0]);
+        }
         $rs = Cate::create($dataArr);        
         $id = $rs->id;
 
         $this->storeMeta( $id, 0, $dataArr);
 
-        Session::flash('message', 'Tạo mới danh mục thành công');
+        Session::flash('message', 'Tạo mới thành công');
 
-        return redirect()->route('cate.index',[$dataArr['parent_id']]);
+        return redirect()->route('cate.index',['parent_id' => $dataArr['parent_id']]);
     }
 
     /**
@@ -120,14 +139,13 @@ class CateController extends Controller
     */
     public function edit($id)
     {
-        $detail = Cate::find($id);
-        $loaiSpArr = CateParent::where('status', 1)->orderBy('display_order')->get();
+        $detail = Cate::find($id);                
+        $cateParentList = CateParent::orderBy('display_order')->get();
         $meta = (object) [];
         if ( $detail->meta_id > 0){
             $meta = MetaData::find( $detail->meta_id );
-        }       
-        $loaiSp = CateParent::find($detail->parent_id); 
-        return view('backend.cate.edit', compact( 'detail', 'loaiSpArr', 'meta', 'loaiSp'));
+        }        
+        return view('backend.cate.edit', compact( 'detail', 'meta', 'cateParentList'));
     }
 
     /**
@@ -141,26 +159,32 @@ class CateController extends Controller
     {
         $dataArr = $request->all();
         
-        $this->validate($request,[
+        $this->validate($request,[            
+            'parent_id' => 'required',
             'name' => 'required',
-            'slug' => 'required',
+            'slug' => 'required',            
+            
         ],
         [
             'name.required' => 'Bạn chưa nhập tên danh mục',
             'slug.required' => 'Bạn chưa nhập slug',
         ]);
-        $dataArr['alias'] = Helper::stripUnicode($dataArr['name']);
 
         $model = Cate::find($dataArr['id']);
 
         $dataArr['updated_user'] = Auth::user()->id;
-       
-        $dataArr['is_hot'] = isset($dataArr['is_hot']) ? 1 : 0;           
-
+        
+        $dataArr['is_hot'] = isset($dataArr['is_hot']) ? 1 : 0;   
+        
+        $dataArr['is_widget'] = isset($dataArr['is_widget']) ? 1 : 0;
+         if($dataArr['is_widget'] == 1){
+            DB::table('cate_parent')->update(['is_widget' => 0]);
+            DB::table('cate')->update(['is_widget' => 0]);
+        }
         $model->update($dataArr);
 
         $this->storeMeta( $dataArr['id'], $dataArr['meta_id'], $dataArr);
-        Session::flash('message', 'Cập nhật danh mục thành công');
+        Session::flash('message', 'Cập nhật thành công');
 
         return redirect()->route('cate.edit', $dataArr['id']);
     }
@@ -178,7 +202,7 @@ class CateController extends Controller
         $model->delete();
 
         // redirect
-        Session::flash('message', 'Xóa danh mục thành công');
+        Session::flash('message', 'Xóa thành công');
         return redirect()->route('cate.index',[$model->parent_id]);
     }
 }

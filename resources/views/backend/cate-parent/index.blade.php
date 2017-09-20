@@ -33,6 +33,7 @@
             <tr>
               <th style="width: 1%">#</th>
               <th style="width: 1%;white-space:nowrap">Thứ tự</th>
+              <th width="300">Hình ảnh</th>
               <th>Tên</th>
               <th style="text-align:center">Danh mục con</th>            
               <th width="1%;white-space:nowrap">Thao tác</th>
@@ -47,15 +48,15 @@
                 <td style="vertical-align:middle;text-align:center">
                   <img src="{{ URL::asset('public/admin/dist/img/move.png')}}" class="move img-thumbnail" alt="Cập nhật thứ tự"/>
                 </td>
+                <td>
+                  <img class="img-thumbnail lazy" width="300" data-original="{{ $item->image_url ? Helper::showImage($item->image_url) : URL::asset('public/admin/dist/img/no-image.jpg') }}" alt="Nổi bật" title="Nổi bật" />
+                </td>
                 <td>                  
                   <a href="{{ route( 'cate-parent.edit', [ 'id' => $item->id ]) }}">{{ $item->name }}</a>
                   
                   @if( $item->is_hot == 1 )
-                  <img class="img-thumbnail" src="{{ URL::asset('public/admin/dist/img/star.png')}}" alt="Nổi bật" title="Nổi bật" />
-                  @endif
-                   @if( $item->is_hover == 1 )
-                  <a href="{{ route('cate-parent.thuoc-tinh', [ 'parent_id' => $item->id ]) }}" style="float:right"><label style="cursor:pointer" class="label label-info">Thuộc tính hover</label></a>
-                  @endif
+                  <label class="label label-danger">HOT</label>
+                  @endif                  
                   <p>{{ $item->description }}</p>
                 </td>
                 <td style="text-align:center"><a class="btn btn-info btn-sm" href="{{ route('cate.index', [$item->id])}}">{{ $item->cates->count() }}</a></td>               

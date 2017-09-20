@@ -34,7 +34,8 @@ class CateParent extends Model  {
                             'meta_id',                            
                             'is_hover',
                             'created_user',
-                            'updated_user'
+                            'updated_user',
+                            'image_url'
                         ];
 
     public function cates()

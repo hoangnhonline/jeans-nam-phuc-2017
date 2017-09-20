@@ -6,43 +6,26 @@
 		</div>
 		<div class="block-content">
 			<div class="row">
+				@foreach($hotParent as $pa)
 				<div class="col-sm-6">
 					<div class="item">
-						<img src="{{ URL::asset('public/assets/images/cate-home/1.jpg') }}" alt="">
+						<img src="{{ $pa->image_url ? Helper::showImage($pa->image_url) : URL::asset('public/admin/dist/img/no-image.jpg') }}" alt="{!! $pa->name !!}">
 						<div class="des">
 							<div class="box-table">
 								<div class="box-td">
 									<div class="box-des">
-										<h3 class="title">COTTON JEANS</h3>
+										<h3 class="title">{!! $pa->name !!}</h3>
 										<div class="description">
-											It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
+											{!! $pa->description !!}
 										</div>
-										<a href="product.html" title="Xem chi tiết" class="btn-viewall btn-1e">Xem chi tiết <i class="fa fa-long-arrow-right"></i></a>
+										<a href="{{ route('cate-parent', $pa->slug )}}" title="Xem chi tiết" class="btn-viewall btn-1e">Xem chi tiết <i class="fa fa-long-arrow-right"></i></a>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div><!-- /item -->
-				<div class="col-sm-6">
-					<div class="item">
-						<img src="{{ URL::asset('public/assets/images/cate-home/2.jpg') }}" alt="">
-						<div class="des">
-							<div class="box-table">
-								<div class="box-td">
-									<div class="box-des">
-										<h3 class="title">COTTON JEANS</h3>
-										<div class="description">
-											It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
-										</div>
-										<a href="product.html" title="Xem chi tiết" class="btn-viewall btn-1e">Xem chi tiết <i class="fa fa-long-arrow-right"></i></a>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div><!-- /item -->
-			</div>
+				@endforeach
 		</div>
 	</div>
 	</div><!-- /block_big-title -->

@@ -81,9 +81,9 @@
                                     </td>
                                     <td>
                                         <a href="{{ route( 'cate.edit', [ 'id' => $item->id ]) }}">{{ $item->name }}</a>
-                                        @if( $item->is_hot == 1 )
-                                        <img class="img-thumbnail" src="{{ URL::asset('public/admin/dist/img/star.png')}}" alt="Nổi bật" title="Nổi bật" />
-                                        @endif                   
+                                         @if( $item->is_hot == 1 )
+                                          <label class="label label-danger">HOT</label>
+                                          @endif                                        
                                         <p>{{ $item->description }}</p>
                                     </td>                                   
                                     <td style="white-space:nowrap; text-align:right">
