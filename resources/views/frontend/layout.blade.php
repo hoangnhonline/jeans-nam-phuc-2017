@@ -115,87 +115,22 @@
 	  </div>
 	</div>
 	<!-- Modal Cart -->
-	<div class="modal fade" id="Cart" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal fade" id="scart_popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<i class="fa fa-times-circle"></i>
 				</button>
-				<div class="shopcart-ct">
-					<div class="modal-body">
-						<form action="#" method="POST" id="frm_order_items">
-							<div class="table cart-tbl">
-								<div class="table-row thead">
-									<div class="table-cell product-col t-c">Sản phẩm</div>
-									<div class="table-cell numb-col t-c">Số lượng</div>
-									<div class="table-cell total-col t-c">Thành tiền</div>
-								</div><!-- table-row thead -->
-								<div class="tr-wrap">
-									<div class="table-row clearfix">
-										<div class="table-cell product-col">
-											<figure class="img-prod">
-												<img alt="Tên sản phẩm quần jeans chất lượng cao được thêm vào giỏ hàng" src="{{ URL::asset('public/assets/images/cart/1.jpg') }}">
-											</figure>
-											<a href="#" target="_blank" title="Tên sản phẩm quần jeans chất lượng cao được thêm vào giỏ hàng">Tên sản phẩm quần jeans chất lượng cao được thêm vào giỏ hàng</a>
-											<p class="p-color">
-												<span>Màu sắc sản phẩm:</span>
-												<span>Đen</span>
-											</p>
-											<p class="p-size">
-												<span>Size sản phẩm:</span>
-												<span>39</span>
-												<span>|</span>
-												<a href="#" title="Xóa sản phẩm">Xóa</a>
-											</p>
-										</div>
-										<div class="table-cell numb-col t-c">
-											<select name="" size="1" class="change_quantity">
-												<option value="0">0</option>
-												<option value="1" selected="">1</option>
-												<option value="2">2</option>
-											</select>
-										</div>
-										<div class="table-cell total-col t-r">355.000đ</div><!-- /table-cell total-col t-r -->
-									</div>
-									<div class="table-row clearfix">
-										<div class="table-cell product-col">
-											<figure class="img-prod">
-												<img alt="Tên sản phẩm quần jeans chất lượng cao được thêm vào giỏ hàng" src="{{ URL::asset('public/assets/images/cart/1.jpg') }}">
-											</figure>
-											<a href="#" target="_blank" title="Tên sản phẩm quần jeans chất lượng cao được thêm vào giỏ hàng">Tên sản phẩm quần jeans chất lượng cao được thêm vào giỏ hàng</a>
-											<p class="p-color">
-												<span>Màu sắc sản phẩm:</span>
-												<span>Đen</span>
-											</p>
-											<p class="p-size">
-												<span>Size sản phẩm:</span>
-												<span>39</span>
-												<span>|</span>
-												<a href="#" title="Xóa sản phẩm">Xóa</a>
-											</p>
-										</div>
-										<div class="table-cell numb-col t-c">
-											<select name="" size="1" class="change_quantity">
-												<option value="0">0</option>
-												<option value="1" selected="">1</option>
-												<option value="2">2</option>
-											</select>
-										</div>
-										<div class="table-cell total-col t-r">355.000đ</div><!-- /table-cell total-col t-r -->
-									</div>
-								</div><!-- tr-wrap -->
-							</div><!-- table cart-tbl -->
-							<div class="block-btn">
-								<a href="#" title="Xóa tất cả" class="btn btn-default">Xóa tất cả <i class="fa fa-trash-o"></i></a>
-								<a href="cart.html" title="Xóa tất cả" class="btn btn-danger">Thanh toán <i class="fa fa-angle-right"></i></a>
-							</div>
-						</form>
-					</div>
-				</div>
+				<div class="shopcart-ct" id="short-cart-content" >
+					
+				</div><!--id="short-cart-content"-->
 			</div>
 		</div>
 	</div>
-
+	<input type="hidden" id="route-add-to-cart" value="{{ route('add-product') }}" />
+	<input type="hidden" id="route-payment" value="{{ route('payment') }}" />
+	<input type="hidden" id="route-short-cart" value="{{ route('short-cart') }}" />
+	<input type="hidden" id="route-update-product" value="{{ route('update-product') }}" />
 	<!-- ===== JS ===== -->
 	<script src="{{ URL::asset('public/assets/js/jquery.min.js') }}"></script>
 	<!-- ===== JS Bootstrap ===== -->
@@ -236,7 +171,86 @@
 
 				});
 			});
+			 $('.cart-link').click(function() {
+		        $.ajax({
+		            url: $('#route-short-cart').val(),
+		            method: "GET",
+
+		            success: function(data) {
+		                $('#short-cart-content').html(data);
+		                $('#scart_popup').modal('show');
+		                calTotalProduct();
+		            }
+		        });
+		    });
+			 $('.btn-checkout').click(function() {
+		        $('form#shopping-cart').submit();
+		    });
+
+
+		    $(document).on('change', '.change_quantity', function() {
+		        var quantity = $(this).val();
+		        var id = $(this).data('id');
+		        update_product_quantity(id, quantity, 'ajax');
+		    });
+		    $(document).on('change', '.change_quantity_payment', function() {
+		        var quantity = $(this).val();
+		        var id = $(this).data('id');
+		        update_product_quantity(id, quantity, 'normal');
+		    });
+
+
+		    $(document).on('click', '.del_item', function() {
+		        var id = $(this).data('id');
+		        $(this).parents('.tr-wrap').remove();
+		        update_product_quantity(id, 0, 'ajax');
+		    });
+		    $(document).on('click', '.del_item_list', function() {
+		        var id = $(this).data('id');
+		        $(this).parents('.tr-wrap').remove();
+		        update_product_quantity(id, 0, 'list');
+		    });
+
+		    $(document).on('click', '.keep-buying', function() {
+		        $('#scart_popup').modal('hide');
+		    });
+
+			
+
 		});
+		function calTotalProduct() {
+		    var total = 0;
+		    $('.change_quantity ').each(function() {
+		        total += parseInt($(this).val());
+		    });
+		    $('.order_total_quantity').html(total);
+		}
+
+		function update_product_quantity(id, quantity, type) {
+		    $.ajax({
+		        url: $('#route-update-product').val(),
+		        method: "POST",
+		        data: {
+		            id: id,
+		            quantity: quantity
+		        },
+		        success: function(data) {
+		            $.ajax({
+		                url: $('#route-short-cart').val(),
+		                method: "GET",
+
+		                success: function(data) {
+		                    if (type == 'ajax') {
+		                        $('#short-cart-content').html(data);
+		                        calTotalProduct();
+		                    } else {
+		                        window.location.reload();
+		                    }
+		                }
+		            });
+		        }
+		    });
+		}
 	</script>
 	
 </body>

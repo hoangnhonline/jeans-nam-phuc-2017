@@ -64,7 +64,7 @@
 		<div class="block-cart-mb">
 			<a href="#" onclick="return false;" title="Cart" data-toggle="modal" data-target="#Cart">
 				<i class="fa fa-shopping-cart"></i>
-				<span>10</span>
+				<span>{!! Session::get('products') ? array_sum(Session::get('products')) : 0 !!}</span>
 			</a>
 		</div>
 		<nav class="menu-top">
@@ -108,10 +108,10 @@
 
 					@endforeach
 					<li class="cart">
-						<a href="#" onclick="return false;" title="Cart" data-toggle="modal" data-target="#Cart">
+						<a href="#" onclick="return false;" class="cart-link">
 							<i class="fa fa-shopping-cart"></i>
 							<span>Giỏ hàng</span><br>
-							<span>0 Sản phẩm</span>
+							<span>{!! Session::get('products') ? array_sum(Session::get('products')) : 0 !!} Sản phẩm</span>
 						</a>
 					</li>
 				</ul>

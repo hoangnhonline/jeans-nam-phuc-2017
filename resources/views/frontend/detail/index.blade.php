@@ -125,7 +125,7 @@
                                         </div>
                                     </div><!-- /block-share-->          
                                     
-                                    <button type="button" class="block_order btn btn-addcart-product" data-id="{{ $detail->id }}">Thêm vào giỏ hàng</button>
+                                    <button type="button" class="btn btn-addcart-product" data-id="{{ $detail->id }}">Thêm vào giỏ hàng</button>
                                 </div>
                             </div>
                         </div>
@@ -217,7 +217,7 @@ $(document).ready(function($){
     $('.slides-large li').each(function () {
         $(this).zoom();
     });
-  $('a.block_order').click(function() {
+  $('.btn-addcart-product').click(function() {
         var product_id = $(this).data('id');
         add_product_to_cart(product_id);
         
