@@ -1,5 +1,5 @@
 <?php 
-$bannerArr = DB::table('banner')->where(['object_id' => 2, 'object_type' => 3])->orderBy('display_order', 'asc')->get();
+$bannerArr = DB::table('banner')->where(['object_id' => 5, 'object_type' => 3])->orderBy('display_order', 'asc')->get();
 ?> 
 <div class="block block-banner">
 @if($bannerArr)
