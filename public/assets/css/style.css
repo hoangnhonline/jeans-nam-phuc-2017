@@ -742,21 +742,10 @@ select {
 }
 .block-categories-hm .item img {
   position: relative;
-  display: block;
-  min-height: 100%;
-  max-width: 100%;
-  width: 100%;
-  -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
-  transition: opacity 0.35s, transform 0.35s;
-}
-.block-categories-hm .item:hover img {
-  opacity: 0.9;
-  -webkit-transform: scale3d(1.1,1.1,1);
-  transform: scale3d(1.1,1.1,1);
-}
-.block-categories-hm .item:hover .des {
-  background: rgba(0, 0, 0, 0.7);
-  opacity: 1;
+  // display: block;
+  // min-height: 100%;
+  // max-width: 100%;
+  // width: 100%;
   -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
   transition: opacity 0.35s, transform 0.35s;
 }
@@ -1169,10 +1158,10 @@ select {
 .ft-info address p:last-child {
   margin-bottom: 0;
 }
-.ft-info p.link a {
+.ft-info p a {
   color: #eaeaea;
 }
-.ft-info p.link a:hover {
+.ft-info p a:hover {
   color: #fff;
 }
 .block-statistics p {
@@ -1206,18 +1195,11 @@ select {
 
 /* Chat
   ========================================================================== */
-.chat {
-  color: #ffffff;
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 40px;
-  width: 160px;
-  text-align: center;
-  line-height: 40px;
-  background: #c70f19;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+.fbchatbox {
+  position: fixed;
+  right: 50px;
+  bottom: 0;
+  z-index: 9999;
 }
 
 /* About
@@ -1288,8 +1270,10 @@ select {
 }
 
 .block-tags ul li {
+  list-style: none;
   display: inline-block;
   margin-right: 10px;
+  margin-bottom: 5px;
 }
 .block-tags ul li:last-child {
   margin-right: 0;
@@ -1297,7 +1281,7 @@ select {
 .block-tags .tags-first {
   font-weight: bold;
   color: #3a3a3c;
-  font-size: 13px;
+  font-size: 14px;
 }
 .block-tags li.tags-link a {
   height: 25px;
@@ -1313,6 +1297,11 @@ select {
 .block-tags li.tags-link:hover a {
   background: #c70f19;
   color: #fff
+}
+.block-share .share-item {
+  display: inline-block;
+  vertical-align: top;
+  line-height: initial;
 }
 
 .block-aritcle-related .list li {
@@ -1881,11 +1870,14 @@ h2.tit-page3 {
 
 /* Edit On Page
   ========================================================================== */
-.edit:hover {
+.edit {
   padding-top: 5px !important;
   padding-bottom: 5px !important;
   position: relative;
-  border: 1px dashed #c70f19;
+  border: 1px dashed transparent;
+}
+.edit:hover {
+  border: 1px dashed #c70f19;\
 }
 .edit:hover:before {
   content: "\f040";

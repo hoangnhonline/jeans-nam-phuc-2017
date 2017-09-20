@@ -16,11 +16,14 @@ class NewsController extends Controller
 {
     public function newsList(Request $request)
     {
-       
+        $slug = $request->slug;
         $page = $request['page'] ? $request['page'] : 1;       
         $cateArr = [];
        
-        $cateDetail = ArticlesCate::find(1);
+        $cateDetail = ArticlesCate::where('slug', $slug)->first();
+        if(!$cateDetail){
+            return redirect()->route('home');
+        }
 
         $title = trim($cateDetail->meta_title) ? $cateDetail->meta_title : $cateDetail->name;
 
