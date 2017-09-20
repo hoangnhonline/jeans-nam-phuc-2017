@@ -1,4 +1,4 @@
-<div class="block block-title-cm block-categories-hm">
+<div class="block block-title-cm block-categories-hm" style="margin-top:15px">
 	<div class="container">
 		<div class="block-title">
 			<h2 data-text="11" @if($isEdit) class="edit" @endif>{!! $textList[11] !!}</h2>
