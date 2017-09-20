@@ -17,9 +17,11 @@ use App\Models\Tag;
 use App\Models\Settings;
 use App\Models\TagObjects;
 use App\Models\Articles;
+use App\Models\Color;
+use App\Models\Size;
+use App\Models\ProductInventory;
 
-
-use Helper, File, Session, Auth;
+use Helper, File, Session, Auth, Response;
 
 class DetailController extends Controller
 {
@@ -71,7 +73,45 @@ class DetailController extends Controller
                     ->where('product.id', '<>', $detail->id);                        
                     $otherList = $query->orderBy('product.id', 'desc')->limit(6)->get();
         $tagSelected = Product::getListTag($detail->id);
-        return view('frontend.detail.index', compact('detail', 'loaiDetail', 'cateDetail', 'hinhArr', 'productArr', 'seo', 'socialImage', 'otherList', 'tagSelected'));
+
+        // get list size selected
+        $colorArr = $sizeArr = [];
+        $colorList = Color::orderBy('display_order')->get();      
+        $sizeList = Size::orderBy('display_order')->get();    
+        foreach($colorList as $color){
+            $colorArr[$color->id] = $color;
+        }
+        foreach($sizeList as $size){
+            $sizeArr[$size->id] = $size;
+        }
+        foreach($detail->colors as $color){
+            $colorSelected[] = $color->color_id;
+        } 
+        foreach($detail->sizes as $size){
+            $sizeSelected[] = $size->size_id;
+        }
+       // dd($colorSelected);
+        return view('frontend.detail.index', compact('detail', 'loaiDetail', 'cateDetail', 'hinhArr', 'productArr', 'seo', 'socialImage', 'otherList', 'tagSelected',
+            'sizeArr', 'sizeSelected', 'colorArr', 'colorSelected'
+            ));
+    }
+    public function getIvtOfColor(Request $request){
+        $color_id = $request->color_id;
+        $product_id = $request->product_id;
+        $rs = ProductInventory::where(['color_id' => $color_id, 'product_id' => $product_id])
+                ->select('amount', 'size_id')->get();
+        foreach($rs as $arr){
+            $rsIvt[$arr['size_id']] = $arr['amount'];
+        }        
+        $sizeList = Size::orderBy('display_order')->get();   
+        $detail = Product::find($product_id);         
+        foreach($sizeList as $size){
+            $sizeArr[$size->id] = $size;
+        }
+        foreach($detail->sizes as $size){
+            $sizeSelected[] = $size->size_id;
+        }
+        return view('frontend.detail.ajax.size', compact('rsIvt', 'sizeArr', 'sizeSelected'));
     }
 
     public function ajaxTab(Request $request){

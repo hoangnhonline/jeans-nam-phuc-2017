@@ -1688,8 +1688,7 @@ h2.tit-page3 {
 .bl-color ul li,
 .bl-size ul li {
   border: 1px solid #b2b2b2;
-  cursor: pointer;
-  opacity: 0.5;
+  cursor: pointer;  
   position: relative;
   overflow: hidden;
 }

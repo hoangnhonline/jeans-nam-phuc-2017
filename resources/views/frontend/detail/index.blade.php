@@ -59,36 +59,31 @@
                                             <p class="title">Màu sắc sản phẩm:</p>
                                             <div class="des">
                                                 <ul>
-                                                    <li class="out-of-stock">
-                                                        <img src="images/color/000.jpg" alt="">
+                                                    @foreach($colorSelected as $color)
+                                                    <li data-value="{{ $color }}" class="choose-color {{ $color == $detail->color_id_main ? "active" : '' }}">
+                                                        <img src="{{ Helper::showImage($colorArr[$color]->image_url) }}" alt="{{ $colorArr[$color]['name'] }}">
                                                     </li>
-                                                    <li>
-                                                        <img src="images/color/3e8ebb.jpg" alt="">
-                                                    </li>
-                                                    <li class="active">
-                                                        <img src="images/color/fff.jpg" alt="">
-                                                    </li>
+                                                    @endforeach
                                                 </ul>
                                             </div>
                                         </div>
                                         <div class="bl-modul-cm bl-size">
                                             <p class="title">Size sản phẩm:</p>
-                                            <div class="des">
+                                            <div class="des" id="size-div">
                                                 <ul>
-                                                    <li class="active">27</li>
-                                                    <li>28</li>
-                                                    <li>29</li>
-                                                    <li class="out-of-stock">30</li>
+                                                    @foreach($sizeSelected as $size)
+                                                    <li class="choose-size" data-value="{{ $size }}">{{ $sizeArr[$size]['name'] }}</li>
+                                                    @endforeach
                                                 </ul>
                                             </div>
                                         </div>
-                                        <div class="bl-modul bl-show-option">
+                                        <!--<div class="bl-modul bl-show-option">
                                             <span class="title">Vòng eo sản phẩm:</span>
                                             <div class="des">
                                                 <b>56cm</b>
                                                 <b>56cm</b>
                                             </div>
-                                        </div>
+                                        </div>-->
                                         @if($tagSelected->count() > 0)
                                         <div class="bl-modul bl-show-option">
                                             <span class="title">Phong cách sản phẩm:</span>
@@ -107,6 +102,8 @@
                                             </div>
                                         </div>
                                         @endif
+                                        <input type="" name="" id="color_id" value="">
+                                        <input type="" name="" id="size_id" value="">
                                     </div><!-- /block-datail-if -->
                                     <div class="block block-share" id="share-buttons">
                                         <div class="share-item">
@@ -191,6 +188,44 @@
 <script src="{{ URL::asset('public/assets/lib/flexslider/jquery.flexslider-min.js') }}"></script>
 <script type="text/javascript">
 $(document).ready(function($){  
+    $.ajax({
+        url : "{{ route('get-ivt-of-color') }}",
+        type :'GET',
+        dataType :'html',
+        data : {
+            color_id : {{ $detail->color_id_main }},
+            product_id : {{ $detail->id }}
+        }, 
+        success : function(data){
+            $('#size-div').html(data);
+        }
+    });
+    $('.choose-color').click(function(){
+        var obj = $(this);
+        $('.choose-color').removeClass('active');
+        obj.addClass('active');
+        $('#color_id').val(obj.data('value'));
+        $.ajax({
+            url : "{{ route('get-ivt-of-color') }}",
+            type :'GET',
+            dataType :'html',
+            data : {
+                color_id : obj.data('value'),
+                product_id : {{ $detail->id }}
+            }, 
+            success : function(data){
+                $('#size-div').html(data);
+            }
+        });
+    });
+    $(document).on('click', '.choose-size', function(){
+       // if(!obj.hasClass('out-of-stock')){
+            var obj = $(this);
+            $('.choose-size').removeClass('active');
+            obj.addClass('active');
+            $('#size_id').val(obj.data('value'));
+       // }
+    });
     // The slider being synced must be initialized first
     $('#carousel').flexslider({
         animation: "slide",
@@ -219,16 +254,26 @@ $(document).ready(function($){
     });
   $('.btn-addcart-product').click(function() {
         var product_id = $(this).data('id');
-        add_product_to_cart(product_id);
+        var size_id = $('#size_id').val();
+        var color_id = $('#color_id').val();
+        if(size_id == ''){
+            alert('Vui lòng chọn size.'); return false;
+        }
+        if(color_id == ''){
+            alert('Vui lòng chọn màu sắc.'); return false;
+        }
+        add_product_to_cart(product_id, color_id, size_id);
         
       });
 });
-function add_product_to_cart(product_id) {
+function add_product_to_cart(product_id, color_id, size_id) {
   $.ajax({
     url: $('#route-add-to-cart').val(),
     method: "GET",
     data : {
-      id: product_id
+      id: product_id,
+      color_id : color_id,
+      size_id : size_id
     },
     success : function(data){
        $('.cart-link').click();

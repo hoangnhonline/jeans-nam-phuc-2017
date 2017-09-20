@@ -75,15 +75,21 @@ class CartController extends Controller
     }
     public function shortCart(Request $request)
     {
-        $getlistProduct = Session::get('products');       
+        $getlistProduct = Session::get('products'); 
+        $listProductId = [];      
         if(!empty($getlistProduct)){
-            $listProductId = array_keys($getlistProduct);        
+            $listKey = array_keys($getlistProduct);        
+            foreach($listKey as $key){
+                $tmp = explode('-', $key);
+                $listProductId[] = $tmp[0];
+            }            
             $arrProductInfo = Product::whereIn('product.id', $listProductId)
                             ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')
                             ->select('product_img.image_url', 'product.*')->get();        
         }else{
             $arrProductInfo = Product::where('id', -1)->get();       
         }
+        
         return view('frontend.cart.ajax.short-cart', compact('arrProductInfo', 'getlistProduct'));
     }
 
@@ -104,14 +110,15 @@ class CartController extends Controller
     public function addProduct(Request $request)
     {
         $id = $request->id;
-    
-        if($id > 0){
+        $color_id = $request->color_id;
+        $size_id = $request->size_id;
+        if($id > 0 && $color_id > 0 && $size_id > 0){
             $listProduct = Session::get('products');
-            
-            if(!empty($listProduct[$request->id])) {
-                $listProduct[$request->id] += 1;
+            $key = $id."-".$color_id."-".$size_id;
+            if(!empty($listProduct[$key])) {
+                $listProduct[$key] += 1;
             } else {
-                $listProduct[$request->id] = 1;
+                $listProduct[$key] = 1;
             }
 
             Session::put('products', $listProduct);
