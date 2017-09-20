@@ -30,15 +30,7 @@ class NewsController extends Controller
         $seo['title'] = $cateDetail->meta_title ? $cateDetail->meta_title : $cateDetail->title;
         $seo['description'] = $cateDetail->meta_description ? $cateDetail->meta_description : $cateDetail->title;
         $seo['keywords'] = $cateDetail->meta_keywords ? $cateDetail->meta_keywords : $cateDetail->title;
-        $socialImage = $cateDetail->image_url;
-
-        $newProductList =  Product::where('so_luong_ton', '>', 0)->where('price', '>', 0)
-                        ->where('is_new', 1)                   
-                        ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')
-                        ->leftJoin('sp_thuoctinh', 'sp_thuoctinh.product_id', '=','product.id')
-                        ->join('loai_sp', 'loai_sp.id', '=', 'product.loai_id')
-                        ->select('product_img.image_url', 'product.*', 'thuoc_tinh')
-                        ->orderBy('id', 'desc')->limit(6)->get();
+        $socialImage = $cateDetail->image_url;      
 
         return view('frontend.news.index', compact('title', 'hotArr', 'articlesList', 'cateDetail', 'seo', 'socialImage', 'page', 'newProductList'));
     }      
@@ -65,15 +57,7 @@ class NewsController extends Controller
             $tagSelected = Articles::getListTag($id);
             $cateDetail = ArticlesCate::find($detail->cate_id);
 
-            $newProductList =  Product::where('so_luong_ton', '>', 0)->where('price', '>', 0)
-                        ->where('is_new', 1)                   
-                        ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')
-                        ->leftJoin('sp_thuoctinh', 'sp_thuoctinh.product_id', '=','product.id')
-                        ->join('loai_sp', 'loai_sp.id', '=', 'product.loai_id')
-                        ->select('product_img.image_url', 'product.*', 'thuoc_tinh')
-                        ->orderBy('id', 'desc')->limit(6)->get();
-
-            return view('frontend.news.news-detail', compact('title',  'hotArr', 'detail', 'otherArr', 'seo', 'socialImage', 'tagSelected', 'cateDetail', 'newProductList'));
+            return view('frontend.news.news-detail', compact('title',  'hotArr', 'detail', 'otherArr', 'seo', 'socialImage', 'tagSelected', 'cateDetail'));
         }else{
             return view('erros.404');
         }

@@ -1,52 +1,109 @@
 @extends('frontend.layout')
 @include('frontend.partials.meta')
 @section('content')
-<div class="block block_breadcrumb">
-    <ol class="breadcrumb">
+<div class="block block-breadcrumb">
+<div class="container">
+    <ul class="breadcrumb">
         <li><a href="{!! route('home') !!}">Trang chủ</a></li>
-        <li><a href="{!! route('news-list') !!}">Tin tức</a></li>        
+        <li><a href="{!! route('news-list', $cateDetail->slug) !!}">{!! $cateDetail->name !!}</a></li>        
         <li class="active">{!! $detail->title !!}</li>
-    </ol>
-</div><!-- /block_breadcrumb -->
-<div class="block_news row">
-    <div class="col-md-9 col-sm-9 col-xs-12 block_cate_left">
-        <div class="block_news_content">
-            <h1 class="article-title">{!! $detail->title !!}</h1>
-            <p class="content-date">Ngày tạo: {!! date('d/m/Y H:i', strtotime($detail->created_at)) !!}</p>
-            <div class="block">
-                <p class="block_intro">
-                    <img class="lazy" data-original="{!! Helper::showImage($detail->image_url ) !!}" alt="{!! $detail->title !!}">
-                </p>
-                {!! $detail->content !!}
-            </div><!-- /block -->
-            @if( $otherArr )
-                       
-            <div class="block_news_related" style="margin-top:40px">
-                <span class="block_title">CÁC TIN KHÁC</span>
-                <ul class="row">
-                 @foreach( $otherArr as $articles)
-                <li class="col-sm-3 col-sm-6">
-                    <div class="des" style="text-align:left">
-                        <img src="{!! Helper::showImage($articles->image_url ) !!}" alt="{!! $articles->title !!}">
-                        <a href="{{ route('news-detail', ['slug' => $articles->slug, 'id' => $articles->id]) }}" title="{!! $articles->title !!}" >{!! $articles->title !!}</a>
-                        <span>[{!! date('d/m/Y', strtotime($detail->created_at)) !!}]</span>
-                    </div>
-                </li>                
-                @endforeach
+    </ul>
+</div>
+</div><!-- /block-breadcrumb -->
+<div class="block block-two-col container">
+<div class="row">
+    <div class="col-sm-9 col-xs-12 block-col-left">
+        <div class="block block-page-common block-dt-sales">
+            <div class="block block-title">
+                <h2>
+                    <i class="fa fa-cart-arrow-down"></i>
+                    {!! $detail->title !!}
+                </h2>
+            </div>
+            <div class="block-content">
+                <div class="block block-aritcle">
+                    {!! $detail->content !!}
+                </div>
+                <div class="block block-share">
+                    Share
+                </div><!-- /block-share -->
+                @if($tagSelected->count() > 0)
+                <div class="block-tags">
+                    <ul>
+                        <li class="tags-first">Tags:</li>
+                        <?php $i = 0; ?>
+                        @foreach($tagSelected as $tag)
+                        <?php $i++; ?>
+                        <li class="tags-link"><a href="{{ route('tag', $tag->slug) }}" title="{!! $tag->name !!}">{!! $tag->name !!}</a></li>
+                        @endforeach
+                    </ul>
+                </div><!-- /block-tags -->
+                @endif                
+            </div>
+        </div><!-- /block-ct-news -->
+        <div class="block-page-common block-aritcle-related">
+            <div class="block block-title">
+                <h2>
+                    <i class="fa fa-cart-arrow-down"></i>
+                    TIN LIÊN QUAN
+                </h2>
+            </div>
+            <div class="block-content">
+                <ul class="list">
+                    @foreach( $otherArr as $articles)
+                    <li><a href="{{ route('news-detail', ['slug' => $articles->slug, 'id' => $articles->id]) }}" title="{!! $articles->title !!}" >{!! $articles->title !!}</a></li>
+                    @endforeach   
                 </ul>
             </div>
-            @endif
+        </div><!-- /block-ct-news -->
+    </div><!-- /block-col-left -->
+    <div class="col-sm-3 col-xs-12 block-col-right">
+        <div class="block-sidebar">
+            <div class="block-module block-links-sidebar">
+                <div class="block-title">
+                    <h2>
+                        <i class="fa fa-gift"></i>
+                        KHUYẾN MÃI HOT
+                    </h2>
+                </div>
+                <div class="block-content">
+                    <ul class="list">
+                        <li>
+                            <a href="#" title="">
+                                <p class="thumb"><img src="images/pro-sidebar/1.jpg" alt=""></p>
+                                <h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" title="">
+                                <p class="thumb"><img src="images/pro-sidebar/2.jpg" alt=""></p>
+                                <h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" title="">
+                                <p class="thumb"><img src="images/pro-sidebar/3.jpg" alt=""></p>
+                                <h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" title="">
+                                <p class="thumb"><img src="images/pro-sidebar/4.jpg" alt=""></p>
+                                <h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" title="">
+                                <p class="thumb"><img src="images/pro-sidebar/5.jpg" alt=""></p>
+                                <h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div><!-- /block-module -->
+            
         </div>
-    </div><!-- /block_cate_left -->
-
-    @include('frontend.news.sidebar')
-</div><!-- /block_categories -->
-<style type="text/css">
-    .block_news_related ul li a{
-        font-size: 12px;
-        height: 30px;
-        display: block;
-        overflow-y: hidden;
-    }
-</style>
-@endsection  
+    </div><!-- /block-col-right -->
+</div>
+</div><!-- /block_big-title -->
+@stop  

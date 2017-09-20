@@ -23,6 +23,6 @@ class HoverInfo extends Model  {
      *
      * @var array
      */
-    protected $fillable = ['text_hien_thi', 'str_thuoctinh_id', 'display_order', 'loai_id'];
+    protected $fillable = ['text_hien_thi', 'str_thuoctinh_id', 'display_order', 'parent_id'];
 
 }

@@ -15,7 +15,7 @@
 
   <!-- Main content -->
   <section class="content">
-    <a class="btn btn-default btn-sm" href="{{ route('product.index', ['loai_id' => $detail->loai_id, 'cate_id' => $detail->cate_id]) }}" style="margin-bottom:5px">Quay lại</a>
+    <a class="btn btn-default btn-sm" href="{{ route('product.index', ['parent_id' => $detail->parent_id, 'cate_id' => $detail->cate_id]) }}" style="margin-bottom:5px">Quay lại</a>
     <a class="btn btn-primary btn-sm" href="{{ route('product-detail', [$detail->slug, $detail->id] ) }}" target="_blank" style="margin-top:-6px"><i class="fa fa-eye" aria-hidden="true"></i> Xem</a>
     <form role="form" method="POST" action="{{ route('product.update') }}" id="dataForm">
     <div class="row">
@@ -56,14 +56,14 @@
                     <div role="tabpanel" class="tab-pane active" id="home">
                         <div class="form-group col-md-6 none-padding">
                           <label for="email">Danh mục cha<span class="red-star">*</span></label>
-                          <select class="form-control req" name="loai_id" id="loai_id">
+                          <select class="form-control req" name="parent_id" id="parent_id">
                             <option value="">--Chọn--</option>
                             @foreach( $loaiSpArr as $value )
                             <option value="{{ $value->id }}"
                             <?php 
-                            if( old('loai_id') && old('loai_id') == $value->id ){ 
+                            if( old('parent_id') && old('parent_id') == $value->id ){ 
                               echo "selected";
-                            }else if( $detail->loai_id == $value->id ){
+                            }else if( $detail->parent_id == $value->id ){
                               echo "selected";
                             }else{
                               echo "";
@@ -125,7 +125,22 @@
                             <label>Giá SALE</label>
                             <input type="text" class="form-control number {{ old('is_sale', $detail->is_sale) == 1  ? "req" : "" }}" name="price_sale" id="price_sale" value="{{ old('price_sale', $detail->price_sale) }}">
                         </div>
-                        <div class="clearfix"></div>
+                        <div class="input-group">
+                          <label>Tags</label>
+                          <select class="form-control select2" name="tags[]" id="tags" multiple="multiple">                  
+                          @if( $tagList->count() > 0)
+                          @foreach( $tagList as $value )
+                          <option value="{{ $value->id }}" {{ in_array($value->id, old('tags', $tagSelected)) ? "selected" : "" }}>{{ $value->name }}</option>
+                          @endforeach
+                          @endif
+                          </select>
+                          <span class="input-group-btn">
+                          <button style="margin-top:24px" class="btn btn-primary btn-sm" id="btnAddTag" type="button" data-value="3">
+                          Tạo mới
+                          </button>
+                          </span>
+                      </div>
+                        <div class="clearfix" style="margin-bottom:10px"></div>
                         <div class="form-group">
                           <label>Màu sắc</label>
                           <ul>
@@ -241,7 +256,7 @@
             <div class="box-footer">             
               <button type="button" class="btn btn-default btn-sm" id="btnLoading" style="display:none"><i class="fa fa-spin fa-spinner"></i></button>
               <button type="submit" class="btn btn-primary btn-sm" id="btnSave">Lưu</button>
-              <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="{{ route('product.index', ['loai_id' => $detail->loai_id, 'cate_id' => $detail->cate_id])}}">Hủy</a>
+              <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="{{ route('product.index', ['parent_id' => $detail->parent_id, 'cate_id' => $detail->cate_id])}}">Hủy</a>
             </div>
             
         </div>
@@ -328,8 +343,8 @@ $(document).on('keypress', '#name_search', function(e){
           $(this).addClass('error');
         }
       });
-      $('#loai_id').change(function(){
-        location.href="{{ route('product.create') }}?loai_id=" + $(this).val();
+      $('#parent_id').change(function(){
+        location.href="{{ route('product.create') }}?parent_id=" + $(this).val();
       })
       $(".select2").select2();
      

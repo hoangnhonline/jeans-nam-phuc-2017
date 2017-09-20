@@ -102,7 +102,7 @@ function callDelete(name, url){
   return flag;
 }
 $(document).ready(function(){
-  $('#loai_id').change(function(){
+  $('#parent_id').change(function(){
     $('#searchForm').submit();
   });
   $('#table-list-data tbody').sortable({

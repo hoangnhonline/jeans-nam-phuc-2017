@@ -1,96 +1,92 @@
 @extends('frontend.layout')  
 @include('frontend.partials.meta')
 @section('content')
-<div class="block block_breadcrumb">
-  <ol class="breadcrumb">
-    <li><a href="{!! route('home') !!}">Trang chủ</a></li>
-    <li class="active">Tin Tức</li>
-  </ol>
-</div><!-- /block_breadcrumb -->
-<div class="block_news row">
-  <div class="col-md-9 col-sm-9 col-xs-12 block_cate_left">
-    @if($page == 1)
-    <div class="block block-news-default row">
-      <div class="block-news-default-left">
-        <div class="col-sm-8 col-xs-12">
-          @if($articlesList->first())
-          <div class="block-news-default-item">
-            <div class="block_thumb">
-              <a href="{{ route('news-detail', ['slug' => $articlesList->first()->slug, 'id' => $articlesList->first()->id]) }}" title="{!! $articlesList->first()->title !!}">
-                <img class="lazy" data-original="{!! Helper::showImage($articlesList->first()->image_url) !!}" alt="{!! $articlesList->first()->title !!}">
-              </a>
-            </div>
-            <a href="{{ route('news-detail', ['slug' => $articlesList->first()->slug, 'id' => $articlesList->first()->id]) }}" title="{!! $articlesList->first()->title !!}">
-                    <h3>{!! $articlesList->first()->title !!}              
-                    </h3>
-                </a>
-                <figure>
-              {!! $articlesList->first()->description !!}
-            </figure>
-          </div>
-          @endif
-        </div>
-      </div><!-- /block-news-default-left -->
-      <div class="block-news-default-right">
-        <div class="col-sm-4 col-xs-12">
-          @if($articlesList)
-          <ul class="list_news">
-            <?php $i = 0; ?>
-            @foreach($articlesList as $articles)
-            <?php $i++ ; ?>
-            @if($i > 1 && $i < 6)
-            <li class="item">
-              @if($i == 2)
-              <div class="block_thumb">
-                <a href="{{ route('news-detail', ['slug' => $articles->slug, 'id' => $articles->id]) }}" title="{!! $articles->title !!}">
-                  <img class="lazy" data-original="{!! Helper::showImage($articles->image_url) !!}" alt="{!! $articles->title !!}">
-                </a>
-              </div>
-              @endif
-              <a href="{{ route('news-detail', ['slug' => $articles->slug, 'id' => $articles->id]) }}" title="{!! $articles->title !!}">
-                <h3>  
-                  {!! $articles->title !!}
-                </h3>
-              </a>
-            </li>
-            @endif
-            @endforeach
-          </ul>
-          @endif
-        </div>
-      </div><!-- /block-news-default-right -->
-    </div><!-- /block-news-default -->
-    @endif
-    <ul class="block_news_bot clearfix">
-      <?php $i = 0; 
-      $nRow = $page == 1 ? 6 : 0;
-      ?>
-          @foreach($articlesList as $articles)
-          <?php $i++ ; ?>
-
-          @if($i > $nRow)
-      <li class="item">
-        <div class="block_thumb">
-          <a href="{{ route('news-detail', ['slug' => $articles->slug, 'id' => $articles->id]) }}" title="{!! $articles->title !!}">
-            <img src="{!! Helper::showImage($articles->image_url) !!}" alt="{!! $articles->title !!}">
-          </a>
-        </div>
-        <div class="description">
-          <a href="{{ route('news-detail', ['slug' => $articles->slug, 'id' => $articles->id]) }}" title="{!! $articles->title !!}">
-            <h3> {!! $articles->title !!}</h3>
-          </a>
-          <figure>
-            {!! $articles->description !!}
-          </figure>                     
-        </div>
-      </li><!-- /item -->
-      @endif
-      @endforeach
-      
-    </ul><!-- /block_news_bot -->
-    <div style="text-align:center">{{ $articlesList->links() }}</div>
-  </div><!-- /block_cate_left -->
-
-  @include('frontend.news.sidebar')
-</div><!-- /block_categories -->
-@endsection
+<div class="block block-breadcrumb">
+	<div class="container">
+		<ul class="breadcrumb">
+			<li><a href="#">Trang chủ</a></li>
+			<li class="active">Khuyến mãi</li>
+		</ul>
+	</div>
+</div><!-- /block-breadcrumb -->
+<div class="block block-two-col container">
+	<div class="row">
+		<div class="col-sm-9 col-xs-12 block-col-left">
+			<div class="block-page-common block-sales">
+				<div class="block block-title">
+					<h2>
+						<i class="fa fa-cart-arrow-down"></i>
+						KHUYẾN MÃI
+					</h2>
+				</div>
+				<div class="block-content">
+					@foreach( $articlesList as $articles )
+					<div class="item">
+						<div class="thumb">
+							 <a href="{{ route('news-detail', ['slug' => $articles->slug, 'id' => $articles->id]) }}"><img title="{!! $articles->title !!}" src="{{ $articles->image_url ? Helper::showImage($articles->image_url) : URL::asset('public/assets/images/no-img.png') }}" alt="{!! $articles->title !!}"></a>
+						</div>
+						<div class="des">
+							<a href="{{ route('news-detail', ['slug' => $articles->slug, 'id' => $articles->id]) }}" title="{!! $articles->title !!}">{!! $articles->title !!}</a>
+							<p class="date-post"><i class="fa fa-calendar"></i> {{ date('d/m/Y', strtotime($articles->created_at)) }}</p>
+							<p class="description">
+								{!! $articles->description !!}
+							</p>
+						</div>
+					</div><!-- /item -->
+					@endforeach					
+				</div>
+			</div><!-- /block-ct-news -->
+			<nav class="block-pagination">
+				{{ $articlesList->links() }}
+			</nav><!-- /block-pagination -->
+		</div><!-- /block-col-left -->
+		<div class="col-sm-3 col-xs-12 block-col-right">
+			<div class="block-sidebar">
+				<div class="block-module block-links-sidebar">
+					<div class="block-title">
+						<h2>
+							<i class="fa fa-gift"></i>
+							KHUYẾN MÃI HOT
+						</h2>
+					</div>
+					<div class="block-content">
+						<ul class="list">
+							<li>
+								<a href="sales-detail.html" title="">
+									<p class="thumb"><img src="images/pro-sidebar/1.jpg" alt=""></p>
+									<h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
+								</a>
+							</li>
+							<li>
+								<a href="sales-detail.html" title="">
+									<p class="thumb"><img src="images/pro-sidebar/2.jpg" alt=""></p>
+									<h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
+								</a>
+							</li>
+							<li>
+								<a href="sales-detail.html" title="">
+									<p class="thumb"><img src="images/pro-sidebar/3.jpg" alt=""></p>
+									<h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
+								</a>
+							</li>
+							<li>
+								<a href="sales-detail.html" title="">
+									<p class="thumb"><img src="images/pro-sidebar/4.jpg" alt=""></p>
+									<h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
+								</a>
+							</li>
+							<li>
+								<a href="sales-detail.html" title="">
+									<p class="thumb"><img src="images/pro-sidebar/5.jpg" alt=""></p>
+									<h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div><!-- /block-module -->
+				
+			</div>
+		</div><!-- /block-col-right -->
+	</div>
+</div><!-- /block_big-title -->
+@stop

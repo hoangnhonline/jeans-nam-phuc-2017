@@ -8,15 +8,15 @@
     </h1>
     <ol class="breadcrumb">
       <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-      <li><a href="{{ route('loai-sp.index') }}">Danh mục cha</a></li>
+      <li><a href="{{ route('cate-parent.index') }}">Danh mục cha</a></li>
       <li class="active">Chỉnh sửa</li>
     </ol>
   </section>
 
   <!-- Main content -->
   <section class="content">
-    <a class="btn btn-default btn-sm" href="{{ route('loai-sp.index') }}" style="margin-bottom:5px">Quay lại</a>
-    <a class="btn btn-primary btn-sm" href="{{ route('parent-cate', $detail->slug ) }}" target="_blank" style="margin-top:-6px"><i class="fa fa-eye" aria-hidden="true"></i> Xem</a>
+    <a class="btn btn-default btn-sm" href="{{ route('cate-parent.index') }}" style="margin-bottom:5px">Quay lại</a>
+    <a class="btn btn-primary btn-sm" href="{{ route('cate-parent', $detail->slug ) }}" target="_blank" style="margin-top:-6px"><i class="fa fa-eye" aria-hidden="true"></i> Xem</a>
     <div class="row">
       <!-- left column -->
 
@@ -28,7 +28,7 @@
           </div>
           <!-- /.box-header -->
           <!-- form start -->
-          <form role="form" method="POST" action="{{ route('loai-sp.update') }}">
+          <form role="form" method="POST" action="{{ route('cate-parent.update') }}">
             {!! csrf_field() !!}
             <input type="hidden" name="id" value="{{ $detail->id }}">
             <div class="box-body">
@@ -72,7 +72,7 @@
             <!-- /.box-body -->
             <div class="box-footer">
               <button type="submit" class="btn btn-primary btn-sm">Lưu</button>
-              <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="{{ route('loai-sp.index')}}">Hủy</a>
+              <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="{{ route('cate-parent.index')}}">Hủy</a>
             </div>
             
         </div>

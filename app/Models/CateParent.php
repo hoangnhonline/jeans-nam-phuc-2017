@@ -3,14 +3,14 @@
 use Illuminate\Database\Eloquent\Model;
 
 
-class LoaiSp extends Model  {
+class CateParent extends Model  {
 
 	/**
 	 * The database table used by the model.
 	 *
 	 * @var string
 	 */
-	protected $table = 'loai_sp';	
+	protected $table = 'cate_parent';	
 
 	 /**
      * Indicates if the model should be timestamped.
@@ -39,7 +39,7 @@ class LoaiSp extends Model  {
 
     public function cates()
     {
-        return $this->hasMany('App\Models\Cate', 'loai_id');
+        return $this->hasMany('App\Models\Cate', 'parent_id');
     }
 
     public function banners()

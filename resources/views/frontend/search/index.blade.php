@@ -60,7 +60,7 @@
                                   @endif
                                 </div>
                                 @if( $product->loaiSp->is_hover == 1)            
-                                    @foreach($hoverInfo[$product->loai_id] as $info)
+                                    @foreach($hoverInfo[$product->parent_id] as $info)
                                     <?php 
                                     $tmpInfo = explode(",", $info->str_thuoctinh_id);              
                                     ?>
@@ -95,7 +95,7 @@
                 <div class="clearfix"></div>
                 <div class="text-center">
                     <div class="block_pagination">
-                        {{ $productList->appends(['loai_id' => $loai_id, 'cate_id' => $cate_id, 'price_fm' => $price_fm, 'price_to' => $price_to, 'cate' => $cateArr, 'keyword' => $tu_khoa, 'color' => $colorArr])->links() }}   
+                        {{ $productList->appends(['parent_id' => $parent_id, 'cate_id' => $cate_id, 'price_fm' => $price_fm, 'price_to' => $price_to, 'cate' => $cateArr, 'keyword' => $tu_khoa, 'color' => $colorArr])->links() }}   
                     </div>                
                 </div>
             </div>

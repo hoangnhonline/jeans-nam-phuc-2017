@@ -23,6 +23,6 @@ class Menu extends Model  {
      *
      * @var array
      */
-    protected $fillable = ['title', 'type', 'url', 'display_order', 'title_attr', 'status', 'menu_id', 'slug', 'object_id'];
+    protected $fillable = ['title', 'type', 'url', 'display_order', 'title_attr', 'status', 'menu_id', 'slug', 'object_id', 'parent_id'];
    
 }

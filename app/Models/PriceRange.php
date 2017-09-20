@@ -23,6 +23,6 @@ class PriceRange extends Model  {
      *
      * @var array
      */
-    protected $fillable = ['name', 'alias', 'from', 'to', 'loai_id'];
+    protected $fillable = ['name', 'alias', 'from', 'to', 'parent_id'];
     
 }

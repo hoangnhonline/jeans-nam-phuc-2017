@@ -125,7 +125,7 @@ $(document).ready(function(){
                 strTemp = rows[i].id;
                 strOrder += strTemp.replace('row-','') + ";";
             }     
-            updateOrder("loai_sp", strOrder);
+            updateOrder("cate_parent", strOrder);
         }
     });
 });

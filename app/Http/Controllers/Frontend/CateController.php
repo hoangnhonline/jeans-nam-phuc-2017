@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Models\LoaiSp;
+use App\Models\CateParent;
 use App\Models\Cate;
 use App\Models\Product;
 use App\Models\SpThuocTinh;
@@ -36,54 +36,63 @@ class CateController extends Controller
     *
     * @return Response
     */
-    public function index(Request $request)
+    public function parent(Request $request)
     {   
         $productArr = [];
-        $slug = $request->slug;
-        $loaiDetail = LoaiSp::where('slug', $slug)->first();
-        $price_fm = $request->price_fm ? $request->price_fm : 0;      
-        $price_to = $request->price_to ? $request->price_to : 500000000;      
-        if($loaiDetail){//danh muc cha
-            $loai_id = $loaiDetail->id;
-            
-            $query = Product::where('loai_id', $loai_id)
-                ->where('so_luong_ton', '>', 0)
-                ->where('price', '>', 0)       
-                ->where('is_old', 0)               
-                ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')
-                ->leftJoin('sp_thuoctinh', 'sp_thuoctinh.product_id', '=','product.id')
-                ->select('product_img.image_url', 'product.*', 'thuoc_tinh')              
-                ->orderBy('product.id', 'desc');
+        $cateList = (object) [];
+        
+        $slugCateParent = $request->slug;
+        if(!$slugCateParent){
+            return redirect()->route('home');       
+        }
+        $parentDetail = CateParent::where('slug', $slugCateParent)->first();
 
-                $productList  = $query->paginate(20);
- 
-            $hoverInfo = HoverInfo::where('loai_id', $loaiDetail->id)->orderBy('display_order', 'asc')->orderBy('id', 'asc')->get();
+        if($parentDetail){
+            $parent_id = $parentDetail->id;
             
-            $socialImage = $loaiDetail->banner_menu;
-
-            if( $loaiDetail->meta_id > 0){
-               $seo = MetaData::find( $loaiDetail->meta_id )->toArray();
-            }else{
-                $seo['title'] = $seo['description'] = $seo['keywords'] = $loaiDetail->name;
-            }                                     
-            return view('frontend.cate.parent', compact('productList', 'loaiDetail', 'hoverInfo', 'socialImage', 'seo', 'price_fm', 'price_to'));
+            $productList = Product::where('parent_id', $parent_id)
+                            ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')
+                            ->select('product_img.image_url', 'product.*')                                                   
+                            ->orderBy('product.id', 'desc')
+                            ->paginate(16);
+            
+        if( $parentDetail->meta_id > 0){
+           $seo = MetaData::find( $parentDetail->meta_id )->toArray();
         }else{
-            // [ page ]
-            $detailPage = Pages::where('slug', $slug)->first();
-            if(!$detailPage){
-                return redirect()->route('home');
-            }
-            $seo['title'] = $detailPage->meta_title ? $detailPage->meta_title : $detailPage->title;
-            $seo['description'] = $detailPage->meta_description ? $detailPage->meta_description : $detailPage->title;
-            $seo['keywords'] = $detailPage->meta_keywords ? $detailPage->meta_keywords : $detailPage->title;        
-            $newProductList =  Product::where('so_luong_ton', '>', 0)->where('price', '>', 0)
-                        ->where('is_new', 1)                   
-                        ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')
-                        ->leftJoin('sp_thuoctinh', 'sp_thuoctinh.product_id', '=','product.id')
-                        ->join('loai_sp', 'loai_sp.id', '=', 'product.loai_id')
-                        ->select('product_img.image_url', 'product.*', 'thuoc_tinh')
-                        ->orderBy('id', 'desc')->limit(6)->get();   
-            return view('frontend.pages.index', compact('detailPage', 'seo', 'newProductList'));    
+            $seo['title'] = $seo['description'] = $seo['keywords'] = $parentDetail->name;
+        }  
+            return view('frontend.cate.parent', compact('parent_id', 'parentDetail', 'cateList', 'productList', 'seo'));
+        }else{
+            return redirect()->route('home');       
+        }
+    }
+    public function child(Request $request){
+        $cateList = (object) [];
+        $slugCateParent = $request->slugCateParent;
+        $parentDetail = CateParent::where('slug', $slugCateParent)->first(); 
+        $slugCateChild = $request->slug;
+        
+        if(!$slugCateChild){
+            return redirect()->route('home');
+        }
+        $cateDetail = Cate::where('slug', $slugCateChild)->first();
+        if($cateDetail){
+            $cate_id = $cateDetail->id;
+            
+            $productList = Product::where('cate_id', $cate_id)
+                                    ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')
+                                    ->select('product_img.image_url', 'product.*')                                                   
+                                    ->orderBy('product.id', 'desc')
+                                    ->paginate(15);
+            if( $cateDetail->meta_id > 0){
+               $seo = MetaData::find( $cateDetail->meta_id )->toArray();
+            }else{
+                $seo['title'] = $seo['description'] = $seo['keywords'] = $cateDetail->name;
+            }  
+            return view('frontend.cate.child', compact('parentDetail', 'parent_id', 'cateDetail', 'productList', 'seo'));
+            
+        }else{
+            return redirect()->route('home');   
         }
     }
     public function getSeoInfo($meta_id){
@@ -149,17 +158,17 @@ class CateController extends Controller
     {
 
         $productArr = [];
-        $slugLoaiSp = $request->slugLoaiSp;
+        $slugCateParent = $request->slugCateParent;
         $slug = $request->slug;
-        $loaiDetail = LoaiSp::where('slug', $slugLoaiSp)->first();
+        $loaiDetail = CateParent::where('slug', $slugCateParent)->first();
         if(!$loaiDetail){
             return redirect()->route('home');
         }
-        $loai_id = $loaiDetail->id;
-        $cateDetail = Cate::where(['loai_id' => $loai_id, 'slug' => $slug])->first();
+        $parent_id = $loaiDetail->id;
+        $cateDetail = Cate::where(['parent_id' => $parent_id, 'slug' => $slug])->first();
         $cate_id = $cateDetail->id;
         
-        $query = Product::where('cate_id', $cateDetail->id)->where('loai_id', $loai_id)->where('so_luong_ton', '>', 0)->where('price', '>', 0)->where('is_old', 0)
+        $query = Product::where('cate_id', $cateDetail->id)->where('parent_id', $parent_id)->where('so_luong_ton', '>', 0)->where('price', '>', 0)->where('is_old', 0)
                 ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')
                 ->leftJoin('sp_thuoctinh', 'sp_thuoctinh.product_id', '=','product.id')
                 ->select('product_img.image_url', 'product.*', 'thuoc_tinh');
@@ -170,7 +179,7 @@ class CateController extends Controller
                     }
                 $query->orderBy('product.id', 'desc');
                 $productList = $query->paginate(20);
-        $hoverInfo = HoverInfo::where('loai_id', $loaiDetail->id)->orderBy('display_order', 'asc')->orderBy('id', 'asc')->get();  
+        $hoverInfo = HoverInfo::where('parent_id', $loaiDetail->id)->orderBy('display_order', 'asc')->orderBy('id', 'asc')->get();  
         //dd($hoverInfo);
         $socialImage = $cateDetail->icon_url;
         if( $cateDetail->meta_id > 0){            

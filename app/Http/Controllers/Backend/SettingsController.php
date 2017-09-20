@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Helpers\Helper;
 use App\Models\Product;
 use App\Models\Settings;
+use App\Models\Text;
 use File, Session, DB, Auth;
 
 class SettingsController  extends Controller
@@ -30,6 +31,13 @@ class SettingsController  extends Controller
         $settingArr = Settings::whereRaw('1')->lists('value', 'name');
 
         return view('backend.settings.noti', compact( 'settingArr'));
+    }
+    public function saveContent(Request $request){
+        $id = $request->id;
+        $content = $request->content;
+        $md = Text::find($id);
+        $md->content = $content;
+        $md->save();
     }
     public function dashboard(Request $request)
     {              
@@ -81,10 +89,7 @@ class SettingsController  extends Controller
         ]);  
         $dataArr['updated_user'] = Auth::user()->id;
 
-        unset($dataArr['_token']);
-        unset($dataArr['logo_name']);
-        unset($dataArr['favicon_name']);
-        unset($dataArr['banner_name']);
+        unset($dataArr['_token']);  
 
     	foreach( $dataArr as $key => $value ){
     		$data['value'] = $value;

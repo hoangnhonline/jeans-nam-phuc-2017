@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Cate;
-use App\Models\LoaiSp;
+use App\Models\CateParent;
 use App\Models\Product;
 use App\Models\Orders;
 use App\Models\OrderDetail;

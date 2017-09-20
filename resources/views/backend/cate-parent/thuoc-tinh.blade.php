@@ -8,8 +8,8 @@
   </h1>
   <ol class="breadcrumb">
     <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-    <li><a href="{{ route( 'loai-sp.list-thuoc-tinh', [ 'loai_id' => $detailLoai->id ] ) }}">Thuộc tính hiển thị</a></li>
-    <li class="active">Cập nhật</li>
+    <li><a href="{{ route( 'cate-parent.list-thuoc-tinh', [ 'parent_id' => $detailParent->id ] ) }}">Thuộc tính hiển thị</a></li>
+    <li class="active">Thêm mới</li>
   </ol>
 </section>
 
@@ -20,14 +20,13 @@
       @if(Session::has('message'))
       <p class="alert alert-info" >{{ Session::get('message') }}</p>
       @endif    
-      <form method="POST" action="{{ route('loai-sp.update-thuoc-tinh')}}" >
+      <form method="POST" action="{{ route('cate-parent.store-thuoc-tinh')}}" >
       <div class="box">
 
         <div class="box-header with-border">
-          <h3 class="box-title">Cập nhật thông tin hiển thị khi hover : <span style="color:red">{{ $detailLoai->name }}</span></h3>
+          <h3 class="box-title">Thêm thông tin hiển thị khi hover : <span style="color:red">{{ $detailParent->name }}</span></h3>
         </div>
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <input type="hidden" name="id" value="{{ $detail->id }}">
         <!-- /.box-header -->
         <div class="box-body">
         @if (count($errors) > 0)
@@ -41,10 +40,9 @@
         @endif
         <div class="form-group">
         	<label class="">Text hiển thị</label>
-        	<input type="text" name="text_hien_thi" class="form-control" value="{{ $detail->text_hien_thi }}">
+        	<input type="text" name="text_hien_thi" class="form-control" value="{{ old('text_hien_thi') }}">
         </div>
-        <input type="hidden" name="loai_id" value="{{ $detailLoai->id }}">
-        <input type="hidden" name="display_order" value="{{ $detail->display_order }}">
+        <input type="hidden" name="parent_id" value="{{ $detailParent->id }}">
         <label class="">Chọn thuộc tính</label>
          @if( !empty( $thuocTinhArr ))
          <table class="table table-responsive table-bordered">
@@ -55,7 +53,7 @@
             @if( !empty($loaithuoctinh['child']))
               @foreach( $loaithuoctinh['child'] as $thuoctinh)
               <tr>
-              <td width="1%"><input type="checkbox" name="str_thuoc_tinh_id[]" value="{{ $thuoctinh['id'] }}" {{ in_array($thuoctinh['id'], $arrSelected) ? "checked" : "" }}></td>
+              <td width="1%"><input type="checkbox" name="str_thuoc_tinh_id[]" value="{{ $thuoctinh['id'] }}" ></td>
                 <td >{{ $thuoctinh['name']}}</td>
                 
               </tr>
@@ -66,7 +64,7 @@
          @endif
          <div class="box-footer">
           <button type="submit" class="btn btn-primary btn-sm">Lưu</button>
-          <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="{{ route('loai-sp.list-thuoc-tinh', ['loai_id' => $detailLoai->id ])}}">Hủy</a>
+          <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="{{ route('cate-parent.list-thuoc-tinh', ['parent_id' => $detailParent->id ])}}">Hủy</a>
         </div>
         </div>        
       </div>
@@ -97,14 +95,14 @@ function callDelete(name, url){
   return flag;
 }
 $(document).ready(function(){
-  $('#loai_id, #loai_thuoc_tinh_id').change(function(){
+  $('#parent_id, #loai_thuoc_tinh_id').change(function(){
     $('#searchForm').submit();
   });
-  $('#loai_id').change(function(){
+  $('#parent_id').change(function(){
     $.ajax({
       url : $('#route-ajax-get-thuoc-tinh-by-id').val(),
       data : {
-        loai_id : $(this).val()
+        parent_id : $(this).val()
       },
       type: "GET",
       success : function(data){

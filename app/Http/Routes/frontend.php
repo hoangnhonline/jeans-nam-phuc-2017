@@ -73,9 +73,12 @@ Route::group(['namespace' => 'Frontend'], function()
         Route::get('/reset-password/{key}', ['as' => 'reset-password', 'uses' => 'CustomerController@resetPassword']);
         Route::post('save-reset-password', ['as' => 'save-reset-password', 'uses' => 'CustomerController@saveResetPassword']);
     });
-    Route::get('{slugLoaiSp}/{slug}/', ['as' => 'child-cate', 'uses' => 'CateController@cate']);
+    Route::get('tag/{slug}', ['as' => 'tag', 'uses' => 'DetailController@tagDetail']);
+    Route::get('tin-tuc/{slug}', ['as' => 'news-list', 'uses' => 'NewsController@newsList']);
+    Route::get('{slugCateParent}/{slug}/', ['as' => 'cate', 'uses' => 'CateController@child']);
     Route::post('/dang-ki-newsletter', ['as' => 'register.newsletter', 'uses' => 'HomeController@registerNews']);
     Route::get('/cap-nhat-thong-tin', ['as' => 'cap-nhat-thong-tin', 'uses' => 'CartController@updateUserInformation']);        
+
     Route::post('/search', ['as' => 'ajax-search', 'uses' => 'HomeController@ajaxSearch']);        
     Route::get('/tin-tuc/{slug}-p{id}.html', ['as' => 'news-detail', 'uses' => 'NewsController@newsDetail']);
     Route::post('/get-district', ['as' => 'get-district', 'uses' => 'DistrictController@getDistrict']);
@@ -88,9 +91,10 @@ Route::group(['namespace' => 'Frontend'], function()
     Route::get('so-sanh.html', ['as' => 'so-sanh', 'uses' => 'CompareController@index']);
     Route::get('lien-he.html', ['as' => 'contact', 'uses' => 'HomeController@contact']);
     Route::get('may-cu-gia-re.html', ['as' => 'old-device', 'uses' => 'HomeController@oldDevice']);
-    Route::get('tin-tuc.html', ['as' => 'news-list', 'uses' => 'NewsController@newsList']);
+    
 
-    Route::get('{slug}.html', ['as' => 'parent-cate', 'uses' => 'CateController@index']);
+    Route::get('{slug}', ['as' => 'cate-parent', 'uses' => 'CateController@parent']);
+    Route::get('{slug}.html', ['as' => 'pages', 'uses' => 'CateController@index']);
 
 });
 

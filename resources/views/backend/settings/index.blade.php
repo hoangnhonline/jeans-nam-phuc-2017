@@ -68,45 +68,30 @@
                   <textarea class="form-control" rows="3" name="email_cc" id="email_cc">{{ $settingArr['email_cc'] }}</textarea>
                 </div>
                 <div class="form-group">
-                  <label>Mô tả chung</label>
-                  <textarea class="form-control" rows="7" name="mo_ta_sp" id="mo_ta_sp">{{ $settingArr['mo_ta_sp'] }}</textarea>
+                  <label>Thông tin công ty</label>
+                  <textarea class="form-control" rows="7" name="thong_tin_cong_ty" id="thong_tin_cong_ty">{{ $settingArr['thong_tin_cong_ty'] }}</textarea>
                 </div>
                 <div class="form-group">
                   <label>Code google analystic </label>
                   <input type="text" class="form-control" name="google_analystic" id="google_analystic" value="{{ $settingArr['google_analystic'] }}">
                 </div>   
-                <div class="form-group" style="margin-top:10px;margin-bottom:10px">  
-                  <label class="col-md-3 row">Logo </label>    
-                  <div class="col-md-9">
-                    <img id="thumbnail_logo" src="{{ $settingArr['logo'] ? Helper::showImage($settingArr['logo']) : URL::asset('public/admin/dist/img/img.png') }}" class="img-logo" width="150" >
+                <div class="form-group col-md-12" style="margin-top:10px;margin-bottom:10px">  
+                  <label class="col-md-4 row">Logo ( 255 x 55 px )</label>    
+                  <div class="col-md-8 div-upload">
+                    <img class="show_thumbnail logo" src="{{ $settingArr['logo'] ? Helper::showImage($settingArr['logo']) : URL::asset('public/admin/dist/img/img.png') }}" class="img-logo" width="150" >
                     
-                    <input type="file" id="file-logo" style="display:none" />
+                    <input type="file" data-value="logo" class="click-choose-file" style="display:none" />
                  
-                    <button class="btn btn-default btn-sm" id="btnUploadLogo" type="button"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload</button>
+                    <button class="btn btn-default btn-sm btnUploadImage" data-value="logo"  data-choose="file-logo" type="button"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload</button>
                   </div>
                   <div style="clear:both"></div>
                 </div>
-                <div style="clear:both"></div> 
-                <div class="form-group" style="margin-top:10px;margin-bottom:10px">  
-                  <label class="col-md-3 row">Favicon </label>    
-                  <div class="col-md-9">
-                    <img id="thumbnail_favicon" src="{{ $settingArr['favicon'] ? Helper::showImage($settingArr['favicon']) : URL::asset('public/admin/dist/img/img.png') }}" class="img-favicon" width="50">
-                    
-                    <input type="file" id="file-favicon" style="display:none" />
-                 
-                    <button class="btn btn-default btn-sm" id="btnUploadFavicon" type="button"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload</button>
-                  </div>
-                  <div style="clear:both"></div>
-                </div>
-                <div style="clear:both"></div> 
-                <div class="form-group" style="margin-top:10px;margin-bottom:10px">  
-                  <label class="col-md-3 row">Banner ( og:image ) </label>    
-                  <div class="col-md-9">
-                    <img id="thumbnail_banner" src="{{ $settingArr['banner'] ? Helper::showImage($settingArr['banner']) : URL::asset('public/admin/dist/img/img.png') }}" class="img-banner" width="200">
-                    
-                    <input type="file" id="file-banner" style="display:none" />
-                 
-                    <button class="btn btn-default btn-sm" id="btnUploadBanner" type="button"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload</button>
+                <div style="clear:both"></div>            
+                <div class="form-group col-md-12" style="margin-top:10px;margin-bottom:10px">  
+                  <label class="col-md-4 row">Banner ( og:image ) </label>    
+                  <div class="col-md-8 div-upload">
+                    <img class="show_thumbnail banner" src="{{ $settingArr['banner'] ? Helper::showImage($settingArr['banner']) : URL::asset('public/admin/dist/img/img.png') }}" class="img-banner" width="200">                  
+                    <button class="btn btn-default btn-sm btnUploadImage" data-value="banner" type="button"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload</button>
                   </div>
                   <div style="clear:both"></div>
                 </div>
@@ -154,12 +139,12 @@
       </div>
       <!--/.col (left) -->      
     </div>
-<input type="hidden" name="logo" id="logo" value="{{ $settingArr['logo'] }}"/>          
-<input type="hidden" name="logo_name" id="logo_name" value="{{ old('logo_name') }}"/>
-<input type="hidden" name="favicon" id="favicon" value="{{ $settingArr['favicon'] }}"/>          
-<input type="hidden" name="favicon_name" id="favicon_name" value="{{ old('favicon_name') }}"/>
+<input type="hidden" name="logo" id="logo" value="{{ $settingArr['logo'] }}"/>         
+
+<input type="hidden" name="favicon" id="favicon" value="{{ $settingArr['favicon'] }}"/>         
+
 <input type="hidden" name="banner" id="banner" value="{{ $settingArr['banner'] }}"/>          
-<input type="hidden" name="banner_name" id="banner_name" value="{{ old('banner_name') }}"/>
+
 
     </form>
     <!-- /.row -->
@@ -170,140 +155,33 @@
 @stop
 @section('javascript_page')
 <script type="text/javascript">
-    $(document).ready(function(){
-      var editor = CKEDITOR.replace( 'mo_ta_sp',{
-          language : 'vi',
-          height : 500
+var h = screen.height;
+var w = screen.width;
+var left = (screen.width/2)-((w-300)/2);
+var top = (screen.height/2)-((h-100)/2);
+function openKCFinder_singleFile(obj_str) {
+  alert('123');
+      window.KCFinder = {};
+      window.KCFinder.callBack = function(url) {
+         $('#' + obj_str).val(url);
+         $('.show_thumbnail.' + obj_str).attr('src', $('#app_url').val() + url);
+          window.KCFinder = null;
+      };
+      window.open('{{ URL::asset("public/admin/dist/js/kcfinder/browse.php?type=images") }}', 'kcfinder_single','scrollbars=1,menubar=no,width='+ (w-300) +',height=' + (h-300) +',top=' + top+',left=' + left);
+  }
+    $(document).ready(function(){     
+      $('.btnUploadImage').click(function(){
+        openKCFinder_singleFile($(this).data('value'));
+        //$(this).parents('.div-upload').find('.click-choose-file').click();
       });
-      $('#btnUploadLogo').click(function(){        
-        $('#file-logo').click();
-      });
-      $('#btnUploadFavicon').click(function(){        
-        $('#file-favicon').click();
-      });
-      $('#btnUploadBanner').click(function(){        
-        $('#file-banner').click();
-      });
-      var files = "";
-      $('#file-logo').change(function(e){
-         files = e.target.files;
-         
-         if(files != ''){
-           var dataForm = new FormData();        
-          $.each(files, function(key, value) {
-             dataForm.append('file', value);
-          });   
-          
-          dataForm.append('date_dir', 0);
-          dataForm.append('folder', 'tmp');
-
-          $.ajax({
-            url: $('#route_upload_tmp_image').val(),
-            type: "POST",
-            async: false,      
-            data: dataForm,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-              if(response.image_path){
-                $('#thumbnail_logo').attr('src',$('#upload_url').val() + response.image_path);
-                $( '#logo' ).val( response.image_path );
-                $( '#logo_name' ).val( response.image_name );
-              }
-              console.log(response.image_path);
-                //window.location.reload();
-            },
-            error: function(response){                             
-                var errors = response.responseJSON;
-                for (var key in errors) {
-                  
-                }
-                //$('#btnLoading').hide();
-                //$('#btnSave').show();
-            }
-          });
-        }
-      });
-      var filesFavicon = '';
-      $('#file-favicon').change(function(e){
-         filesFavicon = e.target.files;
-         
-         if(filesFavicon != ''){
-           var dataForm = new FormData();        
-          $.each(filesFavicon, function(key, value) {
-             dataForm.append('file', value);
-          });
-          
-          dataForm.append('date_dir', 0);
-          dataForm.append('folder', 'tmp');
-
-          $.ajax({
-            url: $('#route_upload_tmp_image').val(),
-            type: "POST",
-            async: false,      
-            data: dataForm,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-              if(response.image_path){
-                $('#thumbnail_favicon').attr('src',$('#upload_url').val() + response.image_path);
-                $('#favicon').val( response.image_path );
-                $( '#favicon_name' ).val( response.image_name );
-              }
-              console.log(response.image_path);
-                //window.location.reload();
-            },
-            error: function(response){                             
-                var errors = response.responseJSON;
-                for (var key in errors) {
-                  
-                }
-                //$('#btnLoading').hide();
-                //$('#btnSave').show();
-            }
-          });
-        }
-      });
-      
-      var filesBanner = '';
-      $('#file-banner').change(function(e){
-         filesBanner = e.target.files;
-         
-         if(filesBanner != ''){
-           var dataForm = new FormData();        
-          $.each(filesBanner, function(key, value) {
-             dataForm.append('file', value);
-          });
-          
-          dataForm.append('date_dir', 0);
-          dataForm.append('folder', 'tmp');
-
-          $.ajax({
-            url: $('#route_upload_tmp_image').val(),
-            type: "POST",
-            async: false,      
-            data: dataForm,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-              if(response.image_path){
-                $('#thumbnail_banner').attr('src',$('#upload_url').val() + response.image_path);
-                $('#banner').val( response.image_path );
-                $( '#banner_name' ).val( response.image_name );
-              }
-              console.log(response.image_path);
-                //window.location.reload();
-            },
-            error: function(response){                             
-                var errors = response.responseJSON;
-                for (var key in errors) {
-                  
-                }
-                //$('#btnLoading').hide();
-                //$('#btnSave').show();
-            }
-          });
-        }
+      var editor = CKEDITOR.replace( 'thong_tin_cong_ty',{
+          language : 'vi',       
+          height : 300,
+          toolbarGroups : [            
+            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },          
+            { name: 'links', groups: [ 'links' ] },           
+            '/',            
+          ]
       });
 
     });

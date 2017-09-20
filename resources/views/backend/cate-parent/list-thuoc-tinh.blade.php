@@ -8,7 +8,7 @@
   </h1>
   <ol class="breadcrumb">
     <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-    <li><a href="{{ route( 'loai-sp.list-thuoc-tinh', [ 'loai_id' => $detailLoai->id ] ) }}">Thuộc tính hiển thị</a></li>
+    <li><a href="{{ route( 'cate-parent.list-thuoc-tinh', [ 'parent_id' => $detailParent->id ] ) }}">Thuộc tính hiển thị</a></li>
     <li class="active">Danh sách</li>
   </ol>
 </section>
@@ -20,12 +20,12 @@
       @if(Session::has('message'))
       <p class="alert alert-info" >{{ Session::get('message') }}</p>
       @endif
-      <a href="{{ route('loai-sp.thuoc-tinh', ['loai_id' => $detailLoai->id]) }}" class="btn btn-info btn-sm" style="margin-bottom:5px">Tạo mới</a>
-       <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="{{ route('loai-sp.index')}}" style="margin-bottom:5px">Quay lại</a>
+      <a href="{{ route('cate-parent.thuoc-tinh', ['parent_id' => $detailParent->id]) }}" class="btn btn-info btn-sm" style="margin-bottom:5px">Tạo mới</a>
+       <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="{{ route('cate-parent.index')}}" style="margin-bottom:5px">Quay lại</a>
       <div class="box">
 
         <div class="box-header with-border">
-          <h3 class="box-title">Thông tin hiển thị khi hover : <span style="color:red">{{ $detailLoai->name }}</span></h3>
+          <h3 class="box-title">Thông tin hiển thị khi hover : <span style="color:red">{{ $detailParent->name }}</span></h3>
         </div>
         
         <!-- /.box-header -->
@@ -49,7 +49,7 @@
                   <img src="{{ URL::asset('public/admin/dist/img/move.png')}}" class="move img-thumbnail" alt="Cập nhật thứ tự"/>
                 </td>
                 <td>                  
-                  <a href="{{ route( 'loai-sp.edit', [ 'id' => $item->id ]) }}">{{ $item->text_hien_thi }}</a>
+                  <a href="{{ route( 'cate-parent.edit', [ 'id' => $item->id ]) }}">{{ $item->text_hien_thi }}</a>
                   
                 </td>
                 <td>
@@ -63,9 +63,9 @@
                 </td>
                 <td style="white-space:nowrap; text-align:right">
                  
-                  <a href="{{ route( 'loai-sp.edit-thuoc-tinh', [ 'loai_id' => $item->loai_id,'id' => $item->id ]) }}" class="btn-sm btn btn-warning">Chỉnh sửa</a>                 
+                  <a href="{{ route( 'cate-parent.edit-thuoc-tinh', [ 'parent_id' => $item->parent_id,'id' => $item->id ]) }}" class="btn-sm btn btn-warning">Chỉnh sửa</a>                 
                   
-                  <a onclick="return callDelete('{{ $item->text_hien_thi }}','{{ route( 'loai-sp.destroyThuocTinh', ['loai_id' => $item->loai_id, 'id' => $item->id ]) }}');" class="btn-sm btn btn-danger">Xóa</a>
+                  <a onclick="return callDelete('{{ $item->text_hien_thi }}','{{ route( 'cate-parent.destroyThuocTinh', ['parent_id' => $item->parent_id, 'id' => $item->id ]) }}');" class="btn-sm btn btn-danger">Xóa</a>
                  
                 </td>
               </tr> 

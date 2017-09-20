@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Models\LoaiSp;
+use App\Models\CateParent;
 use App\Models\Cate;
 use App\Models\Color;
 use App\Models\LoaiThuocTinh;
@@ -33,7 +33,7 @@ class OldController extends Controller
         $arrSearch['is_sale'] = $is_sale = isset($request->is_sale) ? $request->is_sale : null;
         $arrSearch['is_new'] = $is_new = isset($request->is_new) ? $request->is_new : null;
         $is_old = 1;
-        $arrSearch['loai_id'] = $loai_id = isset($request->loai_id) ? $request->loai_id : null;
+        $arrSearch['parent_id'] = $parent_id = isset($request->parent_id) ? $request->parent_id : null;
         $arrSearch['cate_id'] = $cate_id = isset($request->cate_id) ? $request->cate_id : null;
        
         $arrSearch['name'] = $name = isset($request->name) && trim($request->name) != '' ? trim($request->name) : '';
@@ -51,8 +51,8 @@ class OldController extends Controller
         if( $is_sale ){
             $query->where('product.is_sale', $is_sale);
         }
-        if( $loai_id ){
-            $query->where('product.loai_id', $loai_id);
+        if( $parent_id ){
+            $query->where('product.parent_id', $parent_id);
         }
         if( $cate_id ){
             $query->where('product.cate_id', $cate_id);
@@ -62,7 +62,7 @@ class OldController extends Controller
             $query->where('product.name', 'LIKE', '%'.$name.'%');          
         }
         $query->join('users', 'users.id', '=', 'product.created_user');
-        $query->join('loai_sp', 'loai_sp.id', '=', 'product.loai_id');
+        $query->join('cate_parent', 'cate_parent.id', '=', 'product.parent_id');
         $query->join('cate', 'cate.id', '=', 'product.cate_id');
         $query->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id');        
         if($is_hot){
@@ -71,12 +71,12 @@ class OldController extends Controller
             $query->orderBy('product.id', 'desc');    
         }
         
-        $items = $query->select(['product_img.image_url','product.*','product.id as product_id', 'full_name' , 'product.created_at as time_created', 'users.full_name', 'loai_sp.name as ten_loai', 'cate.name as ten_cate'])
+        $items = $query->select(['product_img.image_url','product.*','product.id as product_id', 'full_name' , 'product.created_at as time_created', 'users.full_name', 'cate_parent.name as ten_loai', 'cate.name as ten_cate'])
         ->paginate(50);   
 
-        $loaiSpArr = LoaiSp::all();  
-        if( $loai_id ){
-            $cateArr = Cate::where('loai_id', $loai_id)->orderBy('display_order', 'desc')->get();
+        $loaiSpArr = CateParent::all();  
+        if( $parent_id ){
+            $cateArr = Cate::where('parent_id', $parent_id)->orderBy('display_order', 'desc')->get();
         }else{
             $cateArr = (object) [];
         }
@@ -87,13 +87,13 @@ class OldController extends Controller
     {
         
         $arrSearch['status'] = $status = isset($request->status) ? $request->status : 1;
-        $arrSearch['loai_id'] = $loai_id = isset($request->loai_id) ? $request->loai_id : null;
+        $arrSearch['parent_id'] = $parent_id = isset($request->parent_id) ? $request->parent_id : null;
         $arrSearch['cate_id'] = $cate_id = isset($request->cate_id) ? $request->cate_id : null;
         $arrSearch['name'] = $name = isset($request->name) && trim($request->name) != '' ? trim($request->name) : '';
         
         $query = Product::where('product.status', $status);
-        if( $loai_id ){
-            $query->where('product.loai_id', $loai_id);
+        if( $parent_id ){
+            $query->where('product.parent_id', $parent_id);
         }
         if( $cate_id ){
             $query->where('product.cate_id', $cate_id);
@@ -105,9 +105,9 @@ class OldController extends Controller
         $items = $query->select(['product.*','product.id as product_id' , 'product.created_at as time_created'])
         ->paginate(50);
 
-        $loaiSpArr = LoaiSp::all();  
-        if( $loai_id ){
-            $cateArr = Cate::where('loai_id', $loai_id)->orderBy('display_order', 'desc')->get();
+        $loaiSpArr = CateParent::all();  
+        if( $parent_id ){
+            $cateArr = Cate::where('parent_id', $parent_id)->orderBy('display_order', 'desc')->get();
         }else{
             $cateArr = (object) [];
         }
@@ -116,14 +116,14 @@ class OldController extends Controller
     }    
     public function ajaxSearch(Request $request){    
         $search_type = $request->search_type;
-        $arrSearch['loai_id'] = $loai_id = isset($request->loai_id) ? $request->loai_id : -1;
+        $arrSearch['parent_id'] = $parent_id = isset($request->parent_id) ? $request->parent_id : -1;
         $arrSearch['cate_id'] = $cate_id = isset($request->cate_id) ? $request->cate_id : -1;
         $arrSearch['name'] = $name = isset($request->name) && trim($request->name) != '' ? trim($request->name) : '';
         
         $query = Product::whereRaw('1');
         
-        if( $loai_id ){
-            $query->where('product.loai_id', $loai_id);
+        if( $parent_id ){
+            $query->where('product.parent_id', $parent_id);
         }
         if( $cate_id ){
             $query->where('product.cate_id', $cate_id);
@@ -133,16 +133,16 @@ class OldController extends Controller
             $query->orWhere('name_extend', 'LIKE', '%'.$name.'%');
         }
         $query->join('users', 'users.id', '=', 'product.created_user');
-        $query->join('loai_sp', 'loai_sp.id', '=', 'product.loai_id');
+        $query->join('cate_parent', 'cate_parent.id', '=', 'product.parent_id');
         $query->join('cate', 'cate.id', '=', 'product.cate_id');
         $query->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id');        
         $query->orderBy('product.id', 'desc');
-        $items = $query->select(['product_img.image_url','product.*','product.id as product_id', 'full_name' , 'product.created_at as time_created', 'users.full_name', 'loai_sp.name as ten_loai', 'cate.name as ten_cate'])
+        $items = $query->select(['product_img.image_url','product.*','product.id as product_id', 'full_name' , 'product.created_at as time_created', 'users.full_name', 'cate_parent.name as ten_loai', 'cate.name as ten_cate'])
         ->paginate(1000);
 
-        $loaiSpArr = LoaiSp::all();  
-        if( $loai_id ){
-            $cateArr = Cate::where('loai_id', $loai_id)->orderBy('display_order', 'desc')->get();
+        $loaiSpArr = CateParent::all();  
+        if( $parent_id ){
+            $cateArr = Cate::where('parent_id', $parent_id)->orderBy('display_order', 'desc')->get();
         }else{
             $cateArr = (object) [];
         }
@@ -157,17 +157,17 @@ class OldController extends Controller
     */
     public function create(Request $request)
     {
-        $loai_id = $request->loai_id ? $request->loai_id : null;
+        $parent_id = $request->parent_id ? $request->parent_id : null;
         $cate_id = $request->cate_id ? $request->cate_id : null;
         $cateArr = $loaiThuocTinhArr = (object) [];
         $thuocTinhArr = [];
-        $loaiSpArr = LoaiSp::all();
+        $loaiSpArr = CateParent::all();
         
-        if( $loai_id ){
+        if( $parent_id ){
             
-            $cateArr = Cate::where('loai_id', $loai_id)->select('id', 'name')->orderBy('display_order', 'desc')->get();
+            $cateArr = Cate::where('parent_id', $parent_id)->select('id', 'name')->orderBy('display_order', 'desc')->get();
             
-            $loaiThuocTinhArr = LoaiThuocTinh::where('loai_id', $loai_id)->orderBy('display_order')->get();
+            $loaiThuocTinhArr = LoaiThuocTinh::where('parent_id', $parent_id)->orderBy('display_order')->get();
 
             if( $loaiThuocTinhArr->count() > 0){
                 foreach ($loaiThuocTinhArr as $value) {
@@ -181,7 +181,7 @@ class OldController extends Controller
             }
         }
         $colorArr = Color::orderBy('display_order')->get();        
-        return view('backend.old.create', compact('loaiSpArr', 'cateArr', 'colorArr', 'loai_id', 'thuocTinhArr', 'cate_id'));
+        return view('backend.old.create', compact('loaiSpArr', 'cateArr', 'colorArr', 'parent_id', 'thuocTinhArr', 'cate_id'));
     }
 
     /**
@@ -232,7 +232,7 @@ class OldController extends Controller
             $dataArr['display_order'] = Helper::getNextOrder('product', 
                                             [
                                             'is_old' => $dataArr['is_old'],
-                                            'loai_id' => $dataArr['loai_id'],
+                                            'parent_id' => $dataArr['parent_id'],
                                             'cate_id' => $dataArr['cate_id']
                                         ]);
         }
@@ -247,7 +247,7 @@ class OldController extends Controller
         Session::flash('message', 'Tạo mới sản phẩm thành công');
 
         return redirect()->route('old.index', [
-                        'loai_id' => $dataArr['loai_id'], 
+                        'parent_id' => $dataArr['parent_id'], 
                         'cate_id' => $dataArr['cate_id']                        
                         ]
                         );
@@ -396,13 +396,13 @@ class OldController extends Controller
             $spThuocTinhArr = json_decode( $tmp->thuoc_tinh, true);
         }        
 
-        $loaiSpArr = LoaiSp::all();
+        $loaiSpArr = CateParent::all();
         
-        $loai_id = $detail->loai_id; 
+        $parent_id = $detail->parent_id; 
             
-        $cateArr = Cate::where('loai_id', $loai_id)->select('id', 'name')->orderBy('display_order', 'desc')->get();
+        $cateArr = Cate::where('parent_id', $parent_id)->select('id', 'name')->orderBy('display_order', 'desc')->get();
         
-        $loaiThuocTinhArr = LoaiThuocTinh::where('loai_id', $loai_id)->orderBy('display_order')->get();
+        $loaiThuocTinhArr = LoaiThuocTinh::where('parent_id', $parent_id)->orderBy('display_order')->get();
         $meta = (object) [];
         if ( $detail->meta_id > 0){
             $meta = MetaData::find( $detail->meta_id );
@@ -435,13 +435,13 @@ class OldController extends Controller
             $spThuocTinhArr = json_decode( $tmp->thuoc_tinh, true);
         }        
 
-        $loaiSpArr = LoaiSp::all();
+        $loaiSpArr = CateParent::all();
         
-        $loai_id = $detail->loai_id; 
+        $parent_id = $detail->parent_id; 
             
-        $cateArr = Cate::where('loai_id', $loai_id)->select('id', 'name')->orderBy('display_order', 'desc')->get();
+        $cateArr = Cate::where('parent_id', $parent_id)->select('id', 'name')->orderBy('display_order', 'desc')->get();
         
-        $loaiThuocTinhArr = LoaiThuocTinh::where('loai_id', $loai_id)->orderBy('display_order')->get();
+        $loaiThuocTinhArr = LoaiThuocTinh::where('parent_id', $parent_id)->orderBy('display_order')->get();
         $meta = (object) [];
         if ( $detail->meta_id > 0){
             $meta = MetaData::find( $detail->meta_id );

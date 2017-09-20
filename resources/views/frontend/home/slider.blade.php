@@ -1,22 +1,22 @@
  <?php 
 $bannerArr = DB::table('banner')->where(['object_id' => 1, 'object_type' => 3])->orderBy('display_order', 'asc')->get();
 ?>
-<div class="col-md-9 col-sm-12 col-xs-12 block_slide">
+<div class="block block-side">
 	@if($bannerArr)
-	<ul class="owl-carousel owl-style2 dotsData" data-nav="true" data-margin="0" data-items='1' data-autoplayTimeout="700" data-autoplay="true" data-loop="true">
-	<?php $i = 0; ?>
+	<div class="owl-carousel owl-style2" data-nav="false" data-margin="0" data-items='1' data-autoplayTimeout="1000" data-autoplay="true" data-loop="true" data-navcontainer="true">
+		<?php $i = 0; ?>
 		@foreach($bannerArr as $banner)
 		<?php $i++; ?>
-		<li class="item" data-dot="{{ $i }}">
-			 @if($banner->ads_url !='')
-			 <a href="{{ $banner->ads_url }}" title="banner slide {{ $i }}">
-			  @endif
-				<img src="{{ Helper::showImage($banner->image_url) }}" alt="banner slide {{ $i }}">
-			@if($banner->ads_url !='')
-			</a>
-			@endif
-		</li>
+		<div class="item-slide">
+		@if($banner->ads_url !='')
+		<a href="{{ $banner->ads_url }}" title="banner slide {{ $i }}">
+		@endif
+		<img src="{{ Helper::showImage($banner->image_url) }}" alt="banner slide {{ $i }}">
+		@if($banner->ads_url !='')
+		</a>
+		@endif
+		</div><!-- item-banner -->
 		@endforeach
-	</ul>
+	</div>
 	@endif
-</div><!-- /block_slide -->
+</div><!-- /block-side -->

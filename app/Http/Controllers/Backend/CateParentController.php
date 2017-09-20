@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Models\LoaiSp;
+use App\Models\CateParent;
 use App\Models\MetaData;
 use App\Models\LoaiThuocTinh;
 use App\Models\ThuocTinh;
@@ -14,7 +14,7 @@ use App\Models\HoverInfo;
 
 use Helper, File, Session, Auth;
 
-class LoaiSpController extends Controller
+class CateParentController extends Controller
 {
     /**
     * Display a listing of the resource.
@@ -23,8 +23,8 @@ class LoaiSpController extends Controller
     */
     public function index(Request $request)
     {
-        $items = LoaiSp::where('status', 1)->orderBy('display_order', 'asc')->get();
-        return view('backend.loai-sp.index', compact( 'items' ));
+        $items = CateParent::where('status', 1)->orderBy('display_order', 'asc')->get();
+        return view('backend.cate-parent.index', compact( 'items' ));
     }
 
     /**
@@ -34,23 +34,23 @@ class LoaiSpController extends Controller
     */
     public function create()
     {
-        return view('backend.loai-sp.create');
+        return view('backend.cate-parent.create');
     }
 
     public function thuocTinh(Request $request){      
 
-        $loai_id = $request->loai_id;
+        $parent_id = $request->parent_id;
         
-        $detailLoai = LoaiSp::find( $loai_id );
+        $detailParent = CateParent::find( $parent_id );
               
         
         $thuocTinhArr = [];
-        $loaiSpArr = LoaiSp::all();
+        $loaiSpArr = CateParent::all();
         
-        if( $loai_id ){            
+        if( $parent_id ){            
             
             
-            $loaiThuocTinhArr = LoaiThuocTinh::where('loai_id', $loai_id)->orderBy('display_order')->get();
+            $loaiThuocTinhArr = LoaiThuocTinh::where('parent_id', $parent_id)->orderBy('display_order')->get();
 
             if( $loaiThuocTinhArr->count() > 0){
                 foreach ($loaiThuocTinhArr as $value) {
@@ -64,14 +64,14 @@ class LoaiSpController extends Controller
             }
         }        
         
-        return view('backend.loai-sp.thuoc-tinh', compact( 'detailLoai', 'loai_id', 'thuocTinhArr', 'thuocTinhArr'));
+        return view('backend.cate-parent.thuoc-tinh', compact( 'detailLoai', 'parent_id', 'thuocTinhArr', 'thuocTinhArr'));
     }
 
     public function editThuocTinh(Request $request){      
 
-        $loai_id = $request->loai_id;
+        $parent_id = $request->parent_id;
         
-        $detailLoai = LoaiSp::find( $loai_id );
+        $detailParent = CateParent::find( $parent_id );
         
         $id = $request->id;
         $detail = HoverInfo::find( $id );
@@ -80,12 +80,12 @@ class LoaiSpController extends Controller
         $arrSelected = explode(",", $str_thuoctinh_id);      
         
         $thuocTinhArr = [];
-        $loaiSpArr = LoaiSp::all();
+        $loaiSpArr = CateParent::all();
         
-        if( $loai_id ){            
+        if( $parent_id ){            
             
             
-            $loaiThuocTinhArr = LoaiThuocTinh::where('loai_id', $loai_id)->orderBy('display_order')->get();
+            $loaiThuocTinhArr = LoaiThuocTinh::where('parent_id', $parent_id)->orderBy('display_order')->get();
 
             if( $loaiThuocTinhArr->count() > 0){
                 foreach ($loaiThuocTinhArr as $value) {
@@ -99,7 +99,7 @@ class LoaiSpController extends Controller
             }
         }        
         
-        return view('backend.loai-sp.edit-thuoc-tinh', compact( 'detailLoai', 'loai_id', 'thuocTinhArr', 'thuocTinhArr', 'arrSelected', 'detail'));
+        return view('backend.cate-parent.edit-thuoc-tinh', compact( 'detailLoai', 'parent_id', 'thuocTinhArr', 'thuocTinhArr', 'arrSelected', 'detail'));
     }
 
     public function storeThuocTinh(Request $request)
@@ -121,16 +121,16 @@ class LoaiSpController extends Controller
         HoverInfo::create( $dataArr );
         Session::flash('message', 'Thêm mới danh sách thuộc tính hiển thị thành công');
 
-        return redirect()->route('loai-sp.list-thuoc-tinh', ['loai_id' => $dataArr['loai_id']]);
+        return redirect()->route('cate-parent.list-thuoc-tinh', ['parent_id' => $dataArr['parent_id']]);
     }
 
     public function listThuocTinh( Request $request){
         
-        $loai_id = $request->loai_id;
+        $parent_id = $request->parent_id;
         
-        $detailLoai = LoaiSp::find( $loai_id );
+        $detailParent = CateParent::find( $parent_id );
         $str_thuoctinh_id = '';
-        $items = HoverInfo::where('loai_id', $loai_id)->orderBy('display_order', 'asc')->orderBy('id', 'asc')->get();
+        $items = HoverInfo::where('parent_id', $parent_id)->orderBy('display_order', 'asc')->orderBy('id', 'asc')->get();
         if( $items){
             foreach ($items as $key => $value) {
                 $str_thuoctinh_id .= $value->str_thuoctinh_id.",";
@@ -141,7 +141,7 @@ class LoaiSpController extends Controller
         foreach ($tmpArr as $key => $value) {            
             $thuoctinh[$value] = ThuocTinh::find($value)->name;
         }        
-        return view('backend.loai-sp.list-thuoc-tinh', compact('detail', 'detailLoai', 'items', 'thuoctinh'));
+        return view('backend.cate-parent.list-thuoc-tinh', compact('detail', 'detailLoai', 'items', 'thuoctinh'));
 
     }
     public function updateThuocTinh(Request $request)
@@ -165,7 +165,7 @@ class LoaiSpController extends Controller
         $model->update( $dataArr );
         Session::flash('message', 'Cập nhật thuộc tính hiển thị thành công');
 
-        return redirect()->route('loai-sp.list-thuoc-tinh', ['loai_id' => $dataArr['loai_id']]);
+        return redirect()->route('cate-parent.list-thuoc-tinh', ['parent_id' => $dataArr['parent_id']]);
     }
     /**
     * Store a newly created resource in storage.
@@ -189,14 +189,14 @@ class LoaiSpController extends Controller
         $dataArr['created_user'] = Auth::user()->id;
 
         $dataArr['updated_user'] = Auth::user()->id;
-        $rs = LoaiSp::create($dataArr);
+        $rs = CateParent::create($dataArr);
         $id = $rs->id;
 
         $this->storeMeta( $id, 0, $dataArr);
 
         Session::flash('message', 'Tạo mới danh mục thành công');
 
-        return redirect()->route('loai-sp.index');
+        return redirect()->route('cate-parent.index');
     }
 
     /**
@@ -218,14 +218,14 @@ class LoaiSpController extends Controller
     */
     public function edit($id)
     {
-        $detail = LoaiSp::find($id);
+        $detail = CateParent::find($id);
 
         $meta = (object) [];
         if ( $detail->meta_id > 0){
             $meta = MetaData::find( $detail->meta_id );
         }
 
-        return view('backend.loai-sp.edit', compact( 'detail', 'meta'));
+        return view('backend.cate-parent.edit', compact( 'detail', 'meta'));
     }
 
     /**
@@ -248,14 +248,14 @@ class LoaiSpController extends Controller
             'slug.required' => 'Bạn chưa nhập slug'          
         ]);
        
-        $model = LoaiSp::find($dataArr['id']);
+        $model = CateParent::find($dataArr['id']);
         $model->update($dataArr);
 
         $this->storeMeta( $dataArr['id'], $dataArr['meta_id'], $dataArr);
 
         Session::flash('message', 'Cập nhật danh mục thành công');
 
-        return redirect()->route('loai-sp.edit', $dataArr['id']);
+        return redirect()->route('cate-parent.edit', $dataArr['id']);
     }
     public function storeMeta( $id, $meta_id, $dataArr ){
        
@@ -265,7 +265,7 @@ class LoaiSpController extends Controller
             $rs = MetaData::create( $arrData );
             $meta_id = $rs->id;
             
-            $modelSp = LoaiSp::find( $id );
+            $modelSp = CateParent::find( $id );
             $modelSp->meta_id = $meta_id;
             $modelSp->save();
         }else {
@@ -282,23 +282,23 @@ class LoaiSpController extends Controller
     public function destroy($id)
     {
         // delete
-        $model = LoaiSp::find($id);
+        $model = CateParent::find($id);
         $model->delete();
 
         // redirect
         Session::flash('message', 'Xóa danh mục thành công');
-        return redirect()->route('loai-sp.index');
+        return redirect()->route('cate-parent.index');
     }
 
     public function destroyThuocTinh($id)
     {
         // delete
         $model = HoverInfo::find($id);
-        $loai_id = $model->loai_id;
+        $parent_id = $model->parent_id;
         $model->delete();
 
         // redirect
         Session::flash('message', 'Xóa danh mục thành công');
-        return redirect()->route('loai-sp.list-thuoc-tinh', ['loai_id' => $loai_id]);
+        return redirect()->route('cate-parent.list-thuoc-tinh', ['parent_id' => $parent_id]);
     }
 }

@@ -20,7 +20,7 @@
       @if(Session::has('message'))
       <p class="alert alert-info" >{{ Session::get('message') }}</p>
       @endif
-      <a href="{{ route('product.create', ['loai_id' => $arrSearch['loai_id'], 'cate_id' => $arrSearch['cate_id']]) }}" class="btn btn-info btn-sm" style="margin-bottom:5px">Tạo mới</a>
+      <a href="{{ route('product.create', ['parent_id' => $arrSearch['parent_id'], 'cate_id' => $arrSearch['cate_id']]) }}" class="btn btn-info btn-sm" style="margin-bottom:5px">Tạo mới</a>
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">Bộ lọc</h3>
@@ -30,10 +30,10 @@
            
             <div class="form-group">
              
-              <select class="form-control" name="loai_id" id="loai_id">
+              <select class="form-control" name="parent_id" id="parent_id">
                 <option value="">--Danh mục cha--</option>
                 @foreach( $loaiSpArr as $value )
-                <option value="{{ $value->id }}" {{ $value->id == $arrSearch['loai_id'] ? "selected" : "" }}>{{ $value->name }}</option>
+                <option value="{{ $value->id }}" {{ $value->id == $arrSearch['parent_id'] ? "selected" : "" }}>{{ $value->name }}</option>
                 @endforeach
               </select>
             </div>
@@ -73,7 +73,7 @@
            {{ $items->appends( $arrSearch )->links() }}
           </div>  
           <form action="{{ route('cap-nhat-thu-tu') }}" method="POST">
-           @if( $items->count() > 0 && $arrSearch['is_hot'] == 1 && $arrSearch['loai_id'] > 0) 
+           @if( $items->count() > 0 && $arrSearch['is_hot'] == 1 && $arrSearch['parent_id'] > 0) 
           <button type="submit" class="btn btn-warning btn-sm">Cập nhật thứ tự</button>
           @endif
             {{ csrf_field() }}
@@ -81,7 +81,7 @@
           <table class="table table-bordered" id="table-list-data">
             <tr>
               <th style="width: 1%">#</th>
-              @if($arrSearch['is_hot'] == 1 && $arrSearch['loai_id'] > 0)
+              @if($arrSearch['is_hot'] == 1 && $arrSearch['parent_id'] > 0)
               <th style="width: 1%;white-space:nowrap">Thứ tự</th>
               @endif
               <th width="100px">Hình ảnh</th>
@@ -98,7 +98,7 @@
                 ?>
               <tr id="row-{{ $item->id }}">
                 <td><span class="order">{{ $i }}</span></td>
-                @if($arrSearch['is_hot'] == 1 && $arrSearch['loai_id'] > 0 )
+                @if($arrSearch['is_hot'] == 1 && $arrSearch['parent_id'] > 0 )
                 <td style="vertical-align:middle;text-align:center">
                  <input type="text" name="display_order[]" value="{{ $item->display_order}}" class="form-control" style="width:60px">
                     <input type="hidden" name="id[]" value="{{ $item->id }}">
@@ -207,7 +207,7 @@ $(document).ready(function(){
     obj.parent().parent().parent().submit(); 
   });
   
-  $('#loai_id').change(function(){
+  $('#parent_id').change(function(){
     $('#cate_id').val('');
     $('#searchForm').submit();
   });

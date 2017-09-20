@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Cate;
-use App\Models\LoaiSp;
+use App\Models\CateParent;
 use App\Models\MetaData;
 use Helper, File, Session, Auth;
 
@@ -20,17 +20,17 @@ class CateController extends Controller
     */
     public function index(Request $request)
     {        
-        if( $request->loai_id ){
-            $loai_id = $request->loai_id;
-            $loaiSp = LoaiSp::find($loai_id);
+        if( $request->parent_id ){
+            $parent_id = $request->parent_id;
+            $loaiSp = CateParent::find($parent_id);
         }else{
-            $loaiSp = LoaiSp::orderBy('id')->first();
-            $loai_id = $loaiSp->id;    
+            $loaiSp = CateParent::orderBy('id')->first();
+            $parent_id = $loaiSp->id;    
         }
 
-        $items = Cate::where('loai_id', '=', $loai_id)->where('status', 1)->orderBy('display_order')->get();
-        $loaiSpArr = LoaiSp::where('status', 1)->orderBy('display_order')->get();
-        return view('backend.cate.index', compact( 'items', 'loaiSp' , 'loai_id', 'loaiSpArr'));
+        $items = Cate::where('parent_id', '=', $parent_id)->where('status', 1)->orderBy('display_order')->get();
+        $loaiSpArr = CateParent::where('status', 1)->orderBy('display_order')->get();
+        return view('backend.cate.index', compact( 'items', 'loaiSp' , 'parent_id', 'loaiSpArr'));
     }
 
     /**
@@ -40,11 +40,11 @@ class CateController extends Controller
     */
     public function create(Request $request)
     {
-        $loai_id = isset($request->loai_id) ? $request->loai_id : 0;
+        $parent_id = isset($request->parent_id) ? $request->parent_id : 0;
         
-        $loaiSpArr = LoaiSp::where('status', 1)->orderBy('display_order')->get();
+        $loaiSpArr = CateParent::where('status', 1)->orderBy('display_order')->get();
 
-        return view('backend.cate.create', compact( 'loai_id', 'loaiSpArr'));
+        return view('backend.cate.create', compact( 'parent_id', 'loaiSpArr'));
     }
 
     /**
@@ -83,7 +83,7 @@ class CateController extends Controller
 
         Session::flash('message', 'Tạo mới danh mục thành công');
 
-        return redirect()->route('cate.index',[$dataArr['loai_id']]);
+        return redirect()->route('cate.index',[$dataArr['parent_id']]);
     }
 
     /**
@@ -121,12 +121,12 @@ class CateController extends Controller
     public function edit($id)
     {
         $detail = Cate::find($id);
-        $loaiSpArr = LoaiSp::where('status', 1)->orderBy('display_order')->get();
+        $loaiSpArr = CateParent::where('status', 1)->orderBy('display_order')->get();
         $meta = (object) [];
         if ( $detail->meta_id > 0){
             $meta = MetaData::find( $detail->meta_id );
         }       
-        $loaiSp = LoaiSp::find($detail->loai_id); 
+        $loaiSp = CateParent::find($detail->parent_id); 
         return view('backend.cate.edit', compact( 'detail', 'loaiSpArr', 'meta', 'loaiSp'));
     }
 
@@ -179,6 +179,6 @@ class CateController extends Controller
 
         // redirect
         Session::flash('message', 'Xóa danh mục thành công');
-        return redirect()->route('cate.index',[$model->loai_id]);
+        return redirect()->route('cate.index',[$model->parent_id]);
     }
 }

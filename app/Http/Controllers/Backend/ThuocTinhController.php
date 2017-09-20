@@ -8,7 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\ThuocTinh;
 use App\Models\LoaiThuocTinh;
-use App\Models\LoaiSp;
+use App\Models\CateParent;
 use Helper, File, Session, Auth;
 
 class ThuocTinhController extends Controller
@@ -22,11 +22,11 @@ class ThuocTinhController extends Controller
     {   
         $loai_thuoc_tinh_id = $request->loai_thuoc_tinh_id;
 
-        $loai_id = $request->loai_id;
+        $parent_id = $request->parent_id;
         
-        $loaiSp = LoaiSp::lists('name', 'id')->toArray();
+        $loaiSp = CateParent::lists('name', 'id')->toArray();
         /*
-        $ltt = LoaiThuocTinh::where('loai_id', 8)->get();
+        $ltt = LoaiThuocTinh::where('parent_id', 8)->get();
         foreach($ltt as $lt){
             echo $lt->id."-".$lt->name;
             echo "<br>";
@@ -39,11 +39,11 @@ class ThuocTinhController extends Controller
         */
         $query = ThuocTinh::whereRaw('1');
 
-        if( $loai_id > 0 ){
+        if( $parent_id > 0 ){
 
-            $query->where('loai_id' , $loai_id);
+            $query->where('parent_id' , $parent_id);
 
-            $loaiThuocTinh = LoaiThuocTinh::where('loai_id', $loai_id)->lists('name', 'id')->toArray();
+            $loaiThuocTinh = LoaiThuocTinh::where('parent_id', $parent_id)->lists('name', 'id')->toArray();
 
         }else{
             $loaiThuocTinh = [];
@@ -55,7 +55,7 @@ class ThuocTinhController extends Controller
         }
         $items = $query->get()->sortBy('display_order');
 
-        return view('backend.thuoc-tinh.index', compact( 'items', 'loaiSp', 'loai_thuoc_tinh_id', 'loai_id', 'loaiThuocTinh'));
+        return view('backend.thuoc-tinh.index', compact( 'items', 'loaiSp', 'loai_thuoc_tinh_id', 'parent_id', 'loaiThuocTinh'));
     }
 
     /**
@@ -68,21 +68,21 @@ class ThuocTinhController extends Controller
 
         $loai_thuoc_tinh_id = $request->loai_thuoc_tinh_id;
 
-        $loai_id = $request->loai_id;
+        $parent_id = $request->parent_id;
 
-        $loaiSp = LoaiSp::all()->sortBy('display_order');
+        $loaiSp = CateParent::all()->sortBy('display_order');
         $query = ThuocTinh::whereRaw('1');
-        if( $loai_id > 0 ){
+        if( $parent_id > 0 ){
 
-            $query->where('loai_id' , $loai_id);
+            $query->where('parent_id' , $parent_id);
 
-            $loaiThuocTinh = LoaiThuocTinh::where('loai_id', $loai_id)->lists('name', 'id')->toArray();
+            $loaiThuocTinh = LoaiThuocTinh::where('parent_id', $parent_id)->lists('name', 'id')->toArray();
 
         }else{
             $loaiThuocTinh = [];
         }
 
-        return view('backend.thuoc-tinh.create', compact('loaiSp', 'loaiThuocTinh', 'loai_thuoc_tinh_id', 'loai_id'));
+        return view('backend.thuoc-tinh.create', compact('loaiSp', 'loaiThuocTinh', 'loai_thuoc_tinh_id', 'parent_id'));
     }
 
     /**
@@ -114,7 +114,7 @@ class ThuocTinhController extends Controller
 
         Session::flash('message', 'Tạo mới thuộc tính thành công');
         return redirect()->route('thuoc-tinh.create');
-        //return redirect()->route('thuoc-tinh.index', ['loai_thuoc_tinh_id' => $dataArr['loai_thuoc_tinh_id'], 'loai_id' => $dataArr['loai_id']]);
+        //return redirect()->route('thuoc-tinh.index', ['loai_thuoc_tinh_id' => $dataArr['loai_thuoc_tinh_id'], 'parent_id' => $dataArr['parent_id']]);
 
     }
 
@@ -137,11 +137,11 @@ class ThuocTinhController extends Controller
     */
     public function edit($id)
     {
-        $loaiSp = LoaiSp::all()->sortBy('display_order');
+        $loaiSp = CateParent::all()->sortBy('display_order');
 
         $detail = ThuocTinh::find($id);
              
-        $loaiThuocTinh = LoaiThuocTinh::where('loai_id', $detail->loai_id)->lists('name', 'id')->toArray();
+        $loaiThuocTinh = LoaiThuocTinh::where('parent_id', $detail->parent_id)->lists('name', 'id')->toArray();
 
         
         return view('backend.thuoc-tinh.edit', compact( 'detail', 'loaiSp', 'loaiThuocTinh'));
@@ -176,7 +176,7 @@ class ThuocTinhController extends Controller
 
         Session::flash('message', 'Cập nhật thuộc tính thành công');
 
-        return redirect()->route('thuoc-tinh.index', ['loai_thuoc_tinh_id' => $dataArr['loai_thuoc_tinh_id'], 'loai_id' => $dataArr['loai_id']]);
+        return redirect()->route('thuoc-tinh.index', ['loai_thuoc_tinh_id' => $dataArr['loai_thuoc_tinh_id'], 'parent_id' => $dataArr['parent_id']]);
     }
 
     /**

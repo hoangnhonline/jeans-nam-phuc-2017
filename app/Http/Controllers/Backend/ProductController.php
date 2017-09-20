@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Models\LoaiSp;
+use App\Models\CateParent;
 use App\Models\Cate;
 use App\Models\Color;
 use App\Models\LoaiThuocTinh;
@@ -19,6 +19,8 @@ use App\Models\ProductColor;
 use App\Models\ProductInventory;
 use App\Models\MetaData;
 use App\Models\Size;
+use App\Models\Tag;
+use App\Models\TagObjects;
 use Helper, File, Session, Auth, URL, Image;
 
 class ProductController extends Controller
@@ -35,7 +37,7 @@ class ProductController extends Controller
         $arrSearch['is_hot'] = $is_hot = isset($request->is_hot) ? $request->is_hot : null;
         $arrSearch['is_sale'] = $is_sale = isset($request->is_sale) ? $request->is_sale : null;
         $arrSearch['is_new'] = $is_new = isset($request->is_new) ? $request->is_new : null;        
-        $arrSearch['loai_id'] = $loai_id = isset($request->loai_id) ? $request->loai_id : null;
+        $arrSearch['parent_id'] = $parent_id = isset($request->parent_id) ? $request->parent_id : null;
         $arrSearch['cate_id'] = $cate_id = isset($request->cate_id) ? $request->cate_id : null;
        
         $arrSearch['name'] = $name = isset($request->name) && trim($request->name) != '' ? trim($request->name) : '';
@@ -51,8 +53,8 @@ class ProductController extends Controller
         if( $is_sale ){
             $query->where('product.is_sale', $is_sale);
         }
-        if( $loai_id ){
-            $query->where('product.loai_id', $loai_id);
+        if( $parent_id ){
+            $query->where('product.parent_id', $parent_id);
         }
         if( $cate_id ){
             $query->where('product.cate_id', $cate_id);
@@ -62,7 +64,7 @@ class ProductController extends Controller
             $query->where('product.name', 'LIKE', '%'.$name.'%');          
         }
         $query->join('users', 'users.id', '=', 'product.created_user');
-        $query->join('loai_sp', 'loai_sp.id', '=', 'product.loai_id');
+        $query->join('cate_parent', 'cate_parent.id', '=', 'product.parent_id');
         $query->join('cate', 'cate.id', '=', 'product.cate_id');
         $query->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id');        
         if($is_hot){
@@ -71,12 +73,12 @@ class ProductController extends Controller
             $query->orderBy('product.id', 'desc');    
         }
         
-        $items = $query->select(['product_img.image_url','product.*','product.id as product_id', 'full_name' , 'product.created_at as time_created', 'users.full_name', 'loai_sp.name as ten_loai', 'cate.name as ten_cate'])
+        $items = $query->select(['product_img.image_url','product.*','product.id as product_id', 'full_name' , 'product.created_at as time_created', 'users.full_name', 'cate_parent.name as ten_loai', 'cate.name as ten_cate'])
         ->paginate(50);   
 
-        $loaiSpArr = LoaiSp::all();  
-        if( $loai_id ){
-            $cateArr = Cate::where('loai_id', $loai_id)->orderBy('display_order', 'desc')->get();
+        $loaiSpArr = CateParent::all();  
+        if( $parent_id ){
+            $cateArr = Cate::where('parent_id', $parent_id)->orderBy('display_order', 'desc')->get();
         }else{
             $cateArr = (object) [];
         }
@@ -98,14 +100,14 @@ class ProductController extends Controller
     }  
     public function ajaxSearch(Request $request){    
         $search_type = $request->search_type;
-        $arrSearch['loai_id'] = $loai_id = isset($request->loai_id) ? $request->loai_id : -1;
+        $arrSearch['parent_id'] = $parent_id = isset($request->parent_id) ? $request->parent_id : -1;
         $arrSearch['cate_id'] = $cate_id = isset($request->cate_id) ? $request->cate_id : -1;
         $arrSearch['name'] = $name = isset($request->name) && trim($request->name) != '' ? trim($request->name) : '';
         
         $query = Product::whereRaw('1');
         
-        if( $loai_id ){
-            $query->where('product.loai_id', $loai_id);
+        if( $parent_id ){
+            $query->where('product.parent_id', $parent_id);
         }
         if( $cate_id ){
             $query->where('product.cate_id', $cate_id);
@@ -115,16 +117,16 @@ class ProductController extends Controller
             $query->orWhere('name_extend', 'LIKE', '%'.$name.'%');
         }
         $query->join('users', 'users.id', '=', 'product.created_user');
-        $query->join('loai_sp', 'loai_sp.id', '=', 'product.loai_id');
+        $query->join('cate_parent', 'cate_parent.id', '=', 'product.parent_id');
         $query->join('cate', 'cate.id', '=', 'product.cate_id');
         $query->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id');        
         $query->orderBy('product.id', 'desc');
-        $items = $query->select(['product_img.image_url','product.*','product.id as product_id', 'full_name' , 'product.created_at as time_created', 'users.full_name', 'loai_sp.name as ten_loai', 'cate.name as ten_cate'])
+        $items = $query->select(['product_img.image_url','product.*','product.id as product_id', 'full_name' , 'product.created_at as time_created', 'users.full_name', 'cate_parent.name as ten_loai', 'cate.name as ten_cate'])
         ->paginate(1000);
 
-        $loaiSpArr = LoaiSp::all();  
-        if( $loai_id ){
-            $cateArr = Cate::where('loai_id', $loai_id)->orderBy('display_order', 'desc')->get();
+        $loaiSpArr = CateParent::all();  
+        if( $parent_id ){
+            $cateArr = Cate::where('parent_id', $parent_id)->orderBy('display_order', 'desc')->get();
         }else{
             $cateArr = (object) [];
         }
@@ -139,16 +141,17 @@ class ProductController extends Controller
     */
     public function create(Request $request)
     {
-        $loai_id = $request->loai_id ? $request->loai_id : null;
+        $tagList = Tag::where('type', 1)->get();        
+        $parent_id = $request->parent_id ? $request->parent_id : null;
         $cate_id = $request->cate_id ? $request->cate_id : null;
         $cateList = (object) [];     
-        $loaiSpArr = LoaiSp::all();      
-        if($loai_id > 0){
-            $cateList = Cate::where('loai_id', $loai_id)->get();
+        $loaiSpArr = CateParent::all();      
+        if($parent_id > 0){
+            $cateList = Cate::where('parent_id', $parent_id)->get();
         }
         $colorList = Color::orderBy('display_order')->get();      
         $sizeList = Size::orderBy('display_order')->get();        
-        return view('backend.product.create', compact('loaiSpArr', 'cateList', 'loai_id', 'colorList', 'cate_id', 'sizeList'));
+        return view('backend.product.create', compact('loaiSpArr', 'cateList', 'parent_id', 'colorList', 'cate_id', 'sizeList', 'tagList'));
     }
 
     /**
@@ -195,14 +198,20 @@ class ProductController extends Controller
         if($dataArr['is_hot'] == 1){
             $dataArr['display_order'] = Helper::getNextOrder('product', 
                                             [                                            
-                                            'loai_id' => $dataArr['loai_id'],
+                                            'parent_id' => $dataArr['parent_id'],
                                             'cate_id' => $dataArr['cate_id']
                                         ]);
         }
         $rs = Product::create($dataArr);
 
         $product_id = $rs->id;
-        
+        // xu ly tags
+        if( !empty( $dataArr['tags'] ) && $product_id ){
+            foreach ($dataArr['tags'] as $tag_id) {
+                TagObjects::create(['object_id' => $product_id, 'tag_id' => $tag_id, 'type' => 1]);
+            }
+        }  
+
         $this->storeColor( $product_id, $dataArr);
         $this->storeSize( $product_id, $dataArr);
 
@@ -337,6 +346,7 @@ class ProductController extends Controller
     */
     public function edit($id)
     {
+        $tagList = Tag::where('type', 1)->get();
         $colorSelected = $sizeSelected = $colorArr = $sizeArr = [];
         $hinhArr = (object) [];
         $detail = Product::find($id);
@@ -344,11 +354,11 @@ class ProductController extends Controller
         $hinhArr = ProductImg::where('product_id', $id)->lists('image_url', 'id');
         
         
-        $loaiSpArr = LoaiSp::all();
+        $loaiSpArr = CateParent::all();
         
-        $loai_id = $detail->loai_id; 
+        $parent_id = $detail->parent_id; 
             
-        $cateArr = Cate::where('loai_id', $loai_id)->select('id', 'name')->orderBy('display_order', 'desc')->get();
+        $cateArr = Cate::where('parent_id', $parent_id)->select('id', 'name')->orderBy('display_order', 'desc')->get();
         
         
         $meta = (object) [];
@@ -375,8 +385,9 @@ class ProductController extends Controller
         $rsInv = ProductInventory::where('product_id', $id)->orderBy('color_id')->orderBy('size_id')->get();
         foreach($rsInv as $inv){
             $arrInv[$inv->color_id][$inv->size_id] = $inv->amount;
-        }      
-        return view('backend.product.edit', compact( 'detail', 'hinhArr', 'colorList', 'sizeList' , 'loaiSpArr', 'cateArr', 'meta', 'colorSelected', 'sizeSelected', 'colorArr', 'sizeArr', 'arrInv'));
+        }    
+        $tagSelected = Product::productTag($id);  
+        return view('backend.product.edit', compact( 'detail', 'hinhArr', 'colorList', 'sizeList' , 'loaiSpArr', 'cateArr', 'meta', 'colorSelected', 'sizeSelected', 'colorArr', 'sizeArr', 'arrInv', 'tagSelected', 'tagList'));
     }
     public function copy($id)
     {
@@ -392,13 +403,13 @@ class ProductController extends Controller
             $spThuocTinhArr = json_decode( $tmp->thuoc_tinh, true);
         }        
 
-        $loaiSpArr = LoaiSp::all();
+        $loaiSpArr = CateParent::all();
         
-        $loai_id = $detail->loai_id; 
+        $parent_id = $detail->parent_id; 
             
-        $cateArr = Cate::where('loai_id', $loai_id)->select('id', 'name')->orderBy('display_order', 'desc')->get();
+        $cateArr = Cate::where('parent_id', $parent_id)->select('id', 'name')->orderBy('display_order', 'desc')->get();
         
-        $loaiThuocTinhArr = LoaiThuocTinh::where('loai_id', $loai_id)->orderBy('display_order')->get();
+        $loaiThuocTinhArr = LoaiThuocTinh::where('parent_id', $parent_id)->orderBy('display_order')->get();
         $meta = (object) [];
         if ( $detail->meta_id > 0){
             $meta = MetaData::find( $detail->meta_id );
@@ -465,8 +476,17 @@ class ProductController extends Controller
 
         $model->update($dataArr);
         
-        $product_id = $dataArr['id'];
-       
+        $product_id = $dataArr['id'];      
+
+
+        TagObjects::deleteTags( $dataArr['id'], 1);
+        
+        // xu ly tags
+        if( !empty( $dataArr['tags'] ) && $dataArr['id'] ){
+            foreach ($dataArr['tags'] as $tag_id) {
+                TagObjects::create(['object_id' => $dataArr['id'], 'tag_id' => $tag_id, 'type' => 1]);
+            }
+        }    
         $this->storeInventory( $product_id, $dataArr);
 
       

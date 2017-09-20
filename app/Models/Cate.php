@@ -23,7 +23,7 @@ class Cate extends Model  {
      *
      * @var array
      */
-    protected $fillable = ['name', 'slug', 'alias', 'loai_id', 'is_hot', 'status', 'display_order', 'description', 'meta_id', 'created_user', 'updated_user'];
+    protected $fillable = ['name', 'slug', 'alias', 'parent_id', 'is_hot', 'status', 'display_order', 'description', 'meta_id', 'created_user', 'updated_user'];
 
     public function product()
     {

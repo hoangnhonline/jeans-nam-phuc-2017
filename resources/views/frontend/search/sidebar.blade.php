@@ -44,9 +44,9 @@
         </div><!-- /block_brands -->
     </div><!-- /block_modul -->
     @else
-    @if(isset($loai_id))
+    @if(isset($parent_id))
         @foreach($loaiSpList as $loaiSp)  
-        @if($loaiSp->id == $loai_id)  
+        @if($loaiSp->id == $parent_id)  
         <div class="block block_modul">
             <div class="block_brands">
                 <div class="box-accordion in">
@@ -125,8 +125,8 @@
         </div><!-- /block_colors -->
     </div><!-- /block_modul -->
 </div><!-- /block_cate_left -->
-@if($loai_id)
-<input type="hidden" name="loai_id" value="{{ $loai_id }}">
+@if($parent_id)
+<input type="hidden" name="parent_id" value="{{ $parent_id }}">
 @endif
 @if($cate_id)
 <input type="hidden" name="cate_id" value="{{ $cate_id }}">

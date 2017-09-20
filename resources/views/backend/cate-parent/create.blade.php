@@ -8,15 +8,15 @@
     </h1>
     <ol class="breadcrumb">
       <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-      <li><a href="{{ route('loai-sp.index') }}">Danh mục cha</a></li>
+      <li><a href="{{ route('cate-parent.index') }}">Danh mục cha</a></li>
       <li class="active">Tạo mới</li>
     </ol>
   </section>
 
   <!-- Main content -->
   <section class="content">
-    <a class="btn btn-default btn-sm" href="{{ route('loai-sp.index') }}" style="margin-bottom:5px">Quay lại</a>
-    <form role="form" method="POST" action="{{ route('loai-sp.store') }}">
+    <a class="btn btn-default btn-sm" href="{{ route('cate-parent.index') }}" style="margin-bottom:5px">Quay lại</a>
+    <form role="form" method="POST" action="{{ route('cate-parent.store') }}">
     <div class="row">
       <!-- left column -->
 
@@ -74,7 +74,7 @@
             <input type="hidden" name="banner_name" id="banner_name" value="{{ old('banner_name') }}"/>
             <div class="box-footer">
               <button type="submit" class="btn btn-primary btn-sm">Lưu</button>
-              <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="{{ route('loai-sp.index')}}">Hủy</a>
+              <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="{{ route('cate-parent.index')}}">Hủy</a>
             </div>
             
         </div>

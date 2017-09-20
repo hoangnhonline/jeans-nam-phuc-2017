@@ -6,6 +6,7 @@ Route::get('backend/logout', ['as' => 'backend.logout', 'uses' => 'Backend\UserC
 Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => 'isAdmin'], function()
 {    
     Route::get('dashboard', ['as' => 'dashboard.index', 'uses' => "SettingsController@dashboard"]);
+    Route::post('save-content', ['as' => 'save-content', 'uses' => "SettingsController@saveContent"]);
     Route::group(['prefix' => 'compare'], function () {
         Route::get('/', ['as' => 'compare.index', 'uses' => 'CompareController@index']);
     });
@@ -217,19 +218,19 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
         Route::get('/remove-img', ['as' => 'product.remove-img', 'uses' => 'ProductController@deleteImg']);  
         
     });
-     Route::group(['prefix' => 'loai-sp'], function () {
-        Route::get('/', ['as' => 'loai-sp.index', 'uses' => 'LoaiSpController@index']);
-        Route::get('/create', ['as' => 'loai-sp.create', 'uses' => 'LoaiSpController@create']);
-        Route::get('/thuoc-tinh', ['as' => 'loai-sp.thuoc-tinh', 'uses' => 'LoaiSpController@thuocTinh']);
-        Route::get('/edit-thuoc-tinh', ['as' => 'loai-sp.edit-thuoc-tinh', 'uses' => 'LoaiSpController@editThuocTinh']);
-        Route::get('/list-thuoc-tinh', ['as' => 'loai-sp.list-thuoc-tinh', 'uses' => 'LoaiSpController@listThuocTinh']);
-        Route::post('/store-thuoc-tinh', ['as' => 'loai-sp.store-thuoc-tinh', 'uses' => 'LoaiSpController@storeThuocTinh']);
-        Route::post('/update-thuoc-tinh', ['as' => 'loai-sp.update-thuoc-tinh', 'uses' => 'LoaiSpController@updateThuocTinh']);
-        Route::post('/store', ['as' => 'loai-sp.store', 'uses' => 'LoaiSpController@store']);
-        Route::get('{id}/edit',   ['as' => 'loai-sp.edit', 'uses' => 'LoaiSpController@edit']);
-        Route::post('/update', ['as' => 'loai-sp.update', 'uses' => 'LoaiSpController@update']);
-        Route::get('{id}/destroy', ['as' => 'loai-sp.destroy', 'uses' => 'LoaiSpController@destroy']);
-        Route::get('{id}/destroy-thuoc-tinh', ['as' => 'loai-sp.destroyThuocTinh', 'uses' => 'LoaiSpController@destroyThuocTinh']);
+     Route::group(['prefix' => 'cate-parent'], function () {
+        Route::get('/', ['as' => 'cate-parent.index', 'uses' => 'CateParentController@index']);
+        Route::get('/create', ['as' => 'cate-parent.create', 'uses' => 'CateParentController@create']);
+        Route::get('/thuoc-tinh', ['as' => 'cate-parent.thuoc-tinh', 'uses' => 'CateParentController@thuocTinh']);
+        Route::get('/edit-thuoc-tinh', ['as' => 'cate-parent.edit-thuoc-tinh', 'uses' => 'CateParentController@editThuocTinh']);
+        Route::get('/list-thuoc-tinh', ['as' => 'cate-parent.list-thuoc-tinh', 'uses' => 'CateParentController@listThuocTinh']);
+        Route::post('/store-thuoc-tinh', ['as' => 'cate-parent.store-thuoc-tinh', 'uses' => 'CateParentController@storeThuocTinh']);
+        Route::post('/update-thuoc-tinh', ['as' => 'cate-parent.update-thuoc-tinh', 'uses' => 'CateParentController@updateThuocTinh']);
+        Route::post('/store', ['as' => 'cate-parent.store', 'uses' => 'CateParentController@store']);
+        Route::get('{id}/edit',   ['as' => 'cate-parent.edit', 'uses' => 'CateParentController@edit']);
+        Route::post('/update', ['as' => 'cate-parent.update', 'uses' => 'CateParentController@update']);
+        Route::get('{id}/destroy', ['as' => 'cate-parent.destroy', 'uses' => 'CateParentController@destroy']);
+        Route::get('{id}/destroy-thuoc-tinh', ['as' => 'cate-parent.destroyThuocTinh', 'uses' => 'CateParentController@destroyThuocTinh']);
     });
       Route::group(['prefix' => 'order'], function () {
         Route::get('/', ['as' => 'orders.index', 'uses' => 'OrderController@index']);

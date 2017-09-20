@@ -42,7 +42,7 @@ class ArticlesController extends Controller
 
         $items = $query->orderBy('id', 'desc')->paginate(20);
         
-        $cateArr = ArticlesCate::where('type', 1)->get();
+        $cateArr = ArticlesCate::all();
         
         return view('backend.articles.index', compact( 'items', 'cateArr' , 'title', 'cate_id' ));
     }
@@ -55,7 +55,7 @@ class ArticlesController extends Controller
     public function create(Request $request)
     {
 
-        $cateArr = ArticlesCate::where('type', 1)->get();
+        $cateArr = ArticlesCate::all();
         
         $cate_id = $request->cate_id;
 
@@ -160,7 +160,7 @@ class ArticlesController extends Controller
                 return redirect()->route('product.index');
             }
         }
-        $cateArr = ArticlesCate::where('type', 1)->get();    
+        $cateArr = ArticlesCate::all();    
 
         $tmpArr = TagObjects::where(['type' => 2, 'object_id' => $id])->get();
         

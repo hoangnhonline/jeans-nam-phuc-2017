@@ -25,7 +25,7 @@
                         <h3 class="box-title">Danh sách</h3>
                     </div>
                     <!-- /.box-header -->
-                    <button class="btn btn-info btn-sm btnAddMenu" data-parent="0" style="margin-top:5px;margin-left:10px">Thêm menu cha</button>
+                    <button class="btn btn-info btn-sm btnAddMenu" type="button" data-parent="0" style="margin-top:5px;margin-left:10px">Thêm menu cha</button>
                     <form action="{{ route('menu.store-order') }}" method="POST">
                       {!! csrf_field() !!}
                       <div class="box-body">
@@ -45,7 +45,7 @@
                                     <input type="hidden" name="id[]" value="{{ $menu->id }}">
                                         <p style="font-weight:bold;padding-top:5px;margin-left:10px;">{{ $menu->title }}</p></td>
                                     <td width="1%" style="white-space:nowrap">
-                                      <button type="button" class="btn btn-info btn-sm btnAddMenu" data-parent="{{ $menu->id }}" >Thêm menu con</button>               
+                                      <button type="button" class="btn btn-info btn-sm btnAddMenu" type="button" data-parent="{{ $menu->id }}" >Thêm menu con</button>               
                                       <a onclick="return callDelete('{{ $menu->title }}','{{ route( 'menu.destroy', [ 'id' => $menu->id ]) }}');" class="btn-sm btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                                     </td>
                                   </tr>  
@@ -59,7 +59,7 @@
                                       <p style="padding-left:60px"> <input type="text" name="display_order[]" value="{{ $cap1->display_order }}" class="form-control" style="width:40px; float:left;margin-right:10px;">
                                             <input type="hidden" name="id[]" value="{{ $cap1->id }}"> <span style="padding-top:5px;display:block">{{ $cap1->title }}</span></p></td>
                                         <td width="1%" style="white-space:nowrap">
-                                          <button class="btn btn-info btn-sm btnAddMenu" data-parent="{{ $cap1->id }}" >Thêm menu con</button>               
+                                          <button class="btn btn-info btn-sm btnAddMenu" type="button" data-parent="{{ $cap1->id }}" >Thêm menu con</button>               
                                           <a onclick="return callDelete('{{ $cap1->title }}','{{ route( 'menu.destroy', [ 'id' => $cap1->id ]) }}');" class="btn-sm btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                                         </td>
                                       </tr>  

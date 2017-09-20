@@ -1881,13 +1881,13 @@ h2.tit-page3 {
 
 /* Edit On Page
   ========================================================================== */
-.edit {
+.edit:hover {
   padding-top: 5px !important;
   padding-bottom: 5px !important;
   position: relative;
   border: 1px dashed #c70f19;
 }
-.edit:before {
+.edit:hover:before {
   content: "\f040";
   font-family: "FontAwesome";
   font-size: 13px;
