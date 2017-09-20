@@ -34,6 +34,7 @@
   <![endif]-->
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
+
 <div class="wrapper">
   <?php echo $__env->make('backend.partials.header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
   <?php if(Auth::user()->email != "huongll@Nam Phúc" && \Request::route()->getName() != "compare.index" ): ?>
@@ -74,6 +75,7 @@
 <input type="hidden" id="route_update_order" value="<?php echo e(route('update-order')); ?>">
 <input type="hidden" id="route_get_slug" value="<?php echo e(route('get-slug')); ?>">
 <input type="hidden" id="route_upload_tmp_image" value="<?php echo e(route('image.tmp-upload')); ?>">
+<input type="hidden" id="app_url" value="<?php echo e(env('APP_URL')); ?>">
 <div class="control-sidebar-bg"></div>
 </div>
 <input type="hidden" id="upload_url" value="<?php echo e(config('namphuc.upload_url')); ?>">
@@ -86,6 +88,9 @@
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
   $.widget.bridge('uibutton', $.ui.button);
+</script>
+<script type="text/javascript">
+  var public_url = '<?php echo e(env('APP_URL')); ?>/public/';
 </script>
 <!-- Bootstrap 3.3.6 -->
 <script src="<?php echo e(URL::asset('public/admin/bootstrap/js/bootstrap.min.js')); ?>"></script>

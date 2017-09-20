@@ -51,11 +51,10 @@
                     
                     <input type="file" data-value="image_url" class="click-choose-file" style="display:none" />
                  
-                    <button class="btn btn-default btn-sm btnUpload" type="button"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload</button>
+                    <button class="btn btn-default btn-sm " id="btnUploadImage" type="button"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload</button>
                   </div>
                   <div style="clear:both"></div>
-                  <input type="hidden" name="image_url" id="image_url" value="<?php echo e(old('image_url')); ?>"/>
-                  <input type="hidden" name="image_url_name" id="image_url_name" value="<?php echo e(old('image_url_name')); ?>"/>
+                  <input type="hidden" name="image_url" id="image_url" value="<?php echo e(old('image_url')); ?>"/>                 
                 </div>  
             </div>              
             <div class="box-footer">
@@ -75,5 +74,27 @@
   </section>
   <!-- /.content -->
 </div>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('javascript_page'); ?>
+<script type="text/javascript">
+var h = screen.height;
+var w = screen.width;
+var left = (screen.width/2)-((w-300)/2);
+var top = (screen.height/2)-((h-100)/2);
+function openKCFinder_singleFile() {
+      window.KCFinder = {};
+      window.KCFinder.callBack = function(url) {
+         $('#image_url').val(url);
+         $('#thumbnail_image').attr('src', $('#app_url').val() + url);
+          window.KCFinder = null;
+      };
+      window.open('<?php echo e(URL::asset("public/admin/dist/js/kcfinder/browse.php?type=images")); ?>', 'kcfinder_single','scrollbars=1,menubar=no,width='+ (w-300) +',height=' + (h-300) +',top=' + top+',left=' + left);
+  }
+  $(document).ready(function(){
+    $('#btnUploadImage').click(function(){
+      openKCFinder_singleFile();
+    });
+  });
+</script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('backend.layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

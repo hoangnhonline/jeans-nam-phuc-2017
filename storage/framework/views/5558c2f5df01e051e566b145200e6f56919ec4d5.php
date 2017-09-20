@@ -75,7 +75,7 @@
                   <img class="img-thumbnail lazy" data-original="<?php echo e(Helper::showImage($item->image_url)); ?>" width="145">
                 </td>        
                 <td>                  
-                  <a style="font-size:18px;color:" href="<?php echo e(route( 'articles.edit', [ 'id' => $item->id ])); ?>"><?php echo e($item->title); ?></a><br>
+                  <a href="<?php echo e(route( 'articles.edit', [ 'id' => $item->id ])); ?>"><?php echo e($item->title); ?></a>
                   
                   <?php if( $item->is_hot == 1 ): ?>
                   <img class="img-thumbnail" src="<?php echo e(URL::asset('public/admin/dist/img/star.png')); ?>" alt="Nổi bật" title="Nổi bật" />
@@ -132,6 +132,9 @@ function callDelete(name, url){
   return flag;
 }
 $(document).ready(function(){
+    $('#cate_id').change(function(){
+      $(this).parents('form').submit();
+    });
   $('#parent_id').change(function(){
     $.ajax({
         url: $('#route_get_cate_by_parent').val(),
@@ -166,7 +169,7 @@ $(document).ready(function(){
                 strTemp = rows[i].id;
                 strOrder += strTemp.replace('row-','') + ";";
             }     
-            updateOrder("loai_sp", strOrder);
+            updateOrder("cate_parent", strOrder);
         }
     });
 });

@@ -38,9 +38,19 @@
                           <?php endforeach; ?>
                       </ul>
                   </div>
-              <?php endif; ?>               
-                                         
-                <input type="hidden" name="cate_id" value="1">
+              <?php endif; ?>                
+                <div class="form-group">
+                  <label for="email">Danh mục <span class="red-star">*</span></label>
+                  <select class="form-control" name="cate_id" id="cate_id">
+                    <option value="">-- chọn --</option>
+                    <?php if( $cateArr->count() > 0): ?>
+                      <?php foreach( $cateArr as $value ): ?>
+                      <option value="<?php echo e($value->id); ?>" <?php echo e($value->id == old('cate_id') || $value->id == $cate_id ? "selected" : ""); ?>><?php echo e($value->name); ?></option>
+                      <?php endforeach; ?>
+                    <?php endif; ?>
+                  </select>
+                </div>                           
+                
                 <div class="form-group" >
                   
                   <label>Tiêu đề <span class="red-star">*</span></label>
@@ -53,12 +63,12 @@
                 </div>
                 
                 <div class="form-group" style="margin-top:10px;margin-bottom:10px">  
-                  <label class="col-md-3 row">Thumbnail ( 600x336 px)</label>    
+                  <label class="col-md-3 row">Thumbnail ( 624x468 px)</label>    
                   <div class="col-md-9">
                     <img id="thumbnail_image" src="<?php echo e(old('image_url') ? Helper::showImage(old('image_url')) : URL::asset('public/admin/dist/img/img.png')); ?>" class="img-thumbnail" width="145" height="85">
                     
                     <input type="file" id="file-image" style="display:none" />
-                 
+                    <input type="hidden" name="image_url" id="image_url">
                     <button class="btn btn-default btn-sm" id="btnUploadImage" type="button"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload</button>
                   </div>
                   <div style="clear:both"></div>
@@ -106,8 +116,7 @@
                 <input type="hidden" id="editor" value="content">
                   
             </div>          
-            <input type="hidden" name="image_url" id="image_url" value="<?php echo e(old('image_url')); ?>"/>          
-            <input type="hidden" name="image_name" id="image_name" value="<?php echo e(old('image_name')); ?>"/>
+                              
             <div class="box-footer">
               <button type="submit" class="btn btn-primary btn-sm">Lưu</button>
               <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="<?php echo e(route('articles.index')); ?>">Hủy</a>
@@ -192,6 +201,20 @@
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('javascript_page'); ?>
 <script type="text/javascript">
+var h = screen.height;
+var w = screen.width;
+var left = (screen.width/2)-((w-300)/2);
+var top = (screen.height/2)-((h-100)/2);
+function openKCFinder_singleFile() {
+      window.KCFinder = {};
+      window.KCFinder.callBack = function(url) {
+         $('#image_url').val(url);
+         $('#thumbnail_image').attr('src', $('#app_url').val() + url);
+          window.KCFinder = null;
+      };
+      window.open('<?php echo e(URL::asset("public/admin/dist/js/kcfinder/browse.php?type=images")); ?>', 'kcfinder_single','scrollbars=1,menubar=no,width='+ (w-300) +',height=' + (h-300) +',top=' + top+',left=' + left);
+  }
+
 $(document).on('click', '#btnSaveTagAjax', function(){
     $.ajax({
       url : $('#formAjaxTag').attr('action'),
@@ -218,18 +241,10 @@ $(document).on('click', '#btnSaveTagAjax', function(){
  }); 
 $(document).ready(function(){
       $(".select2").select2();
-      var editor = CKEDITOR.replace( 'content',{
-          language : 'vi',
-          filebrowserBrowseUrl: "<?php echo e(URL::asset('/admin/dist/js/kcfinder/browse.php?type=files')); ?>",
-          filebrowserImageBrowseUrl: "<?php echo e(URL::asset('/admin/dist/js/kcfinder/browse.php?type=images')); ?>",
-          filebrowserFlashBrowseUrl: "<?php echo e(URL::asset('/admin/dist/js/kcfinder/browse.php?type=flash')); ?>",
-          filebrowserUploadUrl: "<?php echo e(URL::asset('/admin/dist/js/kcfinder/upload.php?type=files')); ?>",
-          filebrowserImageUploadUrl: "<?php echo e(URL::asset('/admin/dist/js/kcfinder/upload.php?type=images')); ?>",
-          filebrowserFlashUploadUrl: "<?php echo e(URL::asset('/admin/dist/js/kcfinder/upload.php?type=flash')); ?>",
-          height : 500
-      });
+      var editor = CKEDITOR.replace( 'content');
       $('#btnUploadImage').click(function(){        
-        $('#file-image').click();
+        //$('#file-image').click();
+        openKCFinder_singleFile($('#image_url'));
       });      
       $('#btnAddTag').click(function(){
           $('#tagModal').modal('show');
