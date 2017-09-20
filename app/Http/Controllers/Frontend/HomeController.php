@@ -19,6 +19,7 @@ use App\Models\ArticlesCate;
 use App\Models\Customer;
 use App\Models\Newsletter;
 use App\Models\Settings;
+use App\Models\Pages;
 
 use Helper, File, Session, Auth, Hash;
 
@@ -249,6 +250,20 @@ class HomeController extends Controller
         }        
         //var_dump("<pre>", $hoverInfo);die;
         return view('frontend.search.index', compact('productList', 'tu_khoa', 'seo', 'hoverInfo', 'loaiDetail', 'cateArr', 'price_fm', 'price_to', 'colorArr', 'parent_id', 'cate_id', 'sort'));
+    }
+    public function pages(Request $request){
+        $slug = $request->slug;
+
+        $detailPage = Pages::where('slug', $slug)->first();
+         
+        if(!$detailPage){
+            return redirect()->route('home');
+        }
+        $seo['title'] = $detailPage->meta_title ? $detailPage->meta_title : $detailPage->title;
+        $seo['description'] = $detailPage->meta_description ? $detailPage->meta_description : $detailPage->title;
+        $seo['keywords'] = $detailPage->meta_keywords ? $detailPage->meta_keywords : $detailPage->title;      
+
+        return view('frontend.pages.index', compact('detailPage', 'seo', 'slug'));    
     }
     public function ajaxTab(Request $request){
         $table = $request->type ? $request->type : 'category';

@@ -24,9 +24,22 @@
                 <div class="block block-aritcle">
                     {!! $detail->content !!}
                 </div>
-                <div class="block block-share">
-                    Share
-                </div><!-- /block-share -->
+                <div class="block block-share" id="share-buttons">
+                    <div class="share-item">
+                        <div class="fb-like" data-href="{{ url()->current() }}" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div>
+                    </div>
+                    <div class="share-item" style="max-width: 65px;">
+                        <div class="g-plus" data-action="share"></div>
+                    </div>
+                    <div class="share-item">
+                        <a class="twitter-share-button"
+                      href="https://twitter.com/intent/tweet?text={!! $detail->title !!}">
+                    Tweet</a>
+                    </div>
+                    <div class="share-item">
+                        <div class="addthis_inline_share_toolbox"></div>
+                    </div>
+                </div><!-- /block-share--> 
                 @if($tagSelected->count() > 0)
                 <div class="block-tags">
                     <ul>
@@ -58,51 +71,7 @@
         </div><!-- /block-ct-news -->
     </div><!-- /block-col-left -->
     <div class="col-sm-3 col-xs-12 block-col-right">
-        <div class="block-sidebar">
-            <div class="block-module block-links-sidebar">
-                <div class="block-title">
-                    <h2>
-                        <i class="fa fa-gift"></i>
-                        KHUYẾN MÃI HOT
-                    </h2>
-                </div>
-                <div class="block-content">
-                    <ul class="list">
-                        <li>
-                            <a href="#" title="">
-                                <p class="thumb"><img src="images/pro-sidebar/1.jpg" alt=""></p>
-                                <h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" title="">
-                                <p class="thumb"><img src="images/pro-sidebar/2.jpg" alt=""></p>
-                                <h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" title="">
-                                <p class="thumb"><img src="images/pro-sidebar/3.jpg" alt=""></p>
-                                <h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" title="">
-                                <p class="thumb"><img src="images/pro-sidebar/4.jpg" alt=""></p>
-                                <h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" title="">
-                                <p class="thumb"><img src="images/pro-sidebar/5.jpg" alt=""></p>
-                                <h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div><!-- /block-module -->
-            
-        </div>
+        @include('frontend.partials.km-hot')
     </div><!-- /block-col-right -->
 </div>
 </div><!-- /block_big-title -->

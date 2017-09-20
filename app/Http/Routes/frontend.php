@@ -94,7 +94,7 @@ Route::group(['namespace' => 'Frontend'], function()
     
 
     Route::get('{slug}', ['as' => 'cate-parent', 'uses' => 'CateController@parent']);
-    Route::get('{slug}.html', ['as' => 'pages', 'uses' => 'CateController@index']);
+    Route::get('{slug}.html', ['as' => 'pages', 'uses' => 'HomeController@pages']);
 
 });
 

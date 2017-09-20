@@ -41,51 +41,7 @@
 			</nav><!-- /block-pagination -->
 		</div><!-- /block-col-left -->
 		<div class="col-sm-3 col-xs-12 block-col-right">
-			<div class="block-sidebar">
-				<div class="block-module block-links-sidebar">
-					<div class="block-title">
-						<h2>
-							<i class="fa fa-gift"></i>
-							KHUYẾN MÃI HOT
-						</h2>
-					</div>
-					<div class="block-content">
-						<ul class="list">
-							<li>
-								<a href="sales-detail.html" title="">
-									<p class="thumb"><img src="images/pro-sidebar/1.jpg" alt=""></p>
-									<h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
-								</a>
-							</li>
-							<li>
-								<a href="sales-detail.html" title="">
-									<p class="thumb"><img src="images/pro-sidebar/2.jpg" alt=""></p>
-									<h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
-								</a>
-							</li>
-							<li>
-								<a href="sales-detail.html" title="">
-									<p class="thumb"><img src="images/pro-sidebar/3.jpg" alt=""></p>
-									<h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
-								</a>
-							</li>
-							<li>
-								<a href="sales-detail.html" title="">
-									<p class="thumb"><img src="images/pro-sidebar/4.jpg" alt=""></p>
-									<h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
-								</a>
-							</li>
-							<li>
-								<a href="sales-detail.html" title="">
-									<p class="thumb"><img src="images/pro-sidebar/5.jpg" alt=""></p>
-									<h3>Tiêu đề khuyến mãi được viết bởi nhóm iMarketing</h3>
-								</a>
-							</li>
-						</ul>
-					</div>
-				</div><!-- /block-module -->
-				
-			</div>
+			@include('frontend.partials.km-hot')
 		</div><!-- /block-col-right -->
 	</div>
 </div><!-- /block_big-title -->

@@ -1,92 +1,99 @@
 @extends('frontend.layout')
 @include('frontend.partials.meta')
 @section('content')
-<div class="block block_breadcrumb">
-    <ol class="breadcrumb">
-        <li><a href="{{ route('home') }}" title="Trở về trang chủ">Trang chủ</a></li>
-        <li class="active">Liên hệ</li>
-    </ol>
-</div><!-- /block_breadcrumb -->
-
-<div class="block_form" style="padding-top:20px">
-
-    <div class="block_contact_note">
-        <h2>MỌI NHU CẦU, QUÝ KHÁCH VUI LÒNG LIÊN HỆ</h2>
-        <p class="ctact-time">Ân Nam Mobile phục vụ từ 8:00 đến 21:30 Thứ 2 đến Chủ Nhật</p>
-        <div class="ctact-note-inner">
-            <p>
-                <span>Tel: <strong>0904500057 / 0968678767
-                </strong></span>
-            </p>           
-            <p>
-                <span>Email: <strong>pnhtin@gmail.com / tinphan@Nam Phúc
-                </strong></span>
-            </p>
-        </div>
-    </div><!-- /block_contact_note -->
-     <div class="col-md-6">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.7021140509805!2d106.62289311480056!3d10.757425592334439!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752c291bd8bd93%3A0xbbcd65e4ee9dfba4!2zNjgzIEFuIETGsMahbmcgVsawxqFuZywgcGjGsOG7nW5nIDEzLCBCw6xuaCBUw6JuLCBI4buTIENow60gTWluaCwgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2s!4v1502895046090" width="100%" height="439" frameborder="0" style="border:0" allowfullscreen></iframe>
+<div class="block block-breadcrumb">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{{ route('home') }}" title="Trở về trang chủ">Trang chủ</a></li>
+            <li class="active">Liên hệ</li>
+        </ul>
     </div>
-    <div class="contact-form col-md-6">
-        
-        <div class="ctact-frm-inner">
-            <header class="frm-head">
-                <h2>LIÊN HỆ</h2>
-                <p>
-                    Xin chân thành cảm ơn những ý kiến đóng góp, phản hồi từ phía
-                    khách hàng.
-                </p>
-            </header>
-            <article class="frm-content">
-                <div class="row">
-                    @if(Session::has('message'))
-                    <div class="col-md-12">
-                        <p class="alert alert-info" >{{ Session::get('message') }}</p>
-                    </div>
-                    @endif
-                    @if (count($errors) > 0)
-                    <div class="col-md-12">
-                      <div class="alert alert-danger ">
-                        <ul>                           
-                            <li>Vui lòng nhập đầy đủ thông tin.</li>                            
-                        </ul>
-                      </div>
-                    </div>
-                    @endif  
-                    <form method="POST" action="{{ route('send-contact') }}">
-                    {{ csrf_field() }}                    
-                        <div class="col-md-6 col-sm-6 col-xs-12 frm-itm">
-                            <input type="text" placeholder="Họ và tên" name="full_name" id="full_name" class="ipt txt-name" value="{{ old('full_name') }}"><span class="required">*</span>
-                        </div>
-                        <div class="col-md-6 col-sm-6 col-xs-12 frm-itm">
-                            <input type="tel" placeholder="Số điện thoại" name="phone" id="phone" class="ipt txt-phone" value="{{ old('phone') }}"><span class="required">*</span>
-                        </div>
-                        <div class="col-xs-12 frm-itm">
-                            <input type="email" placeholder="Email liên lạc" value="{{ old('email') }}" name="email" id="email" class="ipt txt-email"><span class="required">*</span>
-                        </div>
-                        <div class="col-xs-12 frm-itm">
-                            <textarea placeholder="Nội dung liên hệ ..." name="content" id="content">{{ old('content') }}</textarea>
-                        </div>
-                        <div class="col-xs-12 frm-itm">
-                            <input type="submit" value="GỬI LIÊN HỆ" class="btn-submit">
-                        </div>
-                    </form>
+    </div><!-- /block-breadcrumb -->
+    <div class="block block-two-col container">
+    <div class="row">
+        <div class="col-sm-9 col-xs-12 block-col-left">
+            <div class="block-page-common clearfix">
+                <div class="block block-title">
+                    <h2>
+                        <i class="fa fa-home"></i>
+                        LIÊN HỆ
+                    </h2>
                 </div>
-            </article>
-        </div>
-    </div><!-- /contact-form -->
-   
-</div><!-- /block_form -->
-<style type="text/css">
-    span.required{
-        color:red !important;
-    }
-    .contact-form-box input {
-        font-size: 14px;
-        border: 1px solid #ccc
-    }
-    .block_contact_note{
-        margin-bottom: 30px;
-    }
-</style>
-@endsection
+                <div class="block-content">
+                    <h2 class="tit-page2">CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI NAM PHÚC</h2>
+                    <div class="block-address">
+                        <p><strong>Địa chỉ:</strong> 788 - 790 Lạc Long Quân, phường 9, quận Tân Bình, thành phố Hồ Chí Minh</p>
+                        <p><strong>Hotline:</strong> (08) 35 00 32 47 - 0909 787 111</p>
+                        <p><strong>Website:</strong> www.namphucjeans.com</p>
+                        <p><strong>Email:</strong> namphucjeans@yahoo.com.vn</p>
+                    </div>
+                    <div class="block block-map">
+                        <object data="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.3340475200366!2d106.66105631546826!3d10.785706992315221!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752ece0a7bad71%3A0x5fded1d58e5866d9!2zMTA0IELhuq9jIEjhuqNpLCBwaMaw4budbmcgNywgVMOibiBCw6xuaCwgSOG7kyBDaMOtIE1pbmgsIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1503933127779"></object>
+                    </div>
+                    <div id="showmess" class="clearfix"></div>
+                        @if(Session::has('message'))
+                        
+                        <p class="alert alert-info" >{{ Session::get('message') }}</p>
+                        
+                        @endif
+                        @if (count($errors) > 0)                        
+                          <div class="alert alert-danger ">
+                            <ul>                           
+                                <li>Vui lòng nhập đầy đủ thông tin.</li>                            
+                            </ul>
+                          </div>                        
+                        @endif  
+                        <form class="block-form" action="{{ route('send-contact') }}" method="POST">
+                        {{ csrf_field() }}
+                            <div class="row">
+                                <div class="form-group col-sm-12 col-xs-12">
+                                    <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Họ tên khách hàng" value="{{ old('full_name') }}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-12 col-xs-12">
+                                    <input type="text" class="form-control" id="phone" name="phone" placeholder="Số điện thoại" value="{{ old('phone') }}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-12 col-xs-12">
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{ old('email') }}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-12 col-xs-12">
+                                    <textarea name="content" id="content" rowspan="300" class="form-control" placeholder="Ghi chú">{{ old('content') }}</textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-12 col-xs-12">
+                                    <button type="submit" id="btnSave" class="btn btn-prmary btn-view">Gửi liên hệ</button>
+                                </div>
+                            </div>
+                        </form>
+                </div>
+            </div><!-- /block-ct-news -->
+        </div><!-- /block-col-left -->
+        <div class="col-sm-3 col-xs-12 block-col-right">            
+            @include('frontend.partials.km-hot')
+        </div><!-- /block-col-right -->
+    </div>
+    </div><!-- /block_big-title -->
+@stop
+@section('js')
+<script type="text/javascript">
+    @if (count($errors) > 0 || Session::has('message'))      
+    $(document).ready(function(){
+        $('html, body').animate({
+            scrollTop: $("#showmess").offset().top
+        });
+    });
+    @endif
+    $(document).ready(function(){
+        $('#btnSave').click(function(){
+            $(this).parents('form').submit();
+            $('#btnSave').attr('disabled', 'disabled').html('<i class="fa fa-spin fa-spinner"></i>');
+        });
+    });
+</script>
+@stop
