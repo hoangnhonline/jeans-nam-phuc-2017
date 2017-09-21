@@ -290,16 +290,12 @@ class CartController extends Controller
         foreach($sizeList as $size){
             $sizeArr[$size->id] = $size;
         }  
-<<<<<<< HEAD
+
         $settingArr = Settings::whereRaw('1')->lists('value', 'name');
         $emailCC = explode(';',$settingArr['email_cc']);
 
         $emailArr = array_merge($emailCC, [$email]);
-=======
-        Session::put('products', []);
-        Session::flush();
-        $emailArr = array_merge(['hoangnhonline@gmail.com'], [$email]);
->>>>>>> e1b02323123a8153c1c6c8656aa92f292683d23f
+
         if(!empty($emailArr)){
             Mail::send('frontend.email.cart',
                 [                    
@@ -320,12 +316,10 @@ class CartController extends Controller
                     $message->sender('quanjeansnamphuc.com@gmail.com', 'Quần jeans Nam Phúc');
             });
         }
-<<<<<<< HEAD
+
         Session::put('products', []);
         Session::flush();
-=======
 
->>>>>>> e1b02323123a8153c1c6c8656aa92f292683d23f
         //return redirect()->route('success');
     }
     public function success(){
