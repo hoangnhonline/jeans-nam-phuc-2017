@@ -40,9 +40,7 @@
                                 <a href="mailto:{!! $orderDetail->email !!}" target="_blank">{!! $orderDetail->email !!}</a><br>
                                 {!! $orderDetail->phone !!} </td>
                               <td valign="top" style="padding:3px 9px 9px 9px;border-top:0;border-left:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#444;line-height:18px;font-weight:normal"><span style="text-transform:capitalize">{!! $orderDetail->full_name !!}</span><br>
-                                <a href="mailto:{!! $orderDetail->email !!}" target="_blank">{!! $orderDetail->email !!}</a><br>                                
-                                  {!! $orderDetail->city->name !!},                                
-                                  {!! $orderDetail->district->name !!},                                
+                                <a href="mailto:{!! $orderDetail->email !!}" target="_blank">{!! $orderDetail->email !!}</a><br>                                                          
                                 {!! $orderDetail->address !!} <br>
                                 {!! $orderDetail->phone !!}<br>
                             </tr>
@@ -51,9 +49,9 @@
                              <td valign="top" style="padding:7px 9px 0px 9px;border-top:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#444" colspan="2"><p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#444;line-height:18px;font-weight:normal"> <strong>Phương thức thanh toán: </strong> 
                             <?php 
                             if($method_id == 1) {
-                              echo "COD - Nhận hàng trả tiền";
-                            }elseif( $method_id == 2){
                               echo "Chuyển khoản ngân hàng";
+                            }elseif( $method_id == 2){
+                              echo "Thanh toán bằng tiền mặt";
                             }
                               ?>
                               </td>
@@ -70,6 +68,8 @@
                           <thead>
                             <tr>
                               <th align="left" bgcolor="#ec1c24" style="padding:6px 9px;color:#fff;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:14px">Sản phẩm</th>
+                              <th align="left" bgcolor="#ec1c24" style="padding:6px 9px;color:#fff;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:14px">Màu sắc</th>
+                              <th align="left" bgcolor="#ec1c24" style="padding:6px 9px;color:#fff;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:14px">Size</th>
                               <th align="left" bgcolor="#ec1c24" style="padding:6px 9px;color:#fff;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:14px"> Đơn giá</th>
                               <th align="left" bgcolor="#ec1c24" style="padding:6px 9px;color:#fff;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:14px">Số lượng</th>
                               <th align="left" bgcolor="#ec1c24" style="padding:6px 9px;color:#fff;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:14px">Giảm giá</th>
@@ -77,36 +77,44 @@
                             </tr>
                           </thead>
                           <tbody bgcolor="#eee" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#444;line-height:18px">
-                              <?php $total = 0 ?>
-                              @foreach($arrProductInfo as $product)
+                              <?php $total = 0;
+                              $i = 0; ?>
+                              @foreach($listKey as $key)
+                              <?php $i++; 
+                              $tmp = explode('-', $key);
+                              $product_id = $tmp[0];
+                              $product = $arrProductInfo[$product_id];
+                                      ?>
                                 <?php
                                   $price = $product->is_sale ? $product->price_sale : $product->price;
                                 ?>
                               <tr>
                               <td align="left" valign="top" style="padding:3px 9px"><span>{!! $product->name !!}</span><br>
+                              <td align="left" valign="top" style="padding:3px 9px"><span>{{ ($colorArr[$tmp[1]]->name ) }}</span><br>
+                              <td align="left" valign="top" style="padding:3px 9px"><span>{{ $sizeArr[$tmp[2]]->name }}</span><br>
                               <td align="left" valign="top" style="padding:3px 9px"><span>{!! number_format($price) !!}&nbsp;₫</span></td>
-                              <td align="left" valign="top" style="padding:3px 9px">{!! $getlistProduct[$product->id] !!}</td>
+                              <td align="left" valign="top" style="padding:3px 9px">{!! $getlistProduct[$key] !!}</td>
                               <td align="left" valign="top" style="padding:3px 9px"><span>0&nbsp;₫</span></td>
-                              <td align="right" valign="top" style="padding:3px 9px"><span>{!! number_format($price * $getlistProduct[$product->id]) !!}&nbsp;₫</span></td>
-                              <?php $total += $price * $getlistProduct[$product->id] ?>
+                              <td align="right" valign="top" style="padding:3px 9px"><span>{!! number_format($price * $getlistProduct[$key]) !!}&nbsp;₫</span></td>
+                              <?php $total += $price * $getlistProduct[$key] ?>
                                </tr>
                               @endforeach
                           </tbody>
                           <tfoot style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#444;line-height:18px">
                             <tr>
-                              <td colspan="4" align="right" style="padding:5px 9px">Tổng giá trị sản phẩm chưa giảm</td>
+                              <td colspan="6" align="right" style="padding:5px 9px">Tổng giá trị sản phẩm chưa giảm</td>
                               <td align="right" style="padding:5px 9px"><span>{!! number_format($total) !!}&nbsp;₫</span></td>
                             </tr>
                             <tr>
-                              <td colspan="4" align="right" style="padding:5px 9px">Giảm giá </td>
+                              <td colspan="6" align="right" style="padding:5px 9px">Giảm giá </td>
                               <td align="right" style="padding:5px 9px"><span>0&nbsp;₫</span></td>
                             </tr>
                             <tr>
-                              <td colspan="4" align="right" style="padding:5px 9px">Chi phí vận chuyển</td>
+                              <td colspan="6" align="right" style="padding:5px 9px">Chi phí vận chuyển</td>
                               <td align="right" style="padding:5px 9px"><span>0&nbsp;₫</span></td>
                             </tr>
                             <tr bgcolor="#eee">
-                              <td colspan="4" align="right" style="padding:7px 9px"><strong><big>Tổng giá trị đơn hàng</big></strong></td>
+                              <td colspan="6" align="right" style="padding:7px 9px"><strong><big>Tổng giá trị đơn hàng</big></strong></td>
                               <td align="right" style="padding:7px 9px"><strong><big><span>{!! number_format($orderDetail->tong_tien) !!}&nbsp;₫</span></big></strong></td>
                             </tr>
                           </tfoot>

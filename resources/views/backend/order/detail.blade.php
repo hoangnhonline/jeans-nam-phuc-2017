@@ -59,7 +59,7 @@
           <div class="col-md-4">
             <h4>Thông tin thanh toán</h4>
             <p>
-              <span>Địa chỉ :</span><br> {{ $order->address }}, {{ $order->ward_id ? Helper::getName($order->ward_id, 'ward') : "" }}, {{ $order->district_id ? Helper::getName($order->district_id, 'district') : "" }}, {{ $order->city_id ? Helper::getName($order->city_id, 'city') : "" }}<br>
+              <span>Địa chỉ :</span><br> {{ $order->address }}<br>
               <div class="clearfix" style="margin-bottom:5px"></div>
               <span>Email : </span><br />
               <span>{{ $order->email }}</span>                  
@@ -72,7 +72,7 @@
           <div class="col-md-4">
             <h4>Chi tiết giao nhận hàng</h4>
             <p>
-              <span>Địa chỉ :</span><br> {{ $order->address }}, {{ $order->ward_id ? Helper::getName($order->ward_id, 'ward') : "" }}, {{ $order->district_id ? Helper::getName($order->district_id, 'district') : "" }}, {{ $order->city_id ? Helper::getName($order->city_id, 'city') : "" }}<br>         
+              <span>Địa chỉ :</span><br> {{ $order->address }}<br>         
               
             </p>
           </div>
@@ -85,6 +85,8 @@
             <tr>
               <th style="width:1%">No.</th>
               <th> Tên Sản phẩm </th>
+              <th> Màu sắc  </th>
+              <th> Size </th>
               <th style="text-align:right"> Số Lượng </th>
               <th style="text-align:center">Giá bán </th>
               <th style="text-align:center">Tổng</th>              
@@ -96,6 +98,8 @@
               <tr>
                   <td style="text-align:center">{{ $i }}</td>
                   <td class="product_name">{{$detail->product->name}}</td>
+                  <td>{{ $colorArr[$detail->color_id]->name }}</td>
+                  <td>{{ $sizeArr[$detail->size_id]->name }}</td>
                   <td style="text-align:right">{{$detail->so_luong}}</td>
                   <td style="text-align:right">{{number_format($detail->don_gia)}} đ</td>
                   <td style="text-align:right">{{number_format($detail->tong_tien)}} đ</td>

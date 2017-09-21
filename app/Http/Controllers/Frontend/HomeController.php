@@ -41,6 +41,7 @@ class HomeController extends Controller
                   
         $query = Product::where( [ 'status' => 1, 'is_hot' => 1])                            
                         ->where('price', '>', 0)            
+			->where('thumbnail_id', '>', 0)
                         ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')           
                         ->select('product_img.image_url', 'product.*')                        
                         ->orderBy('product.id', 'desc')            
