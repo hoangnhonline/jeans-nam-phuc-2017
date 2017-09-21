@@ -1864,9 +1864,7 @@ h2.tit-page3 {
 
 /* Edit On Page
   ========================================================================== */
-.edit {
-  padding-top: 5px !important;
-  padding-bottom: 5px !important;
+.edit {  
   position: relative;
   border: 1px dashed transparent;
 }
