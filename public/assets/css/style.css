@@ -182,12 +182,7 @@ select {
 .block-header .block-info {
   margin-top: 10px;
 }
-.block-info i {
-  float: left;
-  font-size: 40px;
-  color: #c70f19;
-  margin-right: 10px;
-}
+.block-info i {    float: left;    font-size: 38px;    color: #c70f19;    margin-right: 7px;}
 .block-info .item p {
   float: left;
 }
