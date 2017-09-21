@@ -215,16 +215,17 @@ $(document).ready(function($){
             }, 
             success : function(data){
                 $('#size-div').html(data);
+                $('#size_id').val('');
             }
         });
     });
     $(document).on('click', '.choose-size', function(){
-       // if(!obj.hasClass('out-of-stock')){
-            var obj = $(this);
+        var obj = $(this);
+        if(!obj.hasClass('out-of-stock')){
             $('.choose-size').removeClass('active');
             obj.addClass('active');
             $('#size_id').val(obj.data('value'));
-       // }
+        }
     });
     // The slider being synced must be initialized first
     $('#carousel').flexslider({

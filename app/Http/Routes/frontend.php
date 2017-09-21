@@ -59,6 +59,7 @@ Route::group(['namespace' => 'Frontend'], function()
         Route::get('add-product', ['as' => 'add-product', 'uses' => 'CartController@addProduct']);
         Route::get('success', ['as' => 'success', 'uses' => 'CartController@success']);
         Route::post('save-order', ['as' => 'save-order', 'uses' => 'CartController@saveOrder']);        
+        Route::post('save', ['as' => 'save-final', 'uses' => 'CartController@save']);        
     });
 
     Route::group(['prefix' => 'tai-khoan'], function () {

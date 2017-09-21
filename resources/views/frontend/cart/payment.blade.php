@@ -29,47 +29,60 @@ $total = 0;
 					THÔNG TIN ĐẶT HÀNG
 				</div>
 				<div class="block-content">
-					<form action="billing-infomation_submit" method="get" class="form-billing">
+					@if (count($errors) > 0)
+			          <div class="alert alert-danger">
+			              <ul>
+			                  @foreach ($errors->all() as $error)
+			                      <li>{{ $error }}</li>
+			                  @endforeach
+			              </ul>
+			          </div>
+			      	@endif
+					<form action="{{ route('save-order') }}" method="POST"  id="frm_order" class="form-billing">
+						{{ csrf_field() }}
 						<div class="form-group">
 							<span class="input-addon"><i class="fa fa-user"></i></span>
-							<input type="text" class="form-control" id="inputname" placeholder="Họ và tên">
+							<input type="text" class="form-control" id="full_name" name="full_name" placeholder="Họ và tên">
 						</div>
 						<div class="form-group">
 							<span class="input-addon"><i class="fa fa-envelope"></i></span>
-							<input type="text" class="form-control" id="inputmail" placeholder="Email">
+							<input type="email" name="email" class="form-control" id="email" placeholder="Email">
 						</div>
 						<div class="form-group">
 							<span class="input-addon"><i class="fa fa-phone"></i></span>
-							<input type="text" class="form-control" id="inputphone" placeholder="Số điện thoại">
+							<input type="text" class="form-control" id="phone" name="phone" placeholder="Số điện thoại">
 						</div>
 						<div class="form-group">
 							<span class="input-addon"><i class="fa fa-home"></i></span>
-							<input type="text" class="form-control" id="inputaddress" placeholder="Địa chỉ">
+							<input type="text" class="form-control" id="address" name="address" placeholder="Địa chỉ">
 						</div>
 						<div class="form-group">
-							<label class="choose-another"><input type="radio" class="radio-cus"> Giao đến địa chỉ khác</label>
+							<label class="choose-another"><input type="radio" id="other_receiver" name="other_receiver" value="1" class="radio-cus"> Giao đến địa chỉ khác</label>
 						</div>
-						<div class="form-group">
-							<b>Thông tin người nhận</b>
-						</div>
-						<div class="form-group">
-							<span class="input-addon"><i class="fa fa-user"></i></span>
-							<input type="text" class="form-control" id="inputname" placeholder="Họ và tên">
-						</div>
-						<div class="form-group">
-							<span class="input-addon"><i class="fa fa-envelope"></i></span>
-							<input type="text" class="form-control" id="inputmail" placeholder="Email">
-						</div>
-						<div class="form-group">
-							<span class="input-addon"><i class="fa fa-phone"></i></span>
-							<input type="text" class="form-control" id="inputphone" placeholder="Số điện thoại">
-						</div>
-						<div class="form-group">
-							<span class="input-addon"><i class="fa fa-home"></i></span>
-							<input type="text" class="form-control" id="inputaddress" placeholder="Địa chỉ">
+						<div id="div-nguoi-nhan" style="display:none">
+							<div class="form-group">
+								<b>Thông tin người nhận</b>
+							</div>
+						
+							<div class="form-group">
+								<span class="input-addon"><i class="fa fa-user"></i></span>
+								<input type="text" class="form-control" id="inputname" placeholder="Họ và tên">
+							</div>
+							<div class="form-group">
+								<span class="input-addon"><i class="fa fa-envelope"></i></span>
+								<input type="text" class="form-control" id="inputmail" placeholder="Email">
+							</div>
+							<div class="form-group">
+								<span class="input-addon"><i class="fa fa-phone"></i></span>
+								<input type="text" class="form-control" id="inputphone" placeholder="Số điện thoại">
+							</div>
+							<div class="form-group">
+								<span class="input-addon"><i class="fa fa-home"></i></span>
+								<input type="text" class="form-control" id="inputaddress" placeholder="Địa chỉ">
+							</div>
 						</div>
 						<div class="text-center">
-							<a href="payments.html" class="btn btn-danger">
+							<a href="javascript:void(0)" id="btnNext" class="btn btn-danger">
 								Tiếp tục <i class="fa fa-angle-right"></i>
 							</a>
 						</div>
@@ -91,24 +104,28 @@ $total = 0;
 							</tr>
 						</thead>
 						<tbody>
-							@if( $arrProductInfo->count() > 0)
-								<?php $i = 0; ?>
-			                  @foreach($arrProductInfo as $product)
-			                  <?php $i++; ?>
+							@if( !empty($listKey) )
+							<?php $i = 0; ?>
+							@foreach($listKey as $key)
+			                  <?php $i++; 
+			                  $tmp = explode('-', $key);
+								$product_id = $tmp[0];
+								$product = $arrProductInfo[$product_id];
+			                  ?>
 			                  <?php $price = $product->is_sale ? $product->price_sale : $product->price; ?>
 							<tr>
 								<td>
 									<p class="tb-commom"><a href="{{ route('product-detail', [$product->slug, $product->id]) }}" target="_blank" title="{!! $product->name !!}">{!! $product->name !!}</a></p>
-									<p class="tb-commom">Số lượng: x {{ $getlistProduct[$product->id] }}</p>
+									<p class="tb-commom">Số lượng: x {{ $getlistProduct[$key] }}</p>
 									<p class="tb-commom">
 										Màu sắc sản phẩm:
-										<span class="tb-img"><img src="images/color/000.jpg" alt=""></span>
+										<span class="tb-img"><img src="{{ Helper::showImage($colorArr[$tmp[1]]->image_url ) }}" alt="{{ ($colorArr[$tmp[1]]->name ) }}" width="20"></span>
 									</p>
-									<p class="tb-commom">Size sản phẩm: <span class="tb-commom1">29</span></p>
+									<p class="tb-commom">Size sản phẩm: <span class="tb-commom1">{{ $sizeArr[$tmp[2]]->name }}</span></p>
 									</p>
 								</td>
 								<?php 
-								$total += $total_per_product = ($getlistProduct[$product->id]*$price);
+								$total += $total_per_product = ($getlistProduct[$key]*$price);
 								?>
 								<td>
 									<strong class="text-right">{{ number_format($total_per_product)  }}đ</strong>
@@ -141,7 +158,17 @@ $total = 0;
 @stop
 @section('js')
 <script type="text/javascript">
-	$(document).ready(function(){		  
+	$(document).ready(function(){		
+		$('#other_receiver').click(function(){
+			if($(this).prop('checked') == true){
+				$('#div-nguoi-nhan').show();
+			}else{
+				$('#div-nguoi-nhan').hide();
+			}
+		});  
+		$('#btnNext').click(function(){
+			$('#frm_order').submit();
+		});
 	      $('#btnPayment').click(function(){
 	      	$(this).hide();
 	      	$('#btnLoading').show();

@@ -19,6 +19,8 @@ use App\Models\OrderDetail;
 use App\Models\Customer;
 use App\Models\Events;
 use App\Models\ProductEvent;
+use App\Models\Color;
+use App\Models\Size;
 use Helper, File, Session, Auth;
 use Mail;
 
@@ -65,32 +67,66 @@ class CartController extends Controller
         if(empty($getlistProduct)){
             return redirect()->route('home');   
         }
-        $listProductId = array_keys($getlistProduct);
-        $arrProductInfo = Product::whereIn('product.id', $listProductId)
-                            ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')
-                            ->select('product_img.image_url', 'product.*')->get();
-        $seo['title'] = $seo['description'] = $seo['keywords'] = "Thanh toán";
-        $cityList = City::all();
-        return view('frontend.cart.payment', compact('arrProductInfo', 'getlistProduct', 'seo', 'cityList'));
-    }
-    public function shortCart(Request $request)
-    {
-        $getlistProduct = Session::get('products'); 
-        $listProductId = [];      
+        $listProductId = $listKey = $arrProductInfo = [] ;      
         if(!empty($getlistProduct)){
-            $listKey = array_keys($getlistProduct);        
+            $listKey = array_keys($getlistProduct);                  
             foreach($listKey as $key){
                 $tmp = explode('-', $key);
                 $listProductId[] = $tmp[0];
             }            
-            $arrProductInfo = Product::whereIn('product.id', $listProductId)
+            $rs = Product::whereIn('product.id', $listProductId)
                             ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')
                             ->select('product_img.image_url', 'product.*')->get();        
+            foreach($rs as $product){
+                $arrProductInfo[$product->id] = $product;
+            }
         }else{
             $arrProductInfo = Product::where('id', -1)->get();       
         }
-        
-        return view('frontend.cart.ajax.short-cart', compact('arrProductInfo', 'getlistProduct'));
+         $colorArr = $sizeArr = [];
+        $colorList = Color::orderBy('display_order')->get();      
+        $sizeList = Size::orderBy('display_order')->get();    
+        foreach($colorList as $color){
+            $colorArr[$color->id] = $color;
+        }
+        foreach($sizeList as $size){
+            $sizeArr[$size->id] = $size;
+        }        
+        $seo['title'] = $seo['description'] = $seo['keywords'] = "Thanh toán";
+        $cityList = City::all();
+        return view('frontend.cart.payment', compact('arrProductInfo', 'getlistProduct', 'seo', 'cityList', 'colorArr', 'sizeArr', 'listKey'));
+    }
+    public function shortCart(Request $request)
+    {
+        $getlistProduct = Session::get('products'); 
+        //dd($getlistProduct);
+        $listProductId = $listKey = $arrProductInfo = [] ;      
+        if(!empty($getlistProduct)){
+            $listKey = array_keys($getlistProduct);                  
+            foreach($listKey as $key){
+                $tmp = explode('-', $key);
+                $listProductId[] = $tmp[0];
+            }            
+            $rs = Product::whereIn('product.id', $listProductId)
+                            ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')
+                            ->select('product_img.image_url', 'product.*')->get();        
+            foreach($rs as $product){
+                $arrProductInfo[$product->id] = $product;
+            }
+        }else{
+            $arrProductInfo = Product::where('id', -1)->get();       
+        }
+         $colorArr = $sizeArr = [];
+        $colorList = Color::orderBy('display_order')->get();      
+        $sizeList = Size::orderBy('display_order')->get();    
+        foreach($colorList as $color){
+            $colorArr[$color->id] = $color;
+        }
+        foreach($sizeList as $size){
+            $sizeArr[$size->id] = $size;
+        }        
+      //  dd($arrProductInfo);
+        return view('frontend.cart.ajax.short-cart', compact('arrProductInfo', 'getlistProduct', 'listKey', 'colorArr', 'sizeArr'));
     }
 
     public function update(Request $request)
@@ -129,49 +165,83 @@ class CartController extends Controller
 
     public function saveOrder(Request $request)
     {
+        $listProductId = [];
         if(!Session::has('products')) {
             return redirect()->route('home');
         }
-        $getlistProduct = Session::get('products');
-        $listProductId = array_keys($getlistProduct);
-
+        $getlistProduct = Session::get('products');        
+        $dataArr = $request->all();
         $this->validate($request,[
             'full_name' => 'required',
             'phone' => 'required',
-            'email' => 'required|email',
-            'city_id' => 'required',
-            'district_id' => 'required',
+            'email' => 'required|email',            
             'address' => 'required'
         ],
         [
             'full_name.required' => 'Quý khách chưa nhập họ tên',
             'phone.required' => 'Quý khách chưa nhập điện thoại liên hệ',
-            'email.required' => 'Quý khách chưa nhập email',
-            'city_id.required' => 'Quý khách chưa chọn tỉnh/thành',
-            'district_id.required' => 'Quý khách chưa chọn quận/huyện',
-            'address.required' => 'Quý khách chưa nhập số nhà - Tên đường '
+            'email.required' => 'Quý khách chưa nhập email',            
+            'address.required' => 'Quý khách chưa nhập địa chỉ'
         ]);
+
+        Session::put('payment_info', $dataArr);
         
-        $arrProductInfo = Product::whereIn('product.id', $listProductId)
+        //dd($getlistProduct);
+        $listProductId = $listKey = $arrProductInfo = [] ;      
+        if(!empty($getlistProduct)){
+            $listKey = array_keys($getlistProduct);                  
+            foreach($listKey as $key){
+                $tmp = explode('-', $key);
+                $listProductId[] = $tmp[0];
+            }            
+            $rs = Product::whereIn('product.id', $listProductId)
                             ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')
-                            ->select('product_img.image_url', 'product.*')->get();
-        $dataArr['tong_tien'] = 0;
-        $dataArr['tong_sp'] = array_sum($getlistProduct);
+                            ->select('product_img.image_url', 'product.*')->get();        
+            foreach($rs as $product){
+                $arrProductInfo[$product->id] = $product;
+            }
+        }else{
+            $arrProductInfo = Product::where('id', -1)->get();       
+        }
+         $colorArr = $sizeArr = [];
+        $colorList = Color::orderBy('display_order')->get();      
+        $sizeList = Size::orderBy('display_order')->get();    
+        foreach($colorList as $color){
+            $colorArr[$color->id] = $color;
+        }
+        foreach($sizeList as $size){
+            $sizeArr[$size->id] = $size;
+        }        
         
-        $dataArr['district_id'] = $request->district_id;
-        $dataArr['city_id']  = $request->city_id;        
+        $seo['title'] = $seo['description'] = $seo['keywords'] = "Chọn phương thức thanh toán";
+        return view('frontend.cart.method', compact('arrProductInfo', 'getlistProduct', 'listKey', 'colorArr', 'sizeArr', 'seo'));
+        /*
+        $listKey = array_keys($getlistProduct);                  
+            foreach($listKey as $key){
+                $tmp = explode('-', $key);
+                $listProductId[] = $tmp[0];
+            }            
+        $rs = Product::whereIn('product.id', $listProductId)
+                        ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')
+                        ->select('product_img.image_url', 'product.*')->get();        
+        foreach($rs as $product){
+            $arrProductInfo[$product->id] = $product;
+        }
+        $dataArr['tong_tien'] = 0;
+        $dataArr['tong_sp'] = array_sum($getlistProduct);     
+  
         $dataArr['address']  = $request->address;
-        $dataArr['gender']  = $request->gender;
+        $dataArr['gender']  = 1;
         $dataArr['full_name']  = $request->full_name;
         $dataArr['email']  = $email = $request->email;
         $dataArr['phone']  = $request->phone;
         $dataArr['notes']  = $request->notes;
-        $dataArr['address_type']  = 1;
-        $dataArr['method_id'] = $request->method_id;
+        $dataArr['address_type']  = 1;       
         
-        foreach ($arrProductInfo as $product) {
+        foreach ($listKey as $key) {
+            $product = $arrProductInfo[$key];
             $price = $product->is_sale ? $product->price_sale : $product->price;        
-            $dataArr['tong_tien'] += $price * $getlistProduct[$product->id];
+            $dataArr['tong_tien'] += $price * $getlistProduct[$key];
         }
 
         $dataArr['tien_thanh_toan'] = $dataArr['tong_tien'];
@@ -216,8 +286,85 @@ class CartController extends Controller
         }
 
         return redirect()->route('success');
-        
+        */
     }    
+    public function save(){
+        $listProductId = [];
+        if(!Session::has('products')) {
+            return redirect()->route('home');
+        }
+        $getlistProduct = Session::get('products');        
+        $listKey = array_keys($getlistProduct);                  
+            foreach($listKey as $key){
+                $tmp = explode('-', $key);
+                $listProductId[] = $tmp[0];
+            }            
+        $rs = Product::whereIn('product.id', $listProductId)
+                        ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')
+                        ->select('product_img.image_url', 'product.*')->get();        
+        foreach($rs as $product){
+            $arrProductInfo[$product->id] = $product;
+        }
+        $dataArr['tong_tien'] = 0;
+        $dataArr['tong_sp'] = array_sum($getlistProduct);     
+  
+        $dataArr['address']  = $request->address;
+        $dataArr['gender']  = 1;
+        $dataArr['full_name']  = $request->full_name;
+        $dataArr['email']  = $email = $request->email;
+        $dataArr['phone']  = $request->phone;
+        $dataArr['notes']  = $request->notes;
+        $dataArr['address_type']  = 1;       
+        
+        foreach ($listKey as $key) {
+            $product = $arrProductInfo[$key];
+            $price = $product->is_sale ? $product->price_sale : $product->price;        
+            $dataArr['tong_tien'] += $price * $getlistProduct[$key];
+        }
+
+        $dataArr['tien_thanh_toan'] = $dataArr['tong_tien'];
+
+        $rs = Orders::create($dataArr);
+        
+        $order_id = $rs->id;
+        $orderDetail = Orders::find($order_id);
+        Session::put('order_id', $order_id);   
+       
+        foreach ($arrProductInfo as $product) {            
+            # code...
+            $dataDetail['product_id']        = $product->id;
+            $dataDetail['so_luong']     = $getlistProduct[$product->id];
+            $dataDetail['don_gia']      = $product->price;
+            $dataDetail['order_id']     = $order_id;
+            $dataDetail['tong_tien']    = $getlistProduct[$product->id]*$product->price;
+
+            OrderDetail::create($dataDetail); 
+        }
+        
+        $emailArr = array_merge([$email], ['hoangnhonline@gmail.com']);
+        
+        // send email
+        $order_id =str_pad($order_id, 6, "0", STR_PAD_LEFT);
+        //$emailArr = [];
+        if(!empty($emailArr)){
+            Mail::send('frontend.email.cart',
+                [                    
+                    'orderDetail'             => $orderDetail,
+                    'arrProductInfo'    => $arrProductInfo,
+                    'getlistProduct'    => $getlistProduct,            
+                    'method_id' => $dataArr['method_id'],
+                    'order_id' => $order_id                    
+                ],
+                function($message) use ($emailArr, $order_id) {
+                    $message->subject('Xác nhận đơn hàng hàng #'.$order_id);
+                    $message->to($emailArr);
+                    $message->from('annammobile.com@gmail.com', 'annammobile.com');
+                    $message->sender('annammobile.com@gmail.com', 'annammobile.com');
+            });
+        }
+
+        return redirect()->route('success');
+    }
     public function success(){
         if(!Session::has('products')) {
             return redirect()->route('home');
