@@ -102,8 +102,8 @@
                                             </div>
                                         </div>
                                         @endif
-                                        <input type="" name="" id="color_id" value="">
-                                        <input type="" name="" id="size_id" value="">
+                                        <input type="hidden" name="" id="color_id" value="">
+                                        <input type="hidden" name="" id="size_id" value="">
                                     </div><!-- /block-datail-if -->
                                     <div class="block block-share" id="share-buttons">
                                         <div class="share-item">
