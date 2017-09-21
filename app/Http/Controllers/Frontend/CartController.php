@@ -20,6 +20,7 @@ use App\Models\Customer;
 use App\Models\Events;
 use App\Models\ProductEvent;
 use App\Models\Color;
+use App\Models\Settings;
 use App\Models\Size;
 use Helper, File, Session, Auth;
 use Mail;
@@ -289,9 +290,10 @@ class CartController extends Controller
         foreach($sizeList as $size){
             $sizeArr[$size->id] = $size;
         }  
-        Session::put('products', []);
-        Session::flush();
-        $emailArr = array_merge(['hoangnhonline@gmail.com'], [$email]);
+        $settingArr = Settings::whereRaw('1')->lists('value', 'name');
+        $emailCC = explode(';',$settingArr['email_cc']);
+
+        $emailArr = array_merge($emailCC, [$email]);
         if(!empty($emailArr)){
             Mail::send('frontend.email.cart',
                 [                    
@@ -312,7 +314,8 @@ class CartController extends Controller
                     $message->sender('quanjeansnamphuc.com@gmail.com', 'Quần jeans Nam Phúc');
             });
         }
-
+        Session::put('products', []);
+        Session::flush();
         //return redirect()->route('success');
     }
     public function success(){

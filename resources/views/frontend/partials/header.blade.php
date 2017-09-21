@@ -23,7 +23,7 @@
 								<i class="fa fa-clock-o"></i>
 								<p>
 									<span class="title @if($isEdit) edit @endif" data-text="15">{!! $textList[15] !!}</span>
-									<span class="info">08:00 - 17:00</span>
+									<span class="info">{!! $settingArr['gio_lam_viec'] !!}</span>
 								</p>
 							</div>	
 						</div>

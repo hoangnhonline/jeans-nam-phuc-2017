@@ -11,6 +11,8 @@ use App\Models\Orders;
 use App\Models\OrderDetail;
 use App\Models\Customer;
 use App\Models\Product;
+use App\Models\Color;
+use App\Models\Size;
 use DB;
 use Mail;
 class OrderController extends Controller
@@ -58,8 +60,18 @@ class OrderController extends Controller
         $s['name'] = $request->name;
         $s['date_from'] = $request->date_from;
         $s['date_to'] = $request->date_to;
-
-        return view('backend.order.detail', compact('order', 'order_detail', 'list_status', 's'));
+        // get list size selected
+        $colorArr = $sizeArr = [];
+        $colorList = Color::orderBy('display_order')->get();      
+        $sizeList = Size::orderBy('display_order')->get();    
+        foreach($colorList as $color){
+            $colorArr[$color->id] = $color;
+        }
+        foreach($sizeList as $size){
+            $sizeArr[$size->id] = $size;
+        }
+       
+        return view('backend.order.detail', compact('order', 'order_detail', 'list_status', 's'. 'colorArr', 'sizeArr'));
     }
 
     public function orderDetailDelete(Request $request)

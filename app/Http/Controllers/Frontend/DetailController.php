@@ -63,8 +63,11 @@ class DetailController extends Controller
         }else{
             $seo['title'] = $seo['description'] = $seo['keywords'] = $detail->name;
         }               
-        
-        $socialImage = ProductImg::find($detail->thumbnail_id)->image_url;
+        if($detail->thumbnail_id){
+            $socialImage = ProductImg::find($detail->thumbnail_id)->image_url;
+        }else{
+            $socialImage = '';
+        }
        
         $query = Product::where('product.slug', '<>', '')
                     ->where('product.parent_id', $detail->parent_id)

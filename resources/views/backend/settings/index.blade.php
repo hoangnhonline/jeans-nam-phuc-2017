@@ -60,8 +60,16 @@
                   <input type="text" class="form-control" name="google_fanpage" id="google_fanpage" value="{{ $settingArr['google_fanpage'] }}">
                 </div>
                 <div class="form-group">
-                  <label>Twitter</label>
-                  <input type="text" class="form-control" name="twitter_fanpage" id="twitter_fanpage" value="{{ $settingArr['twitter_fanpage'] }}">
+                  <label>Hotline</label>
+                  <input type="text" class="form-control" name="hotline" id="hotline" value="{{ $settingArr['hotline'] }}">
+                </div>
+                <div class="form-group">
+                  <label>Giờ làm việc</label>
+                  <input type="text" class="form-control" name="gio_lam_viec" id="gio_lam_viec" value="{{ $settingArr['gio_lam_viec'] }}">
+                </div>
+                <div class="form-group">
+                  <label>Email header</label>
+                  <input type="text" class="form-control" name="email_header" id="email_header" value="{{ $settingArr['email_header'] }}">
                 </div>
                 <div class="form-group">
                   <label>Email CC</label>
