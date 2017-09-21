@@ -51,7 +51,7 @@ class CateController extends Controller
             $parent_id = $parentDetail->id;
             
             $productList = Product::where('parent_id', $parent_id)
-                            ->where('thumbnail_id', '>', 0)
+			    ->where('thumbnail_id', '>', 0)
                             ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')
                             ->select('product_img.image_url', 'product.*')                                                   
                             ->orderBy('product.id', 'desc')
@@ -81,7 +81,7 @@ class CateController extends Controller
             $cate_id = $cateDetail->id;
             
             $productList = Product::where('cate_id', $cate_id)
-                                    ->where('thumbnail_id', '>', 0)
+			            ->where('thumbnail_id', '>', 0)		
                                     ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')
                                     ->select('product_img.image_url', 'product.*')                                                   
                                     ->orderBy('product.id', 'desc')

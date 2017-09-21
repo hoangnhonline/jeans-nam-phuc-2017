@@ -349,3 +349,4 @@ class DetailController extends Controller
     }
 
 }
+
