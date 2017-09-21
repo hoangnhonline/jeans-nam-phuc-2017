@@ -83,7 +83,7 @@
 								</div>
 								<div class="form-group text-center">
 									<a href="#" title="Quay Lại" class="btn btn-default"><i class="fa fa-angle-left"></i> Quay Lại</a>
-									<button title="Quay Lại" class="btn btn-danger" data-toggle="modal" data-target="#Confirm">Đặt hàng <i class="fa fa-angle-right"></i></button>
+									<button id="btnFinish" type="button" class="btn btn-danger">Đặt hàng <i class="fa fa-angle-right"></i></button>
 								</div>
 							</form>
 						</div>
@@ -184,4 +184,50 @@
 				</div><!-- /block-col-right -->
 			</div>
 		</div><!-- /block_big-title -->
+		<div class="modal fade" id="Confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<i class="fa fa-times-circle"></i>
+					</button>
+					<div class="modal-header">
+						ĐƠN HÀNG CỦA BẠN ĐÃ ĐẶT THÀNH CÔNG
+					</div>
+					<div class="modal-body">
+						<p>
+							<strong>Cảm ơn quý khách đã mua hàng !</strong> Chúng tôi liên hệ xác nhận đến số điện thoại của quý khách và sẽ giao hàng đến cho quý khách trong thời gian từ 2-3 ngày sau khi xác nhận.
+						</p>
+						<p>
+							<strong>Chân thành cảm ơn quý khách.</strong>
+						</p>
+						<div class="text-right">
+							<a href="index.html" title="Trở về trang chủ" class="btn btn-danger"> Trở về trang chủ</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+@stop
+@section('js')
+<script type="text/javascript">
+	$('document').ready(function(){
+		$('#btnFinish').click(function(){
+			$(this).html('<i class="fa fa-spin fa-spinner"></i>');
+			$.ajax({
+				url : "{{ route('save-final') }}",
+				type : 'POST',
+				data : {
+					method_id : $('input[name=method_id]:checked').val()
+				},
+				success: function(){
+					$('#Confirm').modal('show');
+					setTimeout(function(){
+						location.href="{{ route('home') }}";
+					}, 5000);
+				}
+			});
+		});
+	});
+
+</script>
 @stop

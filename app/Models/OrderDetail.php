@@ -31,7 +31,9 @@ class OrderDetail extends Model  {
 	  	'tong_tien',
         'so_dich_vu',
         'don_gia_dich_vu',
-        'tong_dich_vu'
+        'tong_dich_vu',
+        'color_id',
+        'size_id'
   	];
 
     public function product()
