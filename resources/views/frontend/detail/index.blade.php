@@ -102,7 +102,7 @@
                                             </div>
                                         </div>
                                         @endif
-                                        <input type="hidden" name="" id="color_id" value="">
+                                        <input type="hidden" name="" id="color_id" value="{{ $detail->color_id_main }}">
                                         <input type="hidden" name="" id="size_id" value="">
                                     </div><!-- /block-datail-if -->
                                     <div class="block block-share" id="share-buttons">

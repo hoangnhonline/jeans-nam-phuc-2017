@@ -244,7 +244,7 @@ class CartController extends Controller
         $dataArr['phone']  = $info['phone'];
         $dataArr['notes']  = '';
         $dataArr['address_type']  = 1;       
-        
+        $dataArr['method_id'] = $request->method_id;
         foreach ($listKey as $key) {
             $tmp = explode('-', $key);
             $product = $arrProductInfo[$tmp[0]];
@@ -291,8 +291,8 @@ class CartController extends Controller
         }  
         Session::put('products', []);
         Session::flush();
-        //$emailArr = [];
-        /*if(!empty($emailArr)){
+        $emailArr = array_merge(['hoangnhonline@gmail.com'], [$email]);
+        if(!empty($emailArr)){
             Mail::send('frontend.email.cart',
                 [                    
                     'orderDetail'             => $orderDetail,
@@ -308,11 +308,11 @@ class CartController extends Controller
                 function($message) use ($emailArr, $order_id) {
                     $message->subject('Xác nhận đơn hàng hàng #'.$order_id);
                     $message->to($emailArr);
-                    $message->from('annammobile.com@gmail.com', 'annammobile.com');
-                    $message->sender('annammobile.com@gmail.com', 'annammobile.com');
+                    $message->from('quanjeansnamphuc.com@gmail.com', 'Quần jeans Nam Phúc');
+                    $message->sender('quanjeansnamphuc.com@gmail.com', 'Quần jeans Nam Phúc');
             });
         }
-*/
+
         //return redirect()->route('success');
     }
     public function success(){
