@@ -205,6 +205,7 @@ class ProductController extends Controller
         $rs = Product::create($dataArr);
 
         $product_id = $rs->id;
+
         // xu ly tags
         if( !empty( $dataArr['tags'] ) && $product_id ){
             foreach ($dataArr['tags'] as $tag_id) {
@@ -242,8 +243,8 @@ class ProductController extends Controller
         
         ProductColor::where('product_id', $id)->delete();
 
-        if( !empty($dataArr['color_id'])){
-            foreach( $dataArr['color_id'] as $color_id){
+        if( !empty($dataArr['color_id'])){            
+            foreach( $dataArr['color_id'] as $color_id){                
                 ProductColor::create(['product_id' => $id, 'color_id' => $color_id]);
             }
         }
@@ -307,7 +308,10 @@ class ProductController extends Controller
                         $dataInsert['display_order'] = $countImg;
                         $dataInsert['is_thumbnail'] = $is_thumbnail;
                         $dataInsert['image_url'] = $image_url;
-                        ProductImg::create($dataInsert);
+                        $rs = ProductImg::create($dataInsert);
+                        if($is_thumbnail == 1){
+                            $thumbnail_id = $rs->id;
+                        }
                     }
 
                 }
