@@ -56,8 +56,7 @@ class ViewComposerServiceProvider extends ServiceProvider
 	        $settingArr = Settings::whereRaw('1')->lists('value', 'name');
 	        $textList = Text::whereRaw('1')->lists('content', 'id');
 	        $routeName = \Request::route()->getName();
-	       // var_dump("<pre>", $menuDoc);die;   
-	        //var_dump("<pre>", $loaiSpKey);die;
+	
 	        $colorList = Color::orderBy('display_order')->get();
 	        
 	        $isEdit = Auth::check();	        
