@@ -218,6 +218,14 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
         Route::get('/remove-img', ['as' => 'product.remove-img', 'uses' => 'ProductController@deleteImg']);  
         
     });
+    Route::group(['prefix' => 'inventory'], function () {
+        Route::get('/', ['as' => 'inventory.index', 'uses' => 'InventoryController@index']);
+        Route::post('/store', ['as' => 'inventory.store', 'uses' => 'InventoryController@store']);        
+        Route::get('{id}/edit',   ['as' => 'inventory.edit', 'uses' => 'InventoryController@edit']);
+        Route::post('/update', ['as' => 'inventory.update', 'uses' => 'InventoryController@update']);       
+        Route::get('{id}/destroy', ['as' => 'inventory.destroy', 'uses' => 'InventoryController@destroy']);
+        Route::get('/remove-img', ['as' => 'inventory.remove-img', 'uses' => 'InventoryController@deleteImg']);
+    });
      Route::group(['prefix' => 'cate-parent'], function () {
         Route::get('/', ['as' => 'cate-parent.index', 'uses' => 'CateParentController@index']);
         Route::get('/create', ['as' => 'cate-parent.create', 'uses' => 'CateParentController@create']);

@@ -30,7 +30,12 @@
           <li {{ in_array(\Request::route()->getName(), ['cate.index', 'cate.edit', 'cate.create']) ? "class=active" : "" }}><a href="{{ route('cate.index') }}"><i class="fa fa-circle-o"></i> Danh mục con</a></li>
         </ul>
       </li>
-      
+      <li {{ in_array(\Request::route()->getName(), ['inventory.index', 'inventory.edit']) ? "class=active" : "" }}>
+        <a href="{{ route('inventory.index') }}">
+          <i class="fa fa-file-image-o"></i> 
+          <span>Quản lý kho</span>          
+        </a>       
+      </li> 
       <li class="treeview {{ \Request::route()->getName() == "orders.index" ? "active" : "" }}">
         <a href="#">
           <i class="fa fa-reorder"></i> 

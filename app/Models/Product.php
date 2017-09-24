@@ -49,7 +49,8 @@ class Product extends Model  {
                     'updated_user', 
                     'meta_id',
                     'price_sell',
-                    'color_id_main'                 
+                    'color_id_main',
+                    'het_hang'                
                     ];
     
     public function sizes()
