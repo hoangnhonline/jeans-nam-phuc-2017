@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 21, 2017 at 01:32 AM
+-- Generation Time: Sep 27, 2017 at 12:58 AM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -2983,7 +2983,7 @@ CREATE TABLE `product` (
   `mo_ta` text,
   `khuyen_mai` text,
   `chi_tiet` text,
-  `con_hang` tinyint(1) NOT NULL DEFAULT '1',
+  `het_hang` tinyint(1) NOT NULL DEFAULT '0',
   `views` int(11) NOT NULL DEFAULT '0',
   `display_order` tinyint(4) NOT NULL COMMENT 'danh cho sp hot',
   `so_lan_mua` int(11) NOT NULL DEFAULT '0',
@@ -3000,12 +3000,12 @@ CREATE TABLE `product` (
 -- Dumping data for table `product`
 --
 
-INSERT INTO `product` (`id`, `ma_sp`, `name`, `alias`, `slug`, `thumbnail_id`, `is_hot`, `is_sale`, `is_new`, `price`, `price_sale`, `price_sell`, `parent_id`, `cate_id`, `color_id_main`, `mo_ta`, `khuyen_mai`, `chi_tiet`, `con_hang`, `views`, `display_order`, `so_lan_mua`, `sale_percent`, `status`, `meta_id`, `created_user`, `updated_user`, `created_at`, `updated_at`) VALUES
-(1, NULL, 'Quần jeans ống côn 1', 'Quan jeans ong con 1', 'quan-jeans-ong-con-1', 19, 1, 0, 0, 150000, 0, 150000, 1, 1, 4, '<p>M&ocirc; tả n&egrave;</p>\r\n', NULL, '<p>chi tiết sản phẩm n&egrave;</p>\r\n', 1, 0, 1, 0, NULL, 1, 1584, 1, 1, '2017-09-06 09:31:06', '2017-09-19 13:54:52'),
-(2, NULL, 'Quần jeans 01', 'Quan jeans 01', 'quan-jeans-01', 7, 1, 1, 1, 1111, 111111, 111111, 1, 1, 2, '<p>&agrave;S</p>\r\n', NULL, '<p>&aacute;a</p>\r\n', 1, 0, 0, 0, NULL, 1, 1585, 1, 1, '2017-09-17 18:26:18', '2017-09-19 13:52:38'),
-(3, NULL, 'Quần jeans 02', 'Quan jeans 02', 'quan-jeans-02', 20, 1, 0, 0, 1111, 0, 1111, 1, 1, 2, '<p>sầ</p>\r\n', NULL, '<p>ầ</p>\r\n', 1, 0, 0, 0, NULL, 1, 1586, 1, 1, '2017-09-19 13:56:38', '2017-09-19 13:57:33'),
-(4, NULL, 'Quần jeans 03', 'Quan jeans 03', 'quan-jeans-03', 22, 1, 0, 0, 180000, 0, 180000, 1, 1, 3, '', NULL, '', 1, 0, 0, 0, NULL, 1, 1587, 1, 1, '2017-09-19 14:01:02', '2017-09-19 14:01:40'),
-(5, NULL, 'Quần jeans 04', 'Quan jeans 04', 'quan-jeans-04', 23, 1, 0, 0, 220000, 0, 220000, 1, 1, 3, '', NULL, '', 1, 0, 0, 0, NULL, 1, 1588, 1, 1, '2017-09-19 14:03:17', '2017-09-19 14:04:59');
+INSERT INTO `product` (`id`, `ma_sp`, `name`, `alias`, `slug`, `thumbnail_id`, `is_hot`, `is_sale`, `is_new`, `price`, `price_sale`, `price_sell`, `parent_id`, `cate_id`, `color_id_main`, `mo_ta`, `khuyen_mai`, `chi_tiet`, `het_hang`, `views`, `display_order`, `so_lan_mua`, `sale_percent`, `status`, `meta_id`, `created_user`, `updated_user`, `created_at`, `updated_at`) VALUES
+(1, NULL, 'Quần jeans ống côn 1', 'Quan jeans ong con 1', 'quan-jeans-ong-con-1', 19, 1, 0, 0, 150000, 0, 150000, 1, 1, 4, '<p>M&ocirc; tả n&egrave;</p>\r\n', NULL, '<p>chi tiết sản phẩm n&egrave;</p>\r\n', 0, 0, 1, 0, NULL, 1, 1584, 1, 1, '2017-09-06 09:31:06', '2017-09-19 13:54:52'),
+(2, NULL, 'Quần jeans 01', 'Quan jeans 01', 'quan-jeans-01', 7, 1, 1, 1, 1111, 111111, 111111, 1, 1, 2, '<p>&agrave;S</p>\r\n', NULL, '<p>&aacute;a</p>\r\n', 0, 0, 0, 0, NULL, 1, 1585, 1, 1, '2017-09-17 18:26:18', '2017-09-19 13:52:38'),
+(3, NULL, 'Quần jeans 02', 'Quan jeans 02', 'quan-jeans-02', 20, 1, 0, 0, 1111, 0, 1111, 1, 1, 2, '<p>sầ</p>\r\n', NULL, '<p>ầ</p>\r\n', 0, 0, 0, 0, NULL, 1, 1586, 1, 1, '2017-09-19 13:56:38', '2017-09-19 13:57:33'),
+(4, NULL, 'Quần jeans 03', 'Quan jeans 03', 'quan-jeans-03', 22, 1, 0, 0, 180000, 0, 180000, 1, 1, 3, '', NULL, '', 0, 0, 0, 0, NULL, 1, 1587, 1, 1, '2017-09-19 14:01:02', '2017-09-19 14:01:40'),
+(5, NULL, 'Quần jeans 04', 'Quan jeans 04', 'quan-jeans-04', 23, 1, 0, 0, 220000, 0, 220000, 1, 1, 3, '', NULL, '', 0, 0, 0, 0, NULL, 1, 1588, 1, 1, '2017-09-19 14:03:17', '2017-09-19 14:04:59');
 
 -- --------------------------------------------------------
 
@@ -3214,28 +3214,29 @@ CREATE TABLE `settings` (
 
 INSERT INTO `settings` (`id`, `name`, `value`, `created_at`, `updated_at`) VALUES
 (1, 'base_url', 'http://annammobile.com', '2016-07-27 14:37:52', '2016-07-27 14:37:52'),
-(2, 'site_title', 'CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI NAM PHÚC', '2016-07-27 14:37:52', '2017-09-20 09:41:01'),
-(3, 'site_description', 'CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI NAM PHÚC', '2016-07-27 14:37:52', '2017-09-20 09:41:01'),
-(4, 'site_keywords', 'CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI NAM PHÚC', '2016-07-27 14:37:52', '2017-09-20 09:41:01'),
+(2, 'site_title', 'CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI NAM PHÚC', '2016-07-27 14:37:52', '2017-09-21 09:42:23'),
+(3, 'site_description', 'CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI NAM PHÚC', '2016-07-27 14:37:52', '2017-09-21 09:42:23'),
+(4, 'site_keywords', 'CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI NAM PHÚC', '2016-07-27 14:37:52', '2017-09-21 09:42:23'),
 (5, 'admin_email', 'nghien.biz@gmail.com', '2016-07-27 14:37:52', '2016-07-27 14:37:52'),
 (22, 'mail_server', 'mail.example.com', '2016-07-27 14:37:52', '2016-07-27 14:37:52'),
 (23, 'mail_login_name', 'login@example.com', '2016-07-27 14:37:52', '2016-07-27 14:37:52'),
 (24, 'mail_password', 'password', '2016-07-27 14:37:52', '2016-07-27 14:37:52'),
-(105, 'site_name', 'CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI NAM PHÚC', '2016-07-27 14:37:52', '2017-09-20 09:41:01'),
-(113, 'google_analystic', '', '2016-07-27 14:37:52', '2017-09-20 09:41:01'),
-(114, 'facebook_appid', '', '2016-07-27 14:37:52', '2017-09-20 09:41:01'),
-(115, 'google_fanpage', '', '2016-07-27 14:37:52', '2017-09-20 09:41:01'),
-(116, 'facebook_fanpage', 'https://www.facebook.com/', '2016-07-27 14:37:52', '2017-09-20 09:41:01'),
-(117, 'twitter_fanpage', '', '2016-07-27 14:37:52', '2017-09-20 09:41:01'),
-(130, 'logo', '/public/uploads/images/logo.png', '2016-07-27 14:37:52', '2017-09-20 09:41:01'),
-(131, 'favicon', '', '2016-07-27 14:37:52', '2017-09-20 09:41:01'),
-(141, 'banner', '', '2016-07-27 14:37:52', '2017-09-20 09:41:01'),
-(142, 'custom_text', '', '2016-07-27 14:37:52', '2017-09-20 09:41:01'),
-(143, 'email_cc', '', '2016-11-11 00:00:00', '2017-09-20 09:41:01'),
+(105, 'site_name', 'CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI NAM PHÚC', '2016-07-27 14:37:52', '2017-09-21 09:42:23'),
+(113, 'google_analystic', '', '2016-07-27 14:37:52', '2017-09-21 09:42:23'),
+(114, 'facebook_appid', '', '2016-07-27 14:37:52', '2017-09-21 09:42:23'),
+(115, 'google_fanpage', '', '2016-07-27 14:37:52', '2017-09-21 09:42:23'),
+(116, 'facebook_fanpage', 'https://www.facebook.com/', '2016-07-27 14:37:52', '2017-09-21 09:42:23'),
+(117, 'twitter_fanpage', '', '2016-07-27 14:37:52', '2017-09-21 09:36:34'),
+(130, 'logo', '/public/uploads/images/logo.png', '2016-07-27 14:37:52', '2017-09-21 09:42:23'),
+(131, 'favicon', '', '2016-07-27 14:37:52', '2017-09-21 09:42:23'),
+(141, 'banner', '', '2016-07-27 14:37:52', '2017-09-21 09:42:23'),
+(142, 'custom_text', '', '2016-07-27 14:37:52', '2017-09-21 09:42:23'),
+(143, 'email_cc', 'hoangnhonline@gmail.com;tungocsang88@gmail.com', '2016-11-11 00:00:00', '2017-09-21 09:42:23'),
 (144, 'mo_ta_sp', '', '2017-08-06 00:00:00', '2017-09-20 09:30:06'),
-(145, 'hotline', '19001080', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(146, 'email_header', 'abc@gmail.com', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(147, 'thong_tin_cong_ty', '<p><strong>C&Ocirc;NG TY PH&Acirc;N PHỐI QUẦN JEANS CAO CẤPss</strong></p>\r\n\r\n<p>Địa chỉ: 788 - 790 Lạc Long Qu&acirc;n, phường 9, quận T&acirc;n B&igrave;nh, th&agrave;nh phố Hồ Ch&iacute; Minh</p>\r\n\r\n<p>Điện thoại: 08 86 02 440</p>\r\n\r\n<p>Di động: 0918 306 666 - 0918 207 777</p>\r\n\r\n<p>Email: <a href=\"mailto:amphucjean@yahoo.com.vn\">amphucjean@yahoo.com.vn</a></p>\r\n\r\n<p>Website: <a href=\"#\">www.namphucjean.com</a></p>\r\n', '0000-00-00 00:00:00', '2017-09-20 09:41:01');
+(145, 'hotline', '0908201785', '0000-00-00 00:00:00', '2017-09-21 09:42:23'),
+(146, 'email_header', 'namphucjean@yahoo.com.vn', '0000-00-00 00:00:00', '2017-09-21 09:42:23'),
+(147, 'thong_tin_cong_ty', '<p><strong>C&Ocirc;NG TY TNHH SẢN XUẤT THƯƠNG MẠI NAM PH&Uacute;C</strong></p>\r\n\r\n<p>Địa chỉ: 788 Lạc Long Qu&acirc;n, phường 09, quận T&acirc;n B&igrave;nh, th&agrave;nh phố Hồ Ch&iacute; Minh</p>\r\n\r\n<p>Điện thoại: 028&nbsp;8602 440 - Fax: 028 8601 951</p>\r\n\r\n<p>Di động: 0918 207 777 - 0918 306 666</p>\r\n\r\n<p>Email: <a href=\"mailto:amphucjean@yahoo.com.vn\">namphucjean@yahoo.com.vn</a></p>\r\n\r\n<p>Website: <a href=\"#\">www.namphucjean.com</a></p>\r\n', '0000-00-00 00:00:00', '2017-09-21 09:42:23'),
+(148, 'gio_lam_viec', '08:00 - 17:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -14904,7 +14905,7 @@ ALTER TABLE `product_img`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=148;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
 --
 -- AUTO_INCREMENT for table `size`
 --
