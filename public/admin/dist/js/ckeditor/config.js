@@ -8,7 +8,7 @@ var toolbar = [
     { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: ['Image', 'Bold', 'Italic', 'Strike',  'Underline', 'Subscript', 'Superscript', 'NumberedList', 'BulletedList', 'Link', 'Unlink' ] },
     { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', 'Undo', 'Redo', 'HorizontalRule', 'Outdent', 'Indent', 'SpecialChar'] },                                 
     { name: 'styles', items: ['TextColor', 'BGColor', 'Styles', 'Format' ] },
-    { name: 'tools', items: [ 'Maximize' ] },      
+    { name: 'tools', items: [  'Table','Maximize' ] },      
     { name: 'about', items: [ 'About' ] }                
 ];
 CKEDITOR.editorConfig = function( config )
