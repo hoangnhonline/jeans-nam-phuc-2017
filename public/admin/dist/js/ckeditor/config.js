@@ -5,11 +5,11 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 var strPlugins = 'uploadimage';
 var toolbar = [
     { name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Source' ] },
-    { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: ['Image', 'Bold', 'Italic', 'Strike',  'Underline', 'Subscript', 'Superscript', 'NumberedList', 'BulletedList', 'Link', 'Unlink' ] },
-    { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', 'Undo', 'Redo', 'HorizontalRule', 'Outdent', 'Indent', 'SpecialChar'] },                                 
-    { name: 'styles', items: ['TextColor', 'BGColor', 'Styles', 'Format' ] },
-    { name: 'tools', items: [  'Table','Maximize' ] },      
-    { name: 'about', items: [ 'About' ] }                
+    { name: 'basicstyles', groups: [ 'basicstyles' ], items: ['Image', 'FontSize', 'Bold', 'Italic', 'Strike',  'Underline', 'Subscript', 'Superscript', 'NumberedList', 'BulletedList', 'Link', 'Unlink' ] },
+    { name: 'cleanup', groups: [ 'cleanup' ], items: [ 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },                                 
+    { name: 'tools', items: [ 'Undo', 'Redo', 'HorizontalRule', 'Outdent', 'Indent', 'SpecialChar'] },      
+    { name: 'styles', items: ['TextColor', 'BGColor', 'Styles', 'Format', 'Table', 'Maximize',  'About' ] },
+    
 ];
 CKEDITOR.editorConfig = function( config )
 {
@@ -32,4 +32,6 @@ CKEDITOR.editorConfig = function( config )
 	CKEDITOR.config.height = 500;
 	CKEDITOR.config.allowedContent = true;
 	CKEDITOR.config.colorButton_enableMore = true;
+	CKEDITOR.config.extraPlugins = 'font';
+	CKEDITOR.config.fontSize_defaultLabel = '14px';
 };
