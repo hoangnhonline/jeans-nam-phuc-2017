@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Articles extends Model  {
 
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'articles';
+	/**
+	 * The database table used by the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'articles';
 
-     /**
+	 /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
@@ -30,7 +30,7 @@ class Articles extends Model  {
                             'cate_id', 
                             'is_hot', 
                             'project_id', 
-                            'tab_id', 
+                            'type', 
                             'status', 
                             'display_order', 
                             'description', 
@@ -44,5 +44,13 @@ class Articles extends Model  {
             ->join('tag', 'tag.id', '=', 'tag_objects.tag_id')            
             ->get();
         return $query;
-   }
+    }
+    public function createdUser()
+    {
+        return $this->belongsTo('App\Models\Account', 'created_user');
+    }
+     public function updatedUser()
+    {
+        return $this->belongsTo('App\Models\Account', 'updated_user');
+    }
 }

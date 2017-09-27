@@ -4,18 +4,18 @@
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
-      Menu
+      Danh mục trang chủ
     </h1>
     <ol class="breadcrumb">
       <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-      <li><a href="{{ route('menu.index') }}">Menu</a></li>
+      <li><a href="{{ route('hot-cate.index') }}">Danh mục trang chủ</a></li>
       <li class="active">Tạo mới</li>
     </ol>
   </section>
 
   <!-- Main content -->
   <section class="content">
-    <a class="btn btn-default btn-sm" href="{{ route('menu.index') }}" style="margin-bottom:5px">Quay lại</a>    
+    <a class="btn btn-default btn-sm" href="{{ route('hot-cate.index') }}" style="margin-bottom:5px">Quay lại</a>    
     
     <div class="row">
       <!-- left column -->
@@ -25,8 +25,8 @@
                         <h3 class="box-title">Danh sách</h3>
                     </div>
                     <!-- /.box-header -->
-                    <button class="btn btn-info btn-sm btnAddMenu" data-parent="0" style="margin-top:5px;margin-left:10px">Thêm menu cha</button>
-                    <form action="{{ route('menu.store-order') }}" method="POST">
+                    <button class="btn btn-info btn-sm btnAddMenu" data-parent="0" style="margin-top:5px;margin-left:10px">Thêm danh mục</button>
+                    <form action="{{ route('hot-cate.store-order') }}" method="POST">
                       {!! csrf_field() !!}
                       <div class="box-body">
                         <button type="submit" class="btn btn-warning btn-sm">Cập nhật thứ tự</button>
@@ -34,56 +34,20 @@
 
                           <table class="table table-bordered table-hover" id="table-list-data">
                               <tr>                                
-                                  <th>Menu</th>
+                                  <th>Danh mục</th>
                                   <th width="1%;white-space:nowrap">Thao tác</th>
                               </tr>
                               <tbody>                              
-                                  @foreach($menuLists as $menu)
+                                  @foreach($items as $menu)
                                   
                                   <tr>                                                                    
                                     <td><input type="text" name="display_order[]" value="{{ $menu->display_order }}" class="form-control" style="width:40px; float:left;margin-right:10px">
                                     <input type="hidden" name="id[]" value="{{ $menu->id }}">
                                         <p style="font-weight:bold;padding-top:5px;margin-left:10px;">{{ $menu->title }}</p></td>
-                                    <td width="1%" style="white-space:nowrap">
-                                      <button type="button" class="btn btn-info btn-sm btnAddMenu" data-parent="{{ $menu->id }}" >Thêm menu con</button>               
-                                      <a onclick="return callDelete('{{ $menu->title }}','{{ route( 'menu.destroy', [ 'id' => $menu->id ]) }}');" class="btn-sm btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                                    <td width="1%" style="white-space:nowrap">                                                     
+                                      <a onclick="return callDelete('{{ $menu->title }}','{{ route( 'hot-cate.destroy', [ 'id' => $menu->id ]) }}');" class="btn-sm btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                                     </td>
-                                  </tr>  
-                                      <?php
-                                      $menuCap1List = DB::table('menu')->where('parent_id', $menu->id)->orderBy('display_order')->get();
-                                      ?>
-                                      @if($menuCap1List)                                    
-                                        @foreach($menuCap1List as $cap1)
-                                      <tr>                                                                            
-                                        <td>
-                                      <p style="padding-left:60px"> <input type="text" name="display_order[]" value="{{ $cap1->display_order }}" class="form-control" style="width:40px; float:left;margin-right:10px;">
-                                            <input type="hidden" name="id[]" value="{{ $cap1->id }}"> <span style="padding-top:5px;display:block">{{ $cap1->title }}</span></p></td>
-                                        <td width="1%" style="white-space:nowrap">
-                                          <button class="btn btn-info btn-sm btnAddMenu" data-parent="{{ $cap1->id }}" >Thêm menu con</button>               
-                                          <a onclick="return callDelete('{{ $cap1->title }}','{{ route( 'menu.destroy', [ 'id' => $cap1->id ]) }}');" class="btn-sm btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
-                                        </td>
-                                      </tr>  
-                                                                     
-
-                                      <?php
-                                      $menuCap2List = DB::table('menu')->where('parent_id', $cap1->id)->orderBy('display_order')->get(); 
-                                      ?>
-                                      @if($menuCap2List)                                    
-                                        @foreach($menuCap2List as $cap2)
-                                      <tr>                                                                            
-                                        <td><p style="padding-left:120px">
-                                          <input type="text" name="display_order[]" value="{{ $cap2->display_order }}" class="form-control" style="width:40px; float:left;margin-right:10px">
-                                            <input type="hidden" name="id[]" value="{{ $cap2->id }}">
-                                         <span style="padding-top:5px;display:block">{{ $cap2->title }}</span></p></td>
-                                        <td width="1%" style="white-space:nowrap;text-align:right">                                                     
-                                          <a onclick="return callDelete('{{ $cap2->title }}','{{ route( 'menu.destroy', [ 'id' => $cap2->id ]) }}');" class="btn-sm btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
-                                        </td>
-                                      </tr>  
-                                      @endforeach
-                                      @endif
-                                      @endforeach    
-
-                                      @endif
+                                  </tr>                                        
 
                                   @endforeach
                               </tbody>
@@ -149,15 +113,13 @@
 <script type="text/javascript">
   $(document).on('click', 'input.menu_select', function(){
     var obj = $(this);
-    $('#formMenu #title').val(obj.data('title'));
-    $('#formMenu #url').val(obj.data('link'));  
+    $('#formMenu #title').val(obj.data('title'));    
     $('#formMenu #type').val(obj.data('type'));    
     $('#formMenu #object_id').val(obj.data('value'));
   });
   $(document).on('click', '.btnAddToMenuCustom', function(){
     var obj = $(this);
-    $('#formMenu #title').val($('#title_custom').val());
-    $('#formMenu #url').val($('#url_custom').val());  
+    $('#formMenu #title').val($('#title_custom').val());    
     $('#formMenu #type').val(6);    
     $('#formMenu #object_id').val(0);
   });
@@ -180,11 +142,8 @@
       $('.btnAddMenu').click(function(){
         var parent_id = $(this).data('parent');
         $.ajax({
-          url : "{{ route('menu.load-create') }}",
+          url : "{{ route('hot-cate.load-create') }}",
           type : 'GET',
-          data : {
-            parent_id : parent_id
-          },
           success : function(data){
             $('#load-content-menu').html(data);
             $('#myModal').modal('show');
@@ -226,7 +185,7 @@
         });
       });
       $('.btnAddToMenuCustom').click(function(){
-        if($.trim($('#title').val()) != '' && $.trim($('#url').val()) != ''){
+        if($.trim($('#title').val()) != ''){
           var obj = $(this);
           $.ajax({
             url:  "",
@@ -234,7 +193,7 @@
             data : $('#' + obj.data('parent') + ' :input').serialize(),
             success : function(data){
               $('#loadMenu').append(data);
-              $('#title, #url').val('');
+              $('#title,').val('');
               var rows = $('#loadMenu li');
               var liTmp = '';
               for (var i = 1; i< rows.length ; i++) {                

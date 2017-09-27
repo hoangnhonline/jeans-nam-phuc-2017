@@ -21,11 +21,26 @@
       <p class="alert alert-info" >{{ Session::get('message') }}</p>
       @endif
       <a href="{{ route('account.create') }}" class="btn btn-info btn-sm" style="margin-bottom:5px">Tạo mới</a>
+      @if(Auth::user()->role == 3)
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">Bộ lọc</h3>
-        </div>        
+        </div>            
+      <div class="panel-body">
+        <form class="form-inline" role="form" method="GET" action="{{ route('account.index') }}">
+        <div class="form-group">
+            <label>Phân loại</label>
+            <select class="form-control" name="role" id="role">      
+              <option value="" >--Tất cả--</option>                       
+              <option value="1" {{ $role == 1 ? "selected" : "" }}>Editor</option>
+              <option value="2" {{ $role == 2 ? "selected" : "" }}>Mod</option>               
+            </select>
+          </div>          
+          </form>
       </div>
+      </div>
+      @endif
+
       <div class="box">
 
         <div class="box-header with-border">
@@ -37,9 +52,9 @@
           <table class="table table-bordered" id="table-list-data">
             <tr>
               <th style="width: 1%">#</th>              
-              <th>Họ Tên</th>
-              <th>Email</th>
-              <th>Role</th>
+              <th>Tên hiển thị</th>
+              <th>Email truy cập</th>
+              <th>Phân loại</th>
               <th>Trạng thái</th>
               <th width="1%" style="white-space:nowrap">Thao tác</th>
             </tr>
@@ -52,10 +67,10 @@
                   <td><span class="order">{{ $i }}</span></td>
                  
                   <td>                  
-                    <a href="{{ route( 'account.edit', [ 'id' => $item->id ]) }}">{{ $item->full_name }}</a>                                
+                    <a href="{{ route( 'account.edit', [ 'id' => $item->id ]) }}">{{ $item->display_name }}</a>                                
                   </td>
                   <td>{{ $item->email }}</td>
-                  <td>{{ $item->role == 1 ? "Editor"  : "Admin" }}</td>
+                  <td>{{ $item->role == 1 ? "Editor"  : ($item->role == 2 ? "Mod" : "Admin" ) }}</td>
                   <td>{{ $item->status == 1 ? "Mở"  : "Khóa" }}</td>
                   <td style="white-space:nowrap">  
                     <a href="{{ route( 'account.update-status', ['status' => $item->status == 1 ? 2 : 1 , 'id' => $item->id ])}}" class="btn btn-sm {{ $item->status == 1 ? "btn-warning" : "btn-info" }}" 
@@ -65,9 +80,10 @@
                     onclick="return confirm('Bạn chắc chắn muốn KHÓA tài khoản này? '); "
                     @endif
                     >{{ $item->status == 1 ? "Khóa TK" : "Mở khóa TK" }}</a>                
-                    <a href="{{ route( 'account.edit', [ 'id' => $item->id ]) }}" class="btn-sm btn btn-primary">Chỉnh sửa</a>                 
-                    
-                    <a onclick="return callDelete('{{ $item->name }}','{{ route( 'account.destroy', [ 'id' => $item->id ]) }}');" class="btn-sm btn btn-danger">Xóa</a>
+                    <a href="{{ route( 'account.edit', [ 'id' => $item->id ]) }}" class="btn-sm btn btn-primary"><span class="glyphicon glyphicon-pencil"></span></a>                 
+                    @if($item->articles->count() == 0 && $item->products->count() == 0)
+                    <a onclick="return callDelete('{{ $item->full_name }}','{{ route( 'account.destroy', [ 'id' => $item->id ]) }}');" class="btn-sm btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                    @endif
                     
                   </td>
                 </tr> 
@@ -107,6 +123,9 @@ function callDelete(name, url){
   return flag;
 }
 $(document).ready(function(){
+  $('#role').change(function(){
+    $(this).parents('form').submit();
+  });
   $('#table-list-data tbody').sortable({
         placeholder: 'placeholder',
         handle: ".move",
@@ -125,7 +144,7 @@ $(document).ready(function(){
                 strTemp = rows[i].id;
                 strOrder += strTemp.replace('row-','') + ";";
             }     
-            updateOrder("cate_parent", strOrder);
+            updateOrder("loai_sp", strOrder);
         }
     });
 });

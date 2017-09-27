@@ -17,6 +17,23 @@
   <section class="content">
     <a class="btn btn-default btn-sm" href="{{ route('articles.index') }}" style="margin-bottom:5px">Quay lại</a>
     <a class="btn btn-primary btn-sm" href="{{ route('news-detail', [$detail->slug, $detail->id ]) }}" target="_blank" style="margin-top:-6px"><i class="fa fa-eye" aria-hidden="true"></i> Xem</a>
+    <div class="block-author edit">
+      <ul>
+        <li>
+          <span>Tác giả:</span>
+          <span class="name">{!! $detail->createdUser->display_name !!}</span>
+        </li>
+        <li>
+            <span>Ngày tạo:</span>
+          <span class="name">{!! date('d/m/Y H:i', strtotime($detail->created_at)) !!}</span>
+          
+        </li>
+         <li>
+            <span>Cập nhật lần cuối:</span>
+          <span class="name">{!! $detail->updatedUser->display_name !!} ( {!! date('d/m/Y H:i', strtotime($detail->updated_at)) !!} )</span>          
+        </li>        
+      </ul>
+    </div>
     <form role="form" method="POST" action="{{ route('articles.update') }}">
     <div class="row">
       <!-- left column -->

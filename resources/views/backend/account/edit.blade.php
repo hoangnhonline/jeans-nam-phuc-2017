@@ -24,7 +24,7 @@
         <!-- general form elements -->
         <div class="box box-primary">
           <div class="box-header with-border">
-            <h3 class="box-title">Chỉnh sửa</h3>
+            Chỉnh sửa
           </div>
           <!-- /.box-header -->               
             {!! csrf_field() !!}
@@ -38,24 +38,39 @@
                           @endforeach
                       </ul>
                   </div>
-              @endif
-                 
+              @endif                 
                  <!-- text input -->
-                <div class="form-group">
-                  <label>Họ tên <span class="red-star">*</span></label>
-                  <input type="text" class="form-control" name="full_name" id="full_name" value="{{ $detail->full_name }}">
-                </div>
+                
                  <div class="form-group">
-                  <label>Email <span class="red-star">*</span></label>
+                  <label>Email truy cập<span class="red-star">*</span></label>
                   <input type="text" class="form-control" readonly="true" name="email" id="email" value="{{ $detail->email }}">
-                </div>                            
+                </div>
                 <div class="form-group">
-                  <label>Role</label>
+                  <label>Mật khẩu <span class="red-star">*</span></label>
+                  <input type="password" class="form-control" name="password" id="password" value="{{ old('password') }}">
+                </div>   
+                <div class="form-group">
+                  <label>Nhập lại mật khẩu <span class="red-star">*</span></label>
+                  <input type="password" class="form-control" name="re_password" id="re_password" value="{{ old('re_password') }}">
+                </div>  
+                <div class="form-group">
+                  <label>Tên hiển thị <span class="red-star">*</span></label>
+                  <input type="text" class="form-control" name="display_name" id="display_name" value="{{ $detail->display_name }}">
+                </div>
+                <div class="form-group">
+                  <label>Họ tên</label>
+                  <input type="text" class="form-control" name="full_name" id="full_name" value="{{ $detail->full_name }}">
+                </div>                         
+                <div class="form-group">
+                  <label>Phân loại</label>
                   <select class="form-control" name="role" id="role">                             
-                    <option value="1" {{ $detail->role == 1 ? "selected" : "" }}>Editor</option>                  
-                    <option value="2" {{ $detail->role == 2 ? "selected" : "" }}>Admin</option>                    
+                    <option value="1" {{ old('role', $detail->role) == 1 ? "selected" : "" }}>Editor</option>
+                    @if(Auth::user()->role == 3)                  
+                    <option value="2" {{ old('role', $detail->role) == 2 ? "selected" : "" }}>Mod</option>                    
+                    @endif                    
                   </select>
-                </div>                            
+                </div>   
+
                 <div class="form-group">
                   <label>Trạng thái</label>
                   <select class="form-control" name="status" id="status">                                      
@@ -64,8 +79,7 @@
                   </select>
                 </div>
             </div>
-            <div class="box-footer">
-              <button type="button" class="btn btn-default btn-sm" id="btnLoading" style="display:none"><i class="fa fa-spin fa-spinner"></i></button>
+            <div class="box-footer">             
               <button type="submit" class="btn btn-primary btn-sm" id="btnSave">Lưu</button>
               <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="{{ route('account.index')}}">Hủy</a>
             </div>
@@ -85,12 +99,10 @@
 @stop
 @section('javascript_page')
 <script type="text/javascript">
-    $(document).ready(function(){
+     $(document).ready(function(){
       $('#formData').submit(function(){
-        $('#btnSave').hide();
-        $('#btnLoading').show();
-      });
+        $('#btnSave').html('<i class="fa fa-spinner fa-spin">').attr('disabled', 'disabled');
+      });      
     });
-    
 </script>
 @stop

@@ -23,5 +23,14 @@ class Account extends Model  {
      *
      * @var array
      */
-    protected $fillable = ['full_name', 'email', 'password', 'status', 'changed_password', 'remember_token', 'role'];
+    protected $fillable = ['full_name', 'email', 'password', 'status', 'changed_password', 'remember_token', 'role', 'leader_id', 'created_user', 'updated_user', 'display_name'];
+    
+    public function articles()
+    {
+        return $this->hasMany('App\Models\Articles', 'created_user');
+    }
+    public function products()
+    {
+        return $this->hasMany('App\Models\Product', 'created_user');
+    }
 }

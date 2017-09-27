@@ -75,12 +75,31 @@
                   <img class="img-thumbnail lazy" data-original="{{ Helper::showImage($item->image_url)}}" width="145">
                 </td>        
                 <td>                  
-                  <a href="{{ route( 'articles.edit', [ 'id' => $item->id ]) }}">{{ $item->title }}</a>
+                  <a style="font-size:17px" href="{{ route( 'articles.edit', [ 'id' => $item->id ]) }}">{{ $item->title }}</a>
                   
                   @if( $item->is_hot == 1 )
-                  <img class="img-thumbnail" src="{{ URL::asset('public/admin/dist/img/star.png')}}" alt="Nổi bật" title="Nổi bật" />
+                  <label class="label label-danger">HOT</label>
                   @endif
-
+                  <div class="block-author">
+                      <ul>
+                        <li>
+                          <span>Tác giả:</span>
+                          <span class="name">{!! $item->createdUser->display_name !!}</span>
+                        </li>
+                        <li>
+                            <span>Ngày tạo:</span>
+                          <span class="name">{!! date('d/m/Y H:i', strtotime($item->created_at)) !!}</span>
+                          
+                        </li>
+                         <li>
+                            <span>Cập nhật lần cuối:</span>
+                          <span class="name">{!! $item->updatedUser->display_name !!} ( {!! date('d/m/Y H:i', strtotime($item->updated_at)) !!} )</span>          
+                        </li>  
+                        <li>
+                          {!! Helper::view($item->id, 2) !!} lượt xem
+                        </li>
+                      </ul>
+                    </div>
                   <p>{{ $item->description }}</p>
                 </td>
                 <td style="white-space:nowrap"> 
@@ -168,7 +187,7 @@ $(document).ready(function(){
                 strTemp = rows[i].id;
                 strOrder += strTemp.replace('row-','') + ";";
             }     
-            updateOrder("cate_parent", strOrder);
+            updateOrder("loai_sp", strOrder);
         }
     });
 });

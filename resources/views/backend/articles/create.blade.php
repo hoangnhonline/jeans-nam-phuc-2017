@@ -70,6 +70,7 @@
                     <input type="file" id="file-image" style="display:none" />
                     <input type="hidden" name="image_url" id="image_url">
                     <button class="btn btn-default btn-sm" id="btnUploadImage" type="button"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload</button>
+                    <input type="hidden" name="image_url" id="image_url" value="{{ old('image_url') }}"/>
                   </div>
                   <div style="clear:both"></div>
                 </div>
