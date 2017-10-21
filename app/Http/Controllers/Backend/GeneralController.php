@@ -12,9 +12,25 @@ use App\Models\ArticlesCate;
 use App\Models\Pages;
 use App\Models\Menu;
 
-use DB, Session;
+use DB, Session, URL;
 class GeneralController extends Controller
 {
+    public function updateOrderList(Request $request){
+    
+        $dataArr = $request->all();               
+        $table = $dataArr['table'];        
+        if( !empty($dataArr['display_order'] )){            
+            foreach ($dataArr['display_order'] as $key => $display_order) {
+                if( $display_order > 0 ){                    
+                    DB::table($table)
+                    ->where('id', $dataArr['id'][$key])                      
+                    ->update(array('display_order' => $display_order));         
+                }
+            }
+        }
+        Session::flash('message', 'Cập nhật thứ tự thành công');
+        return redirect(URL::previous());
+    }
     public function updateOrder(Request $request){
         if ($request->ajax())
         {

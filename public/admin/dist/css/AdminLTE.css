@@ -4966,3 +4966,36 @@ img.move{
 .pagination{
   margin: 0px !important;
 }
+.block-author {
+  margin-bottom: 15px;
+  margin-top: 5px;
+}
+.block-author.edit{
+  font-size: 17px;
+}
+.block-author ul {
+  padding-left: 0 !important;
+}
+.block-author ul li {
+  display: inline-block;
+  list-style-type: none;
+  padding-right: 25px;
+  color: #898989;
+  position: relative;
+}
+.block-author ul li .name {
+  color: #000;
+  font-weight: bold
+}
+.block-author ul li:before {
+  content: "\f111";
+  font-family: "FontAwesome";
+  color: #898989;
+  font-size: 5px;
+  position: absolute;
+  top: 8px;
+  left: -17px;
+}
+.block-author ul li:first-child:before {
+  display: none;
+}

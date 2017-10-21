@@ -4,7 +4,9 @@ use App\Helpers\simple_html_dom;
 use App\Models\City;
 use App\Models\Price;
 use App\Models\Area;
-use DB, Image;
+use App\Models\CounterValues;
+use App\Models\CounterIps;
+use DB, Image, Auth;
 
 class Helper
 {
@@ -13,6 +15,125 @@ class Helper
     public static function shout(string $string)
     {
         return strtoupper($string);
+    }
+    public static function view($object_id, $object_type){
+        $rs = CounterValues::where(['object_id' => $object_id, 'object_type' => $object_type])->first();
+        if($rs){
+            return $rs->all_value;
+        }else{
+            return 0;
+        }
+    }
+    public static function counter( $object_id, $object_type){
+        // ip-protection in seconds
+        $counter_expire = 600;
+
+        // ignore agent list
+        $counter_ignore_agents = array('bot', 'bot1', 'bot3');
+
+        // ignore ip list
+        //$counter_ignore_ips = array('127.0.0.2', '127.0.0.3');
+        $counter_ignore_ips = [];
+        // get basic information
+        $counter_agent = $_SERVER['HTTP_USER_AGENT'];
+        $counter_ip = $_SERVER['REMOTE_ADDR']; 
+        $counter_time = time();
+
+        $ignore = false; 
+           
+        // get counter information   
+        $rs1 = CounterValues::where(['object_id' => $object_id, 'object_type' => $object_type])->first();   
+
+        // fill when empty
+        if (!$rs1)
+        {   
+
+            $tmpArr = [
+                'object_id' => $object_id,
+                'object_type' => $object_type,
+                'day_id' => date("z"),
+                'day_value' => 1,
+                'all_value' => 1
+            ];
+          CounterValues::create($tmpArr);
+          $rs1 = CounterValues::where(['object_id' => $object_id, 'object_type' => $object_type])->first();
+          
+          $ignore = true;
+        }   
+        
+        $day_id = $rs1->day_id;
+        $day_value = $rs1->day_value;
+        $all_value = $rs1->all_value;
+        // check ignore lists
+        $length = sizeof($counter_ignore_agents);
+        for ($i = 0; $i < $length; $i++)
+        {
+          if (substr_count($counter_agent, strtolower($counter_ignore_agents[$i])))
+          {
+             $ignore = true;
+             break;
+          }
+        }
+
+        $length = sizeof($counter_ignore_ips);
+        for ($i = 0; $i < $length; $i++)
+        {
+          if ($counter_ip == $counter_ignore_ips[$i])
+          {
+             $ignore = true;
+             break;
+          }
+        }
+
+        
+        // delete free ips
+        if ($ignore == false)
+        {           
+            $time = time();
+            CounterIps::where(['object_id' =>$object_id, 'object_type' => $object_type, 'ip' => $counter_ip])->whereRaw("$time-visit >= $counter_expire")->delete();
+        }
+ 
+        // check for entry
+        if ($ignore == false)
+        {
+            $rs2 = CounterIps::where(['ip' => $counter_ip, 'object_id' => $object_id, 'object_type' => $object_type])->get();
+          
+          if ( $rs2->count() > 0)
+          {
+            $modelCouterIps = CounterIps::where('ip', $counter_ip)->where(['object_id' => $object_id, 'object_type' => $object_type]);
+            $modelCouterIps->update(['visit' => time()]);   
+            $ignore = true;          
+          }
+          else
+          {
+             // insert ip
+             CounterIps::create(['ip' => $counter_ip, 'visit' => time(), 'object_id' => $object_id, 'object_type' => $object_type]);
+          }       
+        }
+        // add counter
+        if ($ignore == false)
+        {
+          // day
+          if ($day_id == date("z")) 
+          {
+             $day_value++; 
+          }
+          else 
+          {
+             $day_value = 1;
+             $day_id = date("z");
+          }
+          // all
+          $all_value++; 
+
+        $modelCouterValues = CounterValues::where(['object_id' => $object_id, 'object_type' => $object_type]);
+        $modelCouterValues->update([
+                'day_id' => $day_id,
+                'day_value' => $day_value,
+                'all_value' => $all_value
+        ]);
+         
+        }
     }
     public static function getChild($table, $column, $parent_id){
         $listData = DB::table($table)->where($column, $parent_id)->get();

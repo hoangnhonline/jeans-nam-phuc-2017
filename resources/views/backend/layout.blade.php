@@ -72,7 +72,7 @@
 
   <!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar -->
-<input type="hidden" id="route_update_order" value="{{ route('update-order') }}">
+<input type="hidden" id="route_update_order" value="{{ route('cap-nhat-thu-tu') }}">
 <input type="hidden" id="route_get_slug" value="{{ route('get-slug') }}">
 <input type="hidden" id="route_upload_tmp_image" value="{{ route('image.tmp-upload') }}">
 <input type="hidden" id="app_url" value="{{ env('APP_URL') }}">

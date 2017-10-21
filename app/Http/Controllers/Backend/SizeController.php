@@ -46,10 +46,11 @@ class SizeController extends Controller
         $dataArr = $request->all();
         
         $this->validate($request,[
-            'name' => 'required'           
+            'name' => 'required|unique:size,name'
         ],
         [
-            'name.required' => 'Bạn chưa nhập tên size'            
+            'name.required' => 'Bạn chưa nhập size',
+            'name.unique' => 'Size đã tồn tại',           
         ]);
         
         $dataArr['display_order'] = Helper::getNextOrder('size');
@@ -97,11 +98,11 @@ class SizeController extends Controller
         $dataArr = $request->all();
         
         $this->validate($request,[
-            'name' => 'required'           
+            'name' => 'required|unique:size,name,'.$dataArr['id'],          
         ],
         [
-            'name.required' => 'Bạn chưa nhập tên size'
-           
+            'name.required' => 'Bạn chưa nhập size',
+            'name.unique' => 'Size đã tồn tại',
         ]);
 
         $model = Size::find($dataArr['id']);
