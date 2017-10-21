@@ -23,7 +23,7 @@
                 <div class="block-content">
                     <div class="block row">
                         <div class="col-sm-5">
-                            <div class="block block-slide-detail">
+                            <div class="block block-slide-detail" id="load-slider">
                                 <!-- Place somewhere in the <body> of your page -->
                                 <div id="slider" class="flexslider">
                                     <ul class="slides slides-large">
@@ -216,6 +216,46 @@ $(document).ready(function($){
             success : function(data){
                 $('#size-div').html(data);
                 $('#size_id').val('');
+            }
+        });
+        $.ajax({
+            url : "{{ route('get-image-of-color') }}",
+            type :'GET',
+            dataType :'html',
+            data : {
+                color_id : obj.data('value'),
+                product_id : {{ $detail->id }}
+            }, 
+            success : function(data){
+                $('#load-slider').html(data);
+                // The slider being synced must be initialized first
+                $('#carousel').flexslider({
+                    animation: "slide",
+                    controlNav: false,
+                    animationLoop: true,
+                    slideshow: false,
+                    itemWidth: 75,
+                    itemMargin: 15,
+                    nextText: "",
+                    prevText: "",
+                    asNavFor: '#slider',
+                    adaptiveHeight: true
+                });
+
+                $('#slider').flexslider({
+                    animation: "fade",
+                    controlNav: false,
+                    directionNav: false,
+                    animationLoop: false,
+                    slideshow: false,
+                    animationSpeed: 500,
+                    sync: "#carousel",
+                    adaptiveHeight: true
+                });
+
+                $('.slides-large li').each(function () {
+                    $(this).zoom();
+                });
             }
         });
     });

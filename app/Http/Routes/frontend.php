@@ -79,7 +79,8 @@ Route::group(['namespace' => 'Frontend'], function()
     Route::get('{slugCateParent}/{slug}/', ['as' => 'cate', 'uses' => 'CateController@child']);
     Route::post('/dang-ki-newsletter', ['as' => 'register.newsletter', 'uses' => 'HomeController@registerNews']);
     Route::get('/cap-nhat-thong-tin', ['as' => 'cap-nhat-thong-tin', 'uses' => 'CartController@updateUserInformation']);  
-     Route::get('/get-ivt-of-color', ['as' => 'get-ivt-of-color', 'uses' => 'DetailController@getIvtOfColor']);         
+     Route::get('/get-ivt-of-color', ['as' => 'get-ivt-of-color', 'uses' => 'DetailController@getIvtOfColor']);       
+         Route::get('/get-image-of-color', ['as' => 'get-image-of-color', 'uses' => 'DetailController@getImgOfColor']);         
     
     Route::post('/search', ['as' => 'ajax-search', 'uses' => 'HomeController@ajaxSearch']);        
     Route::get('/tin-tuc/{slug}-p{id}.html', ['as' => 'news-detail', 'uses' => 'NewsController@newsDetail']);

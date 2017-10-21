@@ -116,6 +116,14 @@ class DetailController extends Controller
         }
         return view('frontend.detail.ajax.size', compact('rsIvt', 'sizeArr', 'sizeSelected'));
     }
+    public function getImgOfColor(Request $request){
+        $color_id = $request->color_id;
+        $product_id = $request->product_id;
+        $imageList = ProductImg::where(['color_id' => $color_id, 'product_id' => $product_id])
+                ->orderBy('is_thumbnail')->orderBy('display_order')->get();
+       // dd($imageList);
+        return view('frontend.detail.ajax.image', compact('imageList'));
+    }
 
     public function ajaxTab(Request $request){
         $table = $request->type ? $request->type : 'category';
