@@ -94,10 +94,7 @@
                          <li>
                             <span>Cập nhật lần cuối:</span>
                           <span class="name">{!! $item->updatedUser->display_name !!} ( {!! date('d/m/Y H:i', strtotime($item->updated_at)) !!} )</span>          
-                        </li>  
-                        <li>
-                          {!! Helper::view($item->id, 2) !!} lượt xem
-                        </li>
+                        </li>                          
                       </ul>
                     </div>
                   <p>{{ $item->description }}</p>
