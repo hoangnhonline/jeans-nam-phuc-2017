@@ -140,7 +140,7 @@
                         </div>
                     </div>
                     @endif
-                    @if($otherList)
+                    @if($otherList->count() > 0)
                     <div class="block-datail-atc block-page-common">
                         <div class="block block-title">
                             <h2>
