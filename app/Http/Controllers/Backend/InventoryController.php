@@ -21,7 +21,7 @@ use App\Models\MetaData;
 use App\Models\Size;
 use App\Models\Tag;
 use App\Models\TagObjects;
-use Helper, File, Session, Auth, URL, Image;
+use Helper, File, Session, Auth, URL, Image, Excel;
 
 class InventoryController extends Controller
 {
@@ -92,6 +92,31 @@ class InventoryController extends Controller
         }
         return view('backend.inventory.index', compact( 'items', 'arrSearch', 'loaiSpArr', 'cateArr', 'colorArr', 'sizeArr'));
     }   
+    public function export(){
+        $query = Product::where('product.status', 1);        
+        $query->join('users', 'users.id', '=', 'product.created_user');
+        $query->join('cate_parent', 'cate_parent.id', '=', 'product.parent_id');
+        $query->join('cate', 'cate.id', '=', 'product.cate_id');
+        $query->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id');
+        $items = $query->select(['product_img.image_url','product.*','product.id as product_id', 'full_name' , 'product.created_at as time_created', 'users.full_name', 'cate_parent.name as ten_loai', 'cate.name as ten_cate'])->get();
+        $sizeList = Size::orderBy('display_order')->get();            
+        foreach($sizeList as $size){
+            $sizeArr[$size->id] = $size;
+        }
+        $colorList = Color::orderBy('display_order')->get();              
+        foreach($colorList as $color){
+            $colorArr[$color->id] = $color;
+        }
+         Excel::create('Laravel Excel', function($excel) use ($items, $sizeArr, $colorArr) {
+
+            $excel->sheet('Excel sheet', function($sheet) use ($items, $sizeArr, $colorArr) {
+                $sheet->loadView('backend.inventory.export')->with('items',$items)->with('sizeArr',$sizeArr)->with('colorArr',$colorArr);
+                $sheet->setOrientation('landscape');
+            });
+
+        })->export('xls');
+       
+    }
     public function imageOfColor(Request $request){
         $color_id = $request->color_id;
         $product_id = $request->product_id;

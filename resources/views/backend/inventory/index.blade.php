@@ -81,9 +81,7 @@
             <tr>
               <th style="width: 1%">#</th>              
               <th style="text-align:left;width:150px;">Tên SP</th>
-              <th style="text-align:left">Số lượng</th>
-              <th width="1%" style="text-align:center">Hết hàng</th>
-              <th width="1%;white-space:nowrap">Thao tác</th>
+              <th style="text-align:left">Số lượng</th>                            
             </tr>
             <tbody>
             @if( $items->count() > 0 )
@@ -134,16 +132,6 @@
                         </tr>
                         @endforeach
                       </table>
-                </td>
-                <td style="text-align:center">
-                  <input type="checkbox" data-id="{{ $item->id }}" data-col="het_hang" data-table="product" class="change-value" value="1" {{ $item->het_hang == 1  ? "checked" : "" }}>
-                </td>
-                
-                <td style="white-space:nowrap; text-align:right">                 
-                  <a href="{{ route( 'inventory.edit', [ 'id' => $item->id ]) }}" class="btn btn-warning btn-sm">Chỉnh sửa</a>                 
-
-                  <a onclick="return callDelete('{{ $item->name }}','{{ route( 'inventory.destroy', [ 'id' => $item->id ]) }}');" class="btn btn-danger btn-sm">Xóa</a>
-
                 </td>
               </tr> 
               @endforeach

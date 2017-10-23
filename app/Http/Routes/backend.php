@@ -222,6 +222,7 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
         Route::get('/', ['as' => 'inventory.index', 'uses' => 'InventoryController@index']);
         Route::post('/store', ['as' => 'inventory.store', 'uses' => 'InventoryController@store']);        
         Route::get('{id}/edit',   ['as' => 'inventory.edit', 'uses' => 'InventoryController@edit']);
+        Route::get('/export',   ['as' => 'inventory-export', 'uses' => 'InventoryController@export']);
         Route::post('/update', ['as' => 'inventory.update', 'uses' => 'InventoryController@update']);       
         Route::get('{id}/destroy', ['as' => 'inventory.destroy', 'uses' => 'InventoryController@destroy']);
         Route::get('/remove-img', ['as' => 'inventory.remove-img', 'uses' => 'InventoryController@deleteImg']);
