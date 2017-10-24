@@ -107,10 +107,12 @@ class InventoryController extends Controller
         foreach($colorList as $color){
             $colorArr[$color->id] = $color;
         }
-         Excel::create('Laravel Excel', function($excel) use ($items, $sizeArr, $colorArr) {
+         Excel::create('nam-phuc', function($excel) use ($items, $sizeArr, $colorArr) {
 
-            $excel->sheet('Excel sheet', function($sheet) use ($items, $sizeArr, $colorArr) {
+            $excel->sheet('product', function($sheet) use ($items, $sizeArr, $colorArr) {
                 $sheet->loadView('backend.inventory.export')->with('items',$items)->with('sizeArr',$sizeArr)->with('colorArr',$colorArr);
+                 // Set width
+                
                 $sheet->setOrientation('landscape');
             });
 
