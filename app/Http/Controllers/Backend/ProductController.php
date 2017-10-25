@@ -248,6 +248,7 @@ class ProductController extends Controller
             }
         }
         if( !empty($dataArr['color_id'])){ 
+	    if(isset($currArr)){
             $oldDiffArr = array_diff($currArr, $dataArr['color_id']);
             if(!empty($oldDiffArr)){
                 foreach($oldDiffArr as $color_id){
@@ -260,7 +261,12 @@ class ProductController extends Controller
                 foreach( $newDiffArr as $color_id){
                     ProductColor::create(['product_id' => $id, 'color_id' => $color_id]);
                 }
-            }                       
+            }                  
+            }else{
+               foreach($dataArr['color_id'] as $color_id){
+			ProductColor::create(['product_id' => $id, 'color_id' => $color_id]);
+               }	 
+            }		     
         }
     }
     public function storeSize($id, $dataArr){
@@ -272,6 +278,7 @@ class ProductController extends Controller
             }
         }
         if( !empty($dataArr['size_id'])){
+	    if(isset($currArr)){
             $oldDiffArr = array_diff($currArr, $dataArr['size_id']);
             if(!empty($oldDiffArr)){
                 foreach($oldDiffArr as $size_id){
@@ -284,6 +291,10 @@ class ProductController extends Controller
                 foreach( $newDiffArr as $size_id){
                     ProductSize::create(['product_id' => $id, 'size_id' => $size_id]);
                 }
+            }}else{
+		foreach($dataArr['size_id'] as $size_id){
+			ProductSize::create(['product_id' => $id, 'size_id' => $size_id]);
+		}
             }
         }
     }
