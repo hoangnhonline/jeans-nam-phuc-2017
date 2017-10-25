@@ -59,7 +59,7 @@
                                       <p style="padding-left:60px"> <input type="text" name="display_order[]" value="{{ $cap1->display_order }}" class="form-control" style="width:40px; float:left;margin-right:10px;">
                                             <input type="hidden" name="id[]" value="{{ $cap1->id }}"> <span style="padding-top:5px;display:block">{{ $cap1->title }}</span></p></td>
                                         <td width="1%" style="white-space:nowrap">
-                                          <button class="btn btn-info btn-sm btnAddMenu" data-parent="{{ $cap1->id }}" >Thêm menu con</button>               
+                                          <button type="button" class="btn btn-info btn-sm btnAddMenu" data-parent="{{ $cap1->id }}" >Thêm menu con</button>               
                                           <a onclick="return callDelete('{{ $cap1->title }}','{{ route( 'menu.destroy', [ 'id' => $cap1->id ]) }}');" class="btn-sm btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                                         </td>
                                       </tr>  
