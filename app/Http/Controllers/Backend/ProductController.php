@@ -239,23 +239,51 @@ class ProductController extends Controller
             $model->update( $arrData );
         }              
     }
-    public function storeColor($id, $dataArr){
-        
-        ProductColor::where('product_id', $id)->delete();
-
-        if( !empty($dataArr['color_id'])){            
-            foreach( $dataArr['color_id'] as $color_id){                
-                ProductColor::create(['product_id' => $id, 'color_id' => $color_id]);
+    public function storeColor($id, $dataArr){        
+       
+        $listColor  =ProductColor::where('product_id', $id)->get();
+        if($listColor->count() > 0){
+            foreach($listColor as $color){
+                $currArr[] = $color->color_id;                
             }
+        }
+        if( !empty($dataArr['color_id'])){ 
+            $oldDiffArr = array_diff($currArr, $dataArr['color_id']);
+            if(!empty($oldDiffArr)){
+                foreach($oldDiffArr as $color_id){
+                    ProductInventory::where(['product_id' => $id, 'color_id' => $color_id])->delete();
+                    ProductColor::where(['product_id' => $id, 'color_id' => $color_id])->delete();                   
+                }
+            }  
+            $newDiffArr = array_diff($dataArr['color_id'], $currArr);
+            if ($newDiffArr){
+                foreach( $newDiffArr as $color_id){
+                    ProductColor::create(['product_id' => $id, 'color_id' => $color_id]);
+                }
+            }                       
         }
     }
     public function storeSize($id, $dataArr){
         
-        ProductSize::where('product_id', $id)->delete();
-
+        $listSize  =ProductSize::where('product_id', $id)->get();
+        if($listSize->count() > 0){
+            foreach($listSize as $size){
+                $currArr[] = $size->size_id;                
+            }
+        }
         if( !empty($dataArr['size_id'])){
-            foreach( $dataArr['size_id'] as $size_id){
-                ProductSize::create(['product_id' => $id, 'size_id' => $size_id]);
+            $oldDiffArr = array_diff($currArr, $dataArr['size_id']);
+            if(!empty($oldDiffArr)){
+                foreach($oldDiffArr as $size_id){
+                    ProductInventory::where(['product_id' => $id, 'size_id' => $size_id])->delete();
+                    ProductSize::where(['product_id' => $id, 'size_id' => $size_id])->delete();
+                }
+            }  
+            $newDiffArr = array_diff($dataArr['size_id'], $currArr);
+            if ($newDiffArr){
+                foreach( $newDiffArr as $size_id){
+                    ProductSize::create(['product_id' => $id, 'size_id' => $size_id]);
+                }
             }
         }
     }
@@ -492,7 +520,8 @@ class ProductController extends Controller
             }
         }    
         $this->storeInventory( $product_id, $dataArr);
-
+        $this->storeColor( $product_id, $dataArr);
+        $this->storeSize( $product_id, $dataArr);
       
         Session::flash('message', 'Chỉnh sửa thành công');
 

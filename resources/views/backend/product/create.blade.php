@@ -44,7 +44,6 @@
                   <!-- Nav tabs -->
                   <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Thông tin chi tiết</a></li>
-                    <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Hình ảnh</a></li>                    
                   </ul>
 
                   <!-- Tab panes -->
@@ -128,7 +127,7 @@
                             @foreach($colorList as $color)
                             <li class="col-md-2" style="list-style:none">
                                 <label>
-                                  <input type="checkbox" name="color_id[]" value="{{ $color->id }}">
+                                  <input type="checkbox" class="color_id" name="color_id[]" value="{{ $color->id }}">
                                   <img src="{{ Helper::showImage($color->image_url) }}" width="26" title="{{ $color->name }}" alt="{{ $color->name }}" style="border:1px solid #CCC">
                                 </label>
                               </li>
@@ -142,7 +141,7 @@
                             @foreach($sizeList as $size)
                             <li class="col-md-2" style="list-style:none">
                                 <label>
-                                  <input type="checkbox" name="size_id[]" value="{{ $size->id }}">
+                                  <input type="checkbox" class="size_id" name="size_id[]" value="{{ $size->id }}">
                                   {{ $size->name }}
                                 </label>
                               </li>
@@ -160,46 +159,7 @@
                           <textarea class="form-control" rows="10" name="chi_tiet" id="chi_tiet">{{ old('chi_tiet') }}</textarea>
                         </div>
                         <div class="clearfix"></div>
-                    </div><!--end thong tin co ban-->                    
-                    
-                     <div role="tabpanel" class="tab-pane" id="settings">
-                        <div class="form-group" style="margin-top:10px;margin-bottom:10px">  
-                         
-                          <div class="col-md-12" style="text-align:center">                            
-                            
-                            <input type="file" id="file-image"  style="display:none" multiple/>
-                         
-                            <button class="btn btn-primary btn-sm" id="btnUploadImage" type="button"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload</button>
-                            <div class="clearfix"></div>
-                            <div id="div-image" style="margin-top:10px"></div>
-                          </div>
-                          <div style="clear:both"></div>
-                        </div>
-
-                     </div><!--end hinh anh-->
-                     <div role="tabpanel" class="tab-pane" id="thuoctinh">
-                     
-                     @if( !empty( $thuocTinhArr ))
-                     <table class="table table-responsive table-bordered">
-                      @foreach($thuocTinhArr as $loaithuoctinh)
-                        <tr style="background-color:#CCC">
-                          <td colspan="2">{{ $loaithuoctinh['name']}}</td>
-                        </tr>
-                        @if( !empty($loaithuoctinh['child']))
-                          @foreach( $loaithuoctinh['child'] as $thuoctinh)
-                          <tr>
-                            <td width="150">{{ $thuoctinh['name']}}</td>
-                            <td><input type="text" class="form-control" name="thuoc_tinh[{{ $thuoctinh['id'] }}]" value="{{ old('thuoc_tinh')[$thuoctinh['id']] }}"></td>
-                          </tr>
-                          @endforeach
-                        @endif
-                      @endforeach
-                      </table>
-                     @endif
-                     
-                     </div>
-              
-                    
+                    </div><!--end thong tin co ban-->                        
                   </div>
 
                 </div>
@@ -283,8 +243,7 @@
         </div>
     </div>
 </div>
-<input type="hidden" id="route_upload_tmp_image_multiple" value="{{ route('image.tmp-upload-multiple') }}">
-<input type="hidden" id="route_upload_tmp_image" value="{{ route('image.tmp-upload') }}">
+
 <style type="text/css">
   .nav-tabs>li.active>a{
     color:#FFF !important;
@@ -370,11 +329,20 @@ $(document).ready(function(){
             obj.removeClass('error');
           }
         });
+        
+
         if(errReq > 0){          
          $('html, body').animate({
               scrollTop: $("#dataForm .req.error").eq(0).parents('div').offset().top
           }, 500);
           return false;
+        }else{
+          if($('input.color_id:checked').length == 0){
+            alert('Vui lòng chọn màu'); return false;
+          }
+          if($('input.size_id:checked').length == 0){
+            alert('Vui lòng chọn size'); return false;
+          }  
         }
         /*
         if( $('#div-image img.img-thumbnail').length == 0){
@@ -446,48 +414,7 @@ $(document).ready(function(){
             '/',
             
           ]
-      });
-      $('#btnUploadImage').click(function(){        
-        $('#file-image').click();
-      }); 
-     
-      var files = "";
-      $('#file-image').change(function(e){
-         files = e.target.files;
-         
-         if(files != ''){
-           var dataForm = new FormData();        
-          $.each(files, function(key, value) {
-             dataForm.append('file[]', value);
-          });   
-          
-          dataForm.append('date_dir', 0);
-          dataForm.append('folder', 'tmp');
-
-          $.ajax({
-            url: $('#route_upload_tmp_image_multiple').val(),
-            type: "POST",
-            async: false,      
-            data: dataForm,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                $('#div-image').append(response);
-                if( $('input.thumb:checked').length == 0){
-                  $('input.thumb').eq(0).prop('checked', true);
-                }
-            },
-            error: function(response){                             
-                var errors = response.responseJSON;
-                for (var key in errors) {
-                  
-                }
-                //$('#btnLoading').hide();
-                //$('#btnSave').show();
-            }
-          });
-        }
-      });
+      });     
      
 
       $('#name').change(function(){

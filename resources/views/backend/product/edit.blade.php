@@ -147,7 +147,7 @@
                             @foreach($colorList as $color)
                             <li class="col-md-2" style="list-style:none">
                                 <label>
-                                  <input type="checkbox" name="color_id[]" {{ in_array($color->id, old('color_id', $colorSelected)) ? "checked" : "" }} value="{{ $color->id }}">
+                                  <input type="checkbox" class="color_id" name="color_id[]" {{ in_array($color->id, old('color_id', $colorSelected)) ? "checked" : "" }} value="{{ $color->id }}">
                                   <img src="{{ Helper::showImage($color->image_url) }}" width="26" title="{{ $color->name }}" alt="{{ $color->name }}" style="border:1px solid #CCC">
                                 </label>
                               </li>
@@ -161,7 +161,7 @@
                             @foreach($sizeList as $size)
                             <li class="col-md-2" style="list-style:none">
                                 <label>
-                                  <input type="checkbox" name="size_id[]" {{ in_array($size->id, old('size_id', $sizeSelected)) ? "checked" : "" }} value="{{ $size->id }}">
+                                  <input type="checkbox" class="size_id" name="size_id[]" {{ in_array($size->id, old('size_id', $sizeSelected)) ? "checked" : "" }} value="{{ $size->id }}">
                                   {{ $size->name }}
                                 </label>
                               </li>
@@ -214,7 +214,7 @@
                           </td>
                           @foreach($detail->sizes as $size)          
                           <?php 
-                          $valueAmount = !empty($arrInv) ? $arrInv[$color->color_id][$size->size_id] : "";
+                          $valueAmount = !empty($arrInv) && isset($arrInv[$color->color_id][$size->size_id]) ? $arrInv[$color->color_id][$size->size_id] : "";
                           ?>               
                           <td style="padding-left:1px;padding-right:1px; vertical-align:middle">
                             <input type="text" class="form-control number"  name="amount[{{ $color->color_id}}][{{ $size->size_id}}]" value="{{ $valueAmount }}" >
@@ -314,6 +314,13 @@ $(document).on('keypress', '#name_search', function(e){
               scrollTop: $("#dataForm .req.error").eq(0).parents('div').offset().top
           }, 500);
           return false;
+        }else{
+          if($('input.color_id:checked').length == 0){
+            alert('Vui lòng chọn màu'); return false;
+          }
+          if($('input.size_id:checked').length == 0){
+            alert('Vui lòng chọn size'); return false;
+          }  
         }
         /*
         if( $('#div-image img.img-thumbnail').length == 0){
