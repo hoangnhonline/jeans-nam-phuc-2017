@@ -33,7 +33,7 @@ class ReportController extends Controller
             $tmpArr['date_to'] = date('Y-m-d', strtotime($date_to));
         }
         $dateArr = Helper::getDateFromRange($tmpArr['date_from'], $tmpArr['date_to']);
-
+        //dd($dateArr);
         if($report_type == 'don-hang'){
             $data['cho_xu_ly'] = $this->reportDonHang($tmpArr['date_from'], $tmpArr['date_to'], 0); // cho xu ly
             $data['dang_xu_ly'] = $this->reportDonHang($tmpArr['date_from'], $tmpArr['date_to'], 1); // dang xu ly
@@ -90,14 +90,16 @@ class ReportController extends Controller
 
     public function reportDonHang($date_from, $date_to, $status){
         $date_from = Carbon::parse($date_from)->format('Y-m-d H:i:s');
-        $date_to = Carbon::parse($date_to)->format('Y-m-d H:i:s');
+        $date_to = Carbon::parse($date_to)->format('Y-m-d')." 23:59:00";
+        
         $query = DB::table('orders')
                      ->select(DB::raw('count(id) as total, DATE(created_at) as date'))
                      ->where('status', $status)
                      ->where('created_at', '>=', $date_from)
                      ->where('created_at', '<=', $date_to)                     
                      ->groupBy('date')
-                     ->lists('total', 'date');        
+                     ->lists('total', 'date');
+                     
         return $query;
     }
     public function reportKhachHang($date_from, $date_to, $is_customer = false){
