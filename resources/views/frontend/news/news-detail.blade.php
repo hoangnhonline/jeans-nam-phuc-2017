@@ -5,7 +5,7 @@
 <div class="container">
     <ul class="breadcrumb">
         <li><a href="{!! route('home') !!}">Trang chủ</a></li>
-        <li><a href="{!! route('news-list', $cateDetail->slug) !!}">{!! $cateDetail->name !!}</a></li>        
+        <li><a href="{!! route('cate-parent', $cateDetail->slug) !!}">{!! $cateDetail->name !!}</a></li>        
         <li class="active">{!! $detail->title !!}</li>
     </ul>
 </div>

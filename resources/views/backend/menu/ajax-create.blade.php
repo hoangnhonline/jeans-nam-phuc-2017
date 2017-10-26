@@ -56,7 +56,7 @@
           @foreach($articlesCateList as $value)
           <li>
             <label>
-            <input type="radio" name="menu_select" data-link="{{ route('news-list', $value->slug) }}" data-value="{{ $value->id }}" data-type="5" data-title="{{ $value->name }}" class="menu_select"> {{ $value->name }}
+            <input type="radio" name="menu_select" data-link="{{ route('cate-parent', $value->slug) }}" data-value="{{ $value->id }}" data-type="5" data-title="{{ $value->name }}" class="menu_select"> {{ $value->name }}
             </label>            
           </li>
           @endforeach

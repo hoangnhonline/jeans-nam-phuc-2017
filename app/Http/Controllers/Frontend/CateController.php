@@ -8,16 +8,15 @@ use App\Http\Controllers\Controller;
 use App\Models\CateParent;
 use App\Models\Cate;
 use App\Models\Product;
-use App\Models\SpThuocTinh;
 use App\Models\ProductImg;
-use App\Models\ThuocTinh;
-use App\Models\LoaiThuocTinh;
 use App\Models\Banner;
 use App\Models\Location;
 use App\Models\TinhThanh;
-use App\Models\HoverInfo;
 use App\Models\Pages;
 use App\Models\MetaData;
+use App\Models\ArticlesCate;
+use App\Models\Articles;
+
 use Helper, File, Session, Auth, DB;
 
 class CateController extends Controller
@@ -44,7 +43,8 @@ class CateController extends Controller
         
         $slugCateParent = $request->slug;
         if(!$slugCateParent){
-            return redirect()->route('home');       
+            return redirect()->route('home');   
+                       
         }
         $parentDetail = CateParent::where('slug', $slugCateParent)->first();
 
@@ -65,7 +65,27 @@ class CateController extends Controller
         }  
             return view('frontend.cate.parent', compact('parent_id', 'parentDetail', 'cateList', 'productList', 'seo'));
         }else{
-            return redirect()->route('home');       
+              
+             // check cate news
+            $page = $request['page'] ? $request['page'] : 1;       
+            $cateArr = [];
+           
+            $cateDetail = ArticlesCate::where('slug', $slugCateParent)->first();
+            if(!$cateDetail){
+                return redirect()->route('home');
+            }
+
+            $title = trim($cateDetail->meta_title) ? $cateDetail->meta_title : $cateDetail->name;
+
+            $articlesList = Articles::where('cate_id', $cateDetail->id)->orderBy('id', 'desc')->paginate(20);
+
+            $hotArr = Articles::where( ['cate_id' => $cateDetail->id, 'is_hot' => 1] )->orderBy('id', 'desc')->limit(5)->get();
+            $seo['title'] = $cateDetail->meta_title ? $cateDetail->meta_title : $cateDetail->title;
+            $seo['description'] = $cateDetail->meta_description ? $cateDetail->meta_description : $cateDetail->title;
+            $seo['keywords'] = $cateDetail->meta_keywords ? $cateDetail->meta_keywords : $cateDetail->title;
+            $socialImage = $cateDetail->image_url;      
+
+            return view('frontend.news.index', compact('title', 'hotArr', 'articlesList', 'cateDetail', 'seo', 'socialImage', 'page', 'newProductList'));  
         }
     }
     public function child(Request $request){
