@@ -91,6 +91,12 @@
           <span>Liên hệ</span>          
         </a>       
       </li>
+      <li {{ in_array(\Request::route()->getName(), ['bank.edit', 'bank.index', 'bank.create']) ? "class=active" : "" }}>
+        <a href="{{ route('bank.index') }}">
+          <i class="fa fa-pencil-square-o"></i> 
+          <span>Tài khoản ngân hàng</span>          
+        </a>       
+      </li>
       <li {{ in_array(\Request::route()->getName(), ['banner.list', 'banner.edit', 'banner.create']) ? "class=active" : "" }}>
         <a href="{{ route('banner.list') }}">
           <i class="fa fa-file-image-o"></i> 

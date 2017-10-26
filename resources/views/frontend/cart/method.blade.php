@@ -30,52 +30,24 @@
 								<div class="form-group">
 									<label class="choose-another"><input type="radio" class="radio-cus" name="method_id" checked="checked" value="1"> Chuyển khoản ngân hàng</label>
 								</div>
+								<?php 
+								$bankList = DB::table('bank')->orderBy('display_order')->get();
+								?>
 								<div class="form-group">
 									<div class="content">
+										@foreach($bankList as $bank)
 									<div class="form-group">
 										<div class="thumb">
-											<img src="{{ URL::asset('public/assets/images/payments/VIB.jpg') }}" alt="">
+											<img src="{{ Helper::showImage($bank->image_url) }}" alt="{{ $bank->name }}">
 										</div>
 										<div class="des">
-											<p class="title">Ngân hàng thươnag mại cổ phần Á Châu - Chi nhánh Thủ Đức</p>
+											<p class="title">{{ $bank->name }}</p>
 											<p class="info">
-												It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English
+												{{ $bank->description }}
 											</p>
 										</div>
 									</div>
-									<div class="form-group">
-										<div class="thumb">
-											<img src="{{ URL::asset('public/assets/images/payments/TCB.jpg') }}" alt="">
-										</div>
-										<div class="des">
-											<p class="title">Ngân hàng thươnag mại cổ phần Á Châu - Chi nhánh Thủ Đức</p>
-											<p class="info">
-												It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English
-											</p>
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="thumb">
-											<img src="{{ URL::asset('public/assets/images/payments/ACB.jpg') }}" alt="">
-										</div>
-										<div class="des">
-											<p class="title">Ngân hàng thươnag mại cổ phần Á Châu - Chi nhánh Thủ Đức</p>
-											<p class="info">
-												It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English
-											</p>
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="thumb">
-											<img src="{{ URL::asset('public/assets/images/payments/VCB.jpg') }}" alt="">
-										</div>
-										<div class="des">
-											<p class="title">Ngân hàng thươnag mại cổ phần Á Châu - Chi nhánh Thủ Đức</p>
-											<p class="info">
-												It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English
-											</p>
-										</div>
-									</div>
+									@endforeach
 									</div>
 								</div>
 								<div class="form-group">

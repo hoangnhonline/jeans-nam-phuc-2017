@@ -53,13 +53,13 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
         Route::post('/update', ['as' => 'cate-type.update', 'uses' => 'CateTypeController@update']);
         Route::get('{id}/destroy', ['as' => 'cate-type.destroy', 'uses' => 'CateTypeController@destroy']);
     });
-    Route::group(['prefix' => 'member'], function () {
-        Route::get('/', ['as' => 'member.index', 'uses' => 'MemberController@index']);
-        Route::get('/create', ['as' => 'member.create', 'uses' => 'MemberController@create']);
-        Route::post('/store', ['as' => 'member.store', 'uses' => 'MemberController@store']);
-        Route::get('{id}/edit',   ['as' => 'member.edit', 'uses' => 'MemberController@edit']);
-        Route::post('/update', ['as' => 'member.update', 'uses' => 'MemberController@update']);
-        Route::get('{id}/destroy', ['as' => 'member.destroy', 'uses' => 'MemberController@destroy']);
+    Route::group(['prefix' => 'bank'], function () {
+        Route::get('/', ['as' => 'bank.index', 'uses' => 'BankController@index']);
+        Route::get('/create', ['as' => 'bank.create', 'uses' => 'BankController@create']);
+        Route::post('/store', ['as' => 'bank.store', 'uses' => 'BankController@store']);
+        Route::get('{id}/edit',   ['as' => 'bank.edit', 'uses' => 'BankController@edit']);
+        Route::post('/update', ['as' => 'bank.update', 'uses' => 'BankController@update']);
+        Route::get('{id}/destroy', ['as' => 'bank.destroy', 'uses' => 'BankController@destroy']);
     });
     Route::group(['prefix' => 'work-group'], function () {
         Route::get('/', ['as' => 'work-group.index', 'uses' => 'WorkGroupController@index']);
