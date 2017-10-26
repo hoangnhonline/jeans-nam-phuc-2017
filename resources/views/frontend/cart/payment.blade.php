@@ -115,7 +115,7 @@ $total = 0;
 			                  <?php $price = $product->is_sale ? $product->price_sale : $product->price; ?>
 							<tr>
 								<td>
-									<p class="tb-commom"><a href="{{ route('product-detail', [$product->slug, $product->id]) }}" target="_blank" title="{!! $product->name !!}">{!! $product->name !!}</a></p>
+									<p class="tb-commom"><a href="{{ route('product-detail', [$product->slug]) }}" target="_blank" title="{!! $product->name !!}">{!! $product->name !!}</a></p>
 									<p class="tb-commom">Số lượng: x {{ $getlistProduct[$key] }}</p>
 									<p class="tb-commom">
 										Màu sắc sản phẩm:

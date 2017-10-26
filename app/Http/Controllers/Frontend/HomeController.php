@@ -208,11 +208,10 @@ class HomeController extends Controller
         $colorArr = array_filter($colorArr);   
         $loaiDetail = (object) [];
         $query = Product::where('product.status', 1);
-        $query->where('so_luong_ton', '>', 0)->where('price', '>', 0)->where('cate_parent.status', 1)                        
-                        ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')
-                        ->leftJoin('sp_thuoctinh', 'sp_thuoctinh.product_id', '=','product.id')
+        $query->where('price', '>', 0)->where('cate_parent.status', 1)                        
+                        ->leftJoin('product_img', 'product_img.id', '=','product.thumbnail_id')                     
                         ->join('cate_parent', 'cate_parent.id', '=', 'product.parent_id')
-                        ->select('product_img.image_url', 'product.*', 'thuoc_tinh');
+                        ->select('product_img.image_url', 'product.*');
         if($tu_khoa){
             $query->where('product.alias', 'LIKE', '%'.$tu_khoa.'%');
         }

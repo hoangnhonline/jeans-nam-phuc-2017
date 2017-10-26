@@ -21,7 +21,7 @@
                 </h2>
             </div>
             <div class="block-content">
-                <div class="block block-aritcle">
+                <div class="block block-aritcle block-editor-content">
                     {!! $detail->content !!}
                 </div>
                 <div class="block block-share" id="share-buttons">

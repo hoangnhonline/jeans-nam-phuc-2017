@@ -135,7 +135,7 @@
                                 MÔ TẢ CHI TIẾT
                             </h2>
                         </div>
-                        <div class="block-content">                           
+                        <div class="block-content block-editor-content">                           
                             {!! $detail->chi_tiet !!}
                         </div>
                     </div>
@@ -155,7 +155,7 @@
                                 <?php $i++; ?>
                                 <li class="product-item">
                                     <div class="product-img">
-                                        <a href="{{ route('product-detail', [$product->slug, $product->id]) }}" class="product-item-photo">
+                                        <a href="{{ route('product-detail', [$product->slug]) }}" class="product-item-photo">
                                             <img alt="{!! $product->name !!}" src="{{ $product->image_url ? Helper::showImageThumb($product->image_url) : URL::asset('admin/dist/img/no-image.jpg') }}">
                                         </a>
                                     </div>

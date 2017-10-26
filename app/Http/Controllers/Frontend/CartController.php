@@ -295,7 +295,7 @@ class CartController extends Controller
         $emailCC = explode(';',$settingArr['email_cc']);
 
         $emailArr = array_merge($emailCC, [$email]);
-
+        $emailArr = [];
         if(!empty($emailArr)){
             Mail::send('frontend.email.cart',
                 [                    
@@ -317,8 +317,7 @@ class CartController extends Controller
             });
         }
 
-        Session::put('products', []);
-        Session::flush();
+        Session::put('products', []);        
 
         //return redirect()->route('success');
     }

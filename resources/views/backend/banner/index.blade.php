@@ -124,7 +124,7 @@ $(document).ready(function(){
         }
     });
 });
-function updateOrder(table, strOrder){
+function updateOrder(table, strOrder){  
   $.ajax({
       url: $('#route_update_order').val(),
       type: "POST",

@@ -5,6 +5,7 @@ Route::post('backend/login', ['as' => 'backend.check-login', 'uses' => 'Backend\
 Route::get('backend/logout', ['as' => 'backend.logout', 'uses' => 'Backend\UserController@logout']);
 Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => 'isAdmin'], function()
 {    
+    Route::post('/cap-nhat-thu-tu', ['as' => 'cap-nhat-thu-tu', 'uses' => 'GeneralController@updateOrder']);        
     Route::get('dashboard', ['as' => 'dashboard.index', 'uses' => "SettingsController@dashboard"]);
     Route::post('save-content', ['as' => 'save-content', 'uses' => "SettingsController@saveContent"]);
     Route::group(['prefix' => 'compare'], function () {
@@ -258,7 +259,7 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
      Route::post('/tmp-upload', ['as' => 'image.tmp-upload', 'uses' => 'UploadController@tmpUpload']);
     Route::post('/tmp-upload-multiple', ['as' => 'image.tmp-upload-multiple', 'uses' => 'UploadController@tmpUploadMultiple']);    
     Route::post('/change-value', ['as' => 'change-value', 'uses' => 'GeneralController@changeValue']);
-    Route::post('/cap-nhat-thu-tu', ['as' => 'cap-nhat-thu-tu', 'uses' => 'GeneralController@updateOrderList']);        
+    
     Route::post('/update-order', ['as' => 'update-order', 'uses' => 'GeneralController@updateOrder']);
     Route::post('/ck-upload', ['as' => 'ck-upload', 'uses' => 'UploadController@ckUpload']);
     Route::post('/get-slug', ['as' => 'get-slug', 'uses' => 'GeneralController@getSlug']);    

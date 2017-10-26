@@ -25,7 +25,7 @@ $product = $arrProductInfo[$product_id];
 		<figure class="img-prod">
 			<img alt="{!! $product->name !!}" src="{{ Helper::showImage($product['image_url']) }}">
 		</figure>
-		<a href="{{ route('product-detail', [$product->slug, $product->id]) }}" target="_blank" title="{!! $product->name !!}">{!! $product->name !!}</a>
+		<a href="{{ route('product-detail', [$product->slug]) }}" target="_blank" title="{!! $product->name !!}">{!! $product->name !!}</a>
 		<p class="p-color">
 			<span>Màu sắc sản phẩm:</span>
 			<span>{{ $colorArr[$tmp[1]]->name }}</span>

@@ -533,7 +533,7 @@ class ProductController extends Controller
         $this->storeInventory( $product_id, $dataArr);
         $this->storeColor( $product_id, $dataArr);
         $this->storeSize( $product_id, $dataArr);
-      
+      $this->storeMeta($product_id, $dataArr['meta_id'], $dataArr);
         Session::flash('message', 'Chỉnh sửa thành công');
 
         return redirect()->route('product.edit', $product_id);

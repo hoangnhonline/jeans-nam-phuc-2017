@@ -32,7 +32,7 @@
                                       </div>
                                     <div class="product-info">
                                          <h2 class="title">
-                                   <a href="{{ route('product-detail', [$product->slug, $product->id]) }}" title="{!! $product->name !!}">{!! $product->name !!}</a></h2>
+                                   <a href="{{ route('product-detail', [$product->slug]) }}" title="{!! $product->name !!}">{!! $product->name !!}</a></h2>
                                         <div class="product-price">
                                             <span class="price-new">{{ $product->is_sale == 1 ? number_format($product->price_sale) : number_format($product->price) }}đ</span>
                                   @if($product->is_sale)

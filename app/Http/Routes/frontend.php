@@ -38,14 +38,12 @@ Route::group(['namespace' => 'Frontend'], function()
     Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index']);
     Route::get('/load-slider', ['as' => 'load-slider', 'uses' => 'HomeController@loadSlider']);
     Route::get('/count-message', ['as' => 'count-message', 'uses' => 'HomeController@getNoti']);
-    Route::get('/chuong-trinh-khuyen-mai', ['as' => 'chuong-trinh-khuyen-mai', 'uses' => 'EventController@index']);
-    Route::get('event/{slug}', ['as' => 'detail-event', 'uses' => 'EventController@detail']);
    Route::get('may-cu/{slug}', ['as' => 'old-cate', 'uses' => 'OldController@cate']);
 
     Route::post('/send-contact', ['as' => 'send-contact', 'uses' => 'ContactController@store']);
     Route::post('/set-service', ['as' => 'set-service', 'uses' => 'CartController@setService']);
     
-    Route::get('san-pham/{slug}-{id}.html', ['as' => 'product-detail', 'uses' => 'DetailController@index']);
+    Route::get('san-pham/{slug}.html', ['as' => 'product-detail', 'uses' => 'DetailController@index']);
     Route::get('/tin-tuc/{slug}-{id}.html', ['as' => 'news-detail', 'uses' => 'HomeController@newsDetail']);
     
     Route::group(['prefix' => 'thanh-toan'], function () {
@@ -91,7 +89,6 @@ Route::group(['namespace' => 'Frontend'], function()
     Route::post('/customer/register-ajax', ['as' => 'register-customer-ajax', 'uses' => 'CustomerController@registerAjax']);
     Route::post('/customer/checkemail', ['as' => 'checkemail-customer', 'uses' => 'CustomerController@isEmailExist']);    
     Route::get('tim-kiem.html', ['as' => 'search', 'uses' => 'HomeController@search']);
-    Route::get('so-sanh.html', ['as' => 'so-sanh', 'uses' => 'CompareController@index']);
     Route::get('lien-he.html', ['as' => 'contact', 'uses' => 'HomeController@contact']);
     Route::get('may-cu-gia-re.html', ['as' => 'old-device', 'uses' => 'HomeController@oldDevice']);
     

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ArticlesCate;
 use App\Models\Articles;
 use App\Models\Product;
+use App\Models\MetaData;
 
 use Helper, File, Session, Auth;
 use Mail;
@@ -52,9 +53,16 @@ class NewsController extends Controller
 
             $hotArr = Articles::where( ['cate_id' => $detail->cate_id, 'is_hot' => 1] )->where('id', '<>', $id)->orderBy('id', 'desc')->limit(5)->get();
             $otherArr = Articles::where( ['cate_id' => $detail->cate_id] )->where('id', '<>', $id)->orderBy('id', 'desc')->limit(4)->get();
-            $seo['title'] = $detail->meta_title ? $detail->meta_title : $detail->title;
-            $seo['description'] = $detail->meta_description ? $detail->meta_description : $detail->title;
-            $seo['keywords'] = $detail->meta_keywords ? $detail->meta_keywords : $detail->title;
+            
+            if( $detail->meta_id > 0){
+               $meta = MetaData::find( $detail->meta_id )->toArray();
+               $seo['title'] = $meta['title'] != '' ? $meta['title'] : $detail->name;
+               $seo['description'] = $meta['description'] != '' ? $meta['description'] : $detail->name;
+               $seo['keywords'] = $meta['keywords'] != '' ? $meta['keywords'] : $detail->name;
+            }else{
+                $seo['title'] = $seo['description'] = $seo['keywords'] = $detail->name;
+            } 
+            
             $socialImage = $detail->image_url; 
           
             $tagSelected = Articles::getListTag($id);

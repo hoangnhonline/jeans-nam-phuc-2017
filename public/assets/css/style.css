@@ -1994,9 +1994,34 @@ h2.tit-page3 {
   line-height: 40px;
   padding: 0 12px;
 }
+.block-editor-content{
+  line-height: 22px;
+    font-size: 14px;
+}
 .block-editor-content ul,
 .block-editor-content ol {
   padding-left: 30px;
+}
+.block-editor-content h3{
+  font-size: 17px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.block-editor-content h2{
+  font-size: 18px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.block-editor-content h1{
+  font-size: 19px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.block-editor-content td{
+  padding: 10px;
+}
+.block-editor-content table, .block-editor-content ul{
+  margin-bottom: 10px;
 }
 .block-editor-content ul li,
 .block-editor-content ol li {

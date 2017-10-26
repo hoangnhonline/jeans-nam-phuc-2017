@@ -14,13 +14,13 @@
                                     <div class="product-item">
                                         <div class="product-item-info">
                                             <div class="product-item-head">
-                                                <a href="{{ route('product-detail', [$product->slug, $product->id]) }}" class="product-item-photo">
+                                                <a href="{{ route('product-detail', [$product->slug]) }}" class="product-item-photo">
                                                     <img alt="{!! $product->name !!}" class="lazy" data-original="{{ $product->image_url ? Helper::showImageThumb($product->image_url) : URL::asset('admin/dist/img/no-image.jpg') }}">
                                                 </a>
                                             </div><!-- /product-item-info -->
                                             <div class="product-item-details">
                                                 <h2 class="product-item-name">
-                                                    <a href="{{ route('product-detail', [$product->slug, $product->id]) }}" title="{!! $product->name !!}">{!! $product->name !!}</a>
+                                                    <a href="{{ route('product-detail', [$product->slug]) }}" title="{!! $product->name !!}">{!! $product->name !!}</a>
                                                 </h2>
                                                 <p class="price" style="color:#d0021b">{{ $product->is_sale == 1 ? number_format($product->price_sale) : number_format($product->price) }}đ</p>
                                             </div><!-- /product-item-details -->

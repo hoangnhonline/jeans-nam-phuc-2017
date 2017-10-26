@@ -4,8 +4,8 @@
 <div class="block block-breadcrumb">
 	<div class="container">
 		<ul class="breadcrumb">
-			<li><a href="#">Trang chủ</a></li>
-			<li class="active">Khuyến mãi</li>
+			<li><a href="{{ route('home') }}">Trang chủ</a></li>
+			<li class="active">{!! $cateDetail->name !!}</li>
 		</ul>
 	</div>
 </div><!-- /block-breadcrumb -->
@@ -16,7 +16,7 @@
 				<div class="block block-title">
 					<h2>
 						<i class="fa fa-cart-arrow-down"></i>
-						KHUYẾN MÃI
+						{!! $cateDetail->name !!}
 					</h2>
 				</div>
 				<div class="block-content">

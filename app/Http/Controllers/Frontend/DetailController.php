@@ -41,19 +41,17 @@ class DetailController extends Controller
     */
     public function index(Request $request)
     {   
-        $spThuocTinhArr = $productArr = [];
-        $id = $request->id;
-        $detail = Product::find($id);
+        $productArr = [];
+        $slug = $request->slug;
+        $detail = Product::where('slug', $slug)->first();
         if(!$detail){
             return redirect()->route('home');
         }
+        $id = $detail->id;
         $loaiDetail = CateParent::find( $detail->parent_id );
         $cateDetail = Cate::find( $detail->cate_id );
 
         $hinhArr = ProductImg::where('product_id', $detail->id)->where('color_id', $detail->color_id_main)->get()->toArray();
-        // hien thuoc tinh
-       
-        
         
         if( $detail->meta_id > 0){
            $meta = MetaData::find( $detail->meta_id )->toArray();

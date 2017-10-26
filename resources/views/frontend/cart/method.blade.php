@@ -145,7 +145,7 @@
 					                  <?php $price = $product->is_sale ? $product->price_sale : $product->price; ?>
 									<tr>
 										<td>
-											<p class="tb-commom"><a href="{{ route('product-detail', [$product->slug, $product->id]) }}" target="_blank" title="{!! $product->name !!}">{!! $product->name !!}</a></p>
+											<p class="tb-commom"><a href="{{ route('product-detail', [$product->slug]) }}" target="_blank" title="{!! $product->name !!}">{!! $product->name !!}</a></p>
 											<p class="tb-commom">Số lượng: x {{ $getlistProduct[$key] }}</p>
 											<p class="tb-commom">
 												Màu sắc sản phẩm:
@@ -194,14 +194,9 @@
 						ĐƠN HÀNG CỦA BẠN ĐÃ ĐẶT THÀNH CÔNG
 					</div>
 					<div class="modal-body">
-						<p>
-							<strong>Cảm ơn quý khách đã mua hàng !</strong> Chúng tôi liên hệ xác nhận đến số điện thoại của quý khách và sẽ giao hàng đến cho quý khách trong thời gian từ 2-3 ngày sau khi xác nhận.
-						</p>
-						<p>
-							<strong>Chân thành cảm ơn quý khách.</strong>
-						</p>
+						{!! $settingArr['thong_bao_thanh_cong'] !!}
 						<div class="text-right">
-							<a href="index.html" title="Trở về trang chủ" class="btn btn-danger"> Trở về trang chủ</a>
+							<a href="{{ route('home') }}" title="Trở về trang chủ" class="btn btn-danger"> Trở về trang chủ</a>
 						</div>
 					</div>
 				</div>

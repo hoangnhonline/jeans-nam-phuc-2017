@@ -16,7 +16,7 @@
   <!-- Main content -->
   <section class="content">
     <a class="btn btn-default btn-sm" href="{{ route('product.index', ['parent_id' => $detail->parent_id, 'cate_id' => $detail->cate_id]) }}" style="margin-bottom:5px">Quay lại</a>
-    <a class="btn btn-primary btn-sm" href="{{ route('product-detail', [$detail->slug, $detail->id] ) }}" target="_blank" style="margin-top:-6px"><i class="fa fa-eye" aria-hidden="true"></i> Xem</a>
+    <a class="btn btn-primary btn-sm" href="{{ route('product-detail', [$detail->slug] ) }}" target="_blank" style="margin-top:-6px"><i class="fa fa-eye" aria-hidden="true"></i> Xem</a>
     <form role="form" method="POST" action="{{ route('product.update') }}" id="dataForm">
     <div class="row">
       <!-- left column -->
@@ -171,11 +171,7 @@
                         <div style="margin-bottom:10px;clear:both"></div>
                         
                       <div style="margin-bottom:10px;clear:both"></div>
-                      <div class="form-group col-md-12 none-padding">
-                          <label>Mô tả</label>
-                          <textarea class="form-control" rows="4" name="mo_ta" id="mo_ta">{{ old('mo_ta', $detail->mo_ta) }}</textarea>
-                        </div>
-                      
+               
                        
                       <div class="form-group">
                         <label>Chi tiết</label>
@@ -338,11 +334,50 @@ $(document).on('keypress', '#name_search', function(e){
       
       $('#is_sale').change(function(){
         if($(this).prop('checked') == true){
-          $('#price_sale').addClass('req');
+          $('#price_sale, #sale_percent').addClass('req');          
         }else{
-          $('#price_sale').val('').removeClass('req');
+          $('#price_sale, #sale_percent').val('').removeClass('req');
         }
       });
+      $('#price_sale').blur(function(){
+
+        var sale_percent = 0;
+        var price = parseInt($('#price').val());
+        var price_sale = parseInt($('#price_sale').val());
+        if(price_sale > 0){
+          $('#is_sale').prop('checked', true);          
+          if(price_sale > price){
+            price_sale = price;
+            $('#price_sale').val(price_sale);
+          }
+          if( price > 0 ){
+            sale_percent = 100 - Math.floor(price_sale*100/price);
+            $('#sale_percent').val(sale_percent);
+          }
+        }
+      }); 
+       $('#sale_percent').blur(function(){
+        var price_sale = 0;
+        var price = parseInt($('#price').val());
+        var sale_percent = parseInt($('#sale_percent').val());
+        sale_percent = sale_percent > 100 ? 100 : sale_percent;
+        if( sale_percent > 0){
+          $('#is_sale').prop('checked', true);
+        }
+        if(sale_percent > 100){
+          sale_percent = 100;
+          $('#sale_percent').val(100);
+        }
+        if( price > 0 ){
+          price_sale = Math.ceil((100-sale_percent)*price/100);
+          $('#price_sale').val(price_sale);
+        }
+      }); 
+      @if($detail->is_sale == 1)
+        $('#price_sale, #sale_percent').addClass('req');          
+      @else
+        $('#price_sale, #sale_percent').val('').removeClass('req');     
+      @endif
       $('#dataForm .req').blur(function(){    
         if($(this).val() != ''){
           $(this).removeClass('error');
@@ -357,10 +392,8 @@ $(document).on('keypress', '#name_search', function(e){
      
       var editor = CKEDITOR.replace( 'chi_tiet',{     
           height: 300
-      });     
-      var editor3 = CKEDITOR.replace( 'mo_ta',{  
-          height : 100,
-      });
+      });    
+     
       $('#btnUploadImage').click(function(){        
         $('#file-image').click();
       }); 

@@ -80,6 +80,10 @@
                   <textarea class="form-control" rows="7" name="thong_tin_cong_ty" id="thong_tin_cong_ty">{{ $settingArr['thong_tin_cong_ty'] }}</textarea>
                 </div>
                 <div class="form-group">
+                  <label>Thông báo đặt hàng thành công</label>
+                  <textarea class="form-control" rows="7" name="thong_bao_thanh_cong" id="thong_bao_thanh_cong">{{ $settingArr['thong_bao_thanh_cong'] }}</textarea>
+                </div>
+                <div class="form-group">
                   <label>Code google analystic </label>
                   <input type="text" class="form-control" name="google_analystic" id="google_analystic" value="{{ $settingArr['google_analystic'] }}">
                 </div>   
@@ -185,6 +189,15 @@ function openKCFinder_singleFile(obj_str) {
       var editor = CKEDITOR.replace( 'thong_tin_cong_ty',{
           language : 'vi',       
           height : 300,
+          toolbarGroups : [            
+            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },          
+            { name: 'links', groups: [ 'links' ] },           
+            '/',            
+          ]
+      });
+      var editor = CKEDITOR.replace( 'thong_bao_thanh_cong',{
+          language : 'vi',       
+          height : 400,
           toolbarGroups : [            
             { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },          
             { name: 'links', groups: [ 'links' ] },           

@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="block-article">
-            <div class="block block-content">
+            <div class="block block-content block-editor-content">
                 {!! $detailPage->content !!}
             </div>
         </div>

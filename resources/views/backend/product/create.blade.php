@@ -148,11 +148,7 @@
                             @endforeach
                           </ul>
                         </div>                        
-                        <div style="margin-bottom:10px;clear:both"></div>
-                        <div class="form-group col-md-12 none-padding">
-                            <label>Mô tả</label>
-                            <textarea class="form-control" rows="4" name="mo_ta" id="mo_ta">{{ old('mo_ta') }}</textarea>
-                          </div>                        
+                        <div style="margin-bottom:10px;clear:both"></div>                                      
                          
                         <div class="form-group">
                           <label>Chi tiết</label>
@@ -367,11 +363,45 @@ $(document).ready(function(){
       });
       $('#is_sale').change(function(){
         if($(this).prop('checked') == true){
-          $('#price_sale').addClass('req');
+          $('#price_sale, #sale_percent').addClass('req');          
         }else{
-          $('#price_sale').val('').removeClass('req');
+          $('#price_sale, #sale_percent').val('').removeClass('req');
         }
       });
+      $('#price_sale').blur(function(){
+
+        var sale_percent = 0;
+        var price = parseInt($('#price').val());
+        var price_sale = parseInt($('#price_sale').val());
+        if(price_sale > 0){
+          $('#is_sale').prop('checked', true);          
+          if(price_sale > price){
+            price_sale = price;
+            $('#price_sale').val(price_sale);
+          }
+          if( price > 0 ){
+            sale_percent = 100 - Math.floor(price_sale*100/price);
+            $('#sale_percent').val(sale_percent);
+          }
+        }
+      }); 
+       $('#sale_percent').blur(function(){
+        var price_sale = 0;
+        var price = parseInt($('#price').val());
+        var sale_percent = parseInt($('#sale_percent').val());
+        sale_percent = sale_percent > 100 ? 100 : sale_percent;
+        if( sale_percent > 0){
+          $('#is_sale').prop('checked', true);
+        }
+        if(sale_percent > 100){
+          sale_percent = 100;
+          $('#sale_percent').val(100);
+        }
+        if( price > 0 ){
+          price_sale = Math.ceil((100-sale_percent)*price/100);
+          $('#price_sale').val(price_sale);
+        }
+      }); 
       $('#dataForm .req').blur(function(){    
         if($(this).val() != ''){
           $(this).removeClass('error');
@@ -401,20 +431,7 @@ $(document).ready(function(){
       var editor = CKEDITOR.replace( 'chi_tiet',{
           language : 'vi',
           height: 300        
-      });
-     
-      var editor3 = CKEDITOR.replace( 'mo_ta',{
-          language : 'vi',
-          height : 100,
-          toolbarGroups : [
-            
-            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-            { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
-            { name: 'links', groups: [ 'links' ] },           
-            '/',
-            
-          ]
-      });     
+      });    
      
 
       $('#name').change(function(){
@@ -431,14 +448,6 @@ $(document).ready(function(){
                 if( response.str ){                  
                   $('#slug').val( response.str );
                 }                
-              },
-              error: function(response){                             
-                  var errors = response.responseJSON;
-                  for (var key in errors) {
-                    
-                  }
-                  //$('#btnLoading').hide();
-                  //$('#btnSave').show();
               }
             });
          }
