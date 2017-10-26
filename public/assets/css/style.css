@@ -1994,3 +1994,45 @@ h2.tit-page3 {
   line-height: 40px;
   padding: 0 12px;
 }
+.block-editor-content ul,
+.block-editor-content ol {
+  padding-left: 30px;
+}
+.block-editor-content ul li,
+.block-editor-content ol li {
+  list-style-type: inherit;
+}
+.block-editor-content img {
+  display: unset;
+}
+
+.block-product .block-content,
+.block-btn-slide .block-content {
+    overflow: hidden;
+}
+.Recipepod{
+    display: none;
+    height: 0;
+}
+.edit {  
+position: relative;
+border: 1px dashed transparent;
+min-height: 20px;
+}
+.edit:hover {
+border: 1px dashed #c70f19;\
+}
+.edit:hover:before {
+content: "\f040";
+font-family: "FontAwesome";
+font-size: 13px;
+color: #ffffff;
+width: 20px;
+height: 20px;
+display: block;
+background: #c70f19;
+position: absolute;
+top: 0;
+right: 0;
+cursor: pointer;
+}
