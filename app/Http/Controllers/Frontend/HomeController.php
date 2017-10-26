@@ -39,6 +39,7 @@ class HomeController extends Controller
     */    
     public function index(Request $request){         
                   
+        Helper::counter(1, 3);    
         $query = Product::where( [ 'status' => 1, 'is_hot' => 1])                            
                         ->where('price', '>', 0)            
 			->where('thumbnail_id', '>', 0)
@@ -252,6 +253,8 @@ class HomeController extends Controller
         return view('frontend.search.index', compact('productList', 'tu_khoa', 'seo', 'hoverInfo', 'loaiDetail', 'cateArr', 'price_fm', 'price_to', 'colorArr', 'parent_id', 'cate_id', 'sort'));
     }
     public function pages(Request $request){
+        
+        Helper::counter(1, 3);
         $slug = $request->slug;
 
         $detailPage = Pages::where('slug', $slug)->first();

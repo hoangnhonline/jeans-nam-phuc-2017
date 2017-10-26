@@ -41,6 +41,7 @@ class DetailController extends Controller
     */
     public function index(Request $request)
     {   
+        Helper::counter(1, 3);
         $productArr = [];
         $slug = $request->slug;
         $detail = Product::where('slug', $slug)->first();

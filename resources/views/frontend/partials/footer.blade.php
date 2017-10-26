@@ -7,10 +7,9 @@
 							{!! $settingArr['thong_tin_cong_ty'] !!}
 						</address>
 						<div class="block-statistics">
-							<p><span>Truy cập hôm nay:</span> 1.234</p>
-							<p><span>Truy cập hôm qua:</span> 875</p>
-							<p><span>Truy cập trong tuần:</span> 8.765</p>
-							<p><span>Tổng lượt truy cập:</span> 12.762</p>
+							<p><span>Truy cập hôm nay:</span> {{ number_format(Helper::view(1, 3, 1)) }}</p>							
+							<p><span>Tổng lượt truy cập:</span> {{ number_format(Helper::view(1, 3)) }}</p>
+						
 						</div>
 					</div>
 					<div class="col-sm-6 col-xs-12 ft-map">

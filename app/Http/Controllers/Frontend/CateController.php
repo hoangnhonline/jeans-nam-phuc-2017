@@ -38,6 +38,7 @@ class CateController extends Controller
     */
     public function parent(Request $request)
     {   
+        Helper::counter(1, 3);
         $productArr = [];
         $cateList = (object) [];
         
@@ -68,6 +69,7 @@ class CateController extends Controller
         }
     }
     public function child(Request $request){
+        Helper::counter(1, 3);
         $cateList = (object) [];
         $slugCateParent = $request->slugCateParent;
         $parentDetail = CateParent::where('slug', $slugCateParent)->first(); 

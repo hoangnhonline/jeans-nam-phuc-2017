@@ -17,6 +17,7 @@ class NewsController extends Controller
 {
     public function newsList(Request $request)
     {
+        Helper::counter(1, 3);
         $slug = $request->slug;
         $page = $request['page'] ? $request['page'] : 1;       
         $cateArr = [];
@@ -41,6 +42,7 @@ class NewsController extends Controller
 
      public function newsDetail(Request $request)
     { 
+        Helper::counter(1, 3);
         $id = $request->id;
 
         $detail = Articles::where( 'id', $id )
