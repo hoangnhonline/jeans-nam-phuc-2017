@@ -86,7 +86,11 @@
                 <div class="form-group">
                   <label>Code google analystic </label>
                   <input type="text" class="form-control" name="google_analystic" id="google_analystic" value="{{ $settingArr['google_analystic'] }}">
-                </div>   
+                </div>  
+                  <div class="form-group">
+                  <label>Maps</label>
+                  <textarea class="form-control" rows="7" name="maps" id="maps">{{ $settingArr['maps'] }}</textarea>
+                </div>
                 <div class="form-group col-md-12" style="margin-top:10px;margin-bottom:10px">  
                   <label class="col-md-4 row">Logo ( 255 x 55 px )</label>    
                   <div class="col-md-8 div-upload">

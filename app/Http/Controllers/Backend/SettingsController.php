@@ -88,7 +88,6 @@ class SettingsController  extends Controller
             'site_keywords.unique' => 'Bạn chưa nhập meta keywords.'
         ]);  
         $dataArr['updated_user'] = Auth::user()->id;
-
         unset($dataArr['_token']);  
 
     	foreach( $dataArr as $key => $value ){
