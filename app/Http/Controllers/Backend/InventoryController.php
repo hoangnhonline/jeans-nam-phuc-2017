@@ -107,13 +107,15 @@ class InventoryController extends Controller
         foreach($colorList as $color){
             $colorArr[$color->id] = $color;
         }
+        //return view('backend.inventory.export', compact( 'items', 'colorArr', 'sizeArr'));
+       // dd($colorArr);
          Excel::create('nam-phuc', function($excel) use ($items, $sizeArr, $colorArr) {
 
             $excel->sheet('product', function($sheet) use ($items, $sizeArr, $colorArr) {
                 $sheet->loadView('backend.inventory.export')->with('items',$items)->with('sizeArr',$sizeArr)->with('colorArr',$colorArr);
                  // Set width
                 
-                $sheet->setOrientation('landscape');
+                //$sheet->setOrientation('landscape');
             });
 
         })->export('xls');

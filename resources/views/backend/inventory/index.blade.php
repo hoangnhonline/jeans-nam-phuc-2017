@@ -16,10 +16,12 @@
 <!-- Main content -->
 <section class="content">
   <div class="row">
+
     <div class="col-md-12">
       @if(Session::has('message'))
       <p class="alert alert-info" >{{ Session::get('message') }}</p>
       @endif
+
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">Bộ lọc</h3>
@@ -58,10 +60,13 @@
                
             <button type="submit" style="margin-top:-5px" class="btn btn-primary btn-sm">Lọc</button>
           </form>         
+
         </div>
+
       </div>
       <div class="box">
-
+        <a href="{{ route('inventory-export') }}" class="btn btn-info btn-sm" style="margin-bottom:5px;float:left" target="_blank">Xuất Excel</a>
+        <div class="clearfix"></div>
         <div class="box-header with-border">
           <h3 class="box-title">Danh sách ( {{ $items->total() }} sản phẩm )</h3>
         </div>
